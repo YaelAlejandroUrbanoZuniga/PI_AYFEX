@@ -14,13 +14,13 @@ export default function HeaderNaranja() {
 
             <Svg
                 width={width}
-                height={200}  
+                height={260}  
                 style={styles.svg}
             >
                 <Circle
                     cx={width / 2}
-                    cy={-210}        
-                    r={radius}
+                    cy={-width*0.55}        
+                    r={width * 1.03}
                     fill="#FF6B00"
                 />
             </Svg>
@@ -34,16 +34,19 @@ export default function HeaderNaranja() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff', 
+        backgroundColor: '#fff',
+        height: 190,
+        overflow: 'hidden', 
     },
     svg: {
         position: 'absolute',
-        top: -20,
+        top: 0,
     },
     titleContainer: {
-        height: 170,
+        height: 180,
         justifyContent: 'center',
         alignItems: 'center',
+        paddingTop:25,
     },
     title: {
         fontSize: 42,

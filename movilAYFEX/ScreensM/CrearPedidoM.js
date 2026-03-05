@@ -241,13 +241,13 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   confirmButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FF6B00',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
     marginTop: 10,
     marginBottom: 20,
-    shadowColor: '#007AFF',
+    shadowColor: '#FF6B00',
     shadowOffset: {
       width: 0,
       height: 4,
