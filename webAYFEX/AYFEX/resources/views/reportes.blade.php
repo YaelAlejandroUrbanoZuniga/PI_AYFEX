@@ -2,12 +2,10 @@
 
 @section('content')
 <style>
-    
     .navbar { display: none !important; } 
     .container.mt-4 { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
     body { background-color: #f4f6f9; color: #333; overflow-x: hidden; }
 
-    
     .wrapper { 
         display: flex; 
         width: 100%; 
@@ -15,7 +13,6 @@
         overflow: hidden; 
     }
 
-    
     .sidebar {
         width: 260px;
         background: linear-gradient(180deg, #ff5722 0%, #e64a19 100%); 
@@ -65,7 +62,6 @@
     .logout-btn:hover { opacity: 1; }
     .logout-btn i { margin-right: 10px; }
 
-    
     .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 
     .topbar { 
@@ -79,7 +75,6 @@
     
     .topbar-right { flex: 1; text-align: right; }
 
-    
     .dashboard-content { padding: 30px; }
     
     .box-bordered { 
@@ -128,7 +123,6 @@
         align-items: center;
     }
 
-    
     .chart-skeletal-bar {
         height: 150px;
         display: flex;
@@ -160,7 +154,6 @@
         height: 140px;
         margin: 0 auto;
     }
-    
     
     .pie-skeletal-donut {
         width: 100%;
@@ -197,7 +190,6 @@
         font-weight: 600;
     }
 
-    
     .resumen-cards {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -237,7 +229,6 @@
         font-size: 0.75rem;
     }
 
-    
     .card-envios { border-bottom: 3px solid #16a34a; }
     .card-envios i { background: #dcfce7; color: #16a34a; }
     
@@ -250,7 +241,6 @@
     .card-incidencias { border-bottom: 3px solid #ef4444; }
     .card-incidencias i { background: #fee2e2; color: #ef4444; }
 
-    
     .exportar-group {
         display: flex;
         gap: 15px;
@@ -296,7 +286,7 @@
         </nav>
 
         <div class="sidebar-footer">
-            <a href="{{ route('perfil') }}" style="text-decoration:none; display:flex; align-items:center; margin-bottom:15px; padding: 10px; border-radius: 12px; transition: 0.3s;">
+            <a href="{{ route('perfil') }}" class="user-profile" style="text-decoration:none; display:flex; align-items:center; margin-bottom:15px; padding: 10px; border-radius: 12px; transition: 0.3s;">
                 <div class="user-avatar">A</div>
                 <div>
                     <h6>Admin AYFEX</h6>
