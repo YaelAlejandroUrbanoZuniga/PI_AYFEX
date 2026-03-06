@@ -138,7 +138,7 @@ export default function PedidosM({ navigation }) {
                             onPress={() => verDetalles('#PED022604')}
                         >
                             <Text style={styles.detailsButtonText}>Detalles</Text>
-                            <Ionicons name="chevron-forward" size={16} color="#007AFF" />
+                            <Ionicons name="chevron-forward" size={16} color="#FF6B00" />
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -183,7 +183,7 @@ export default function PedidosM({ navigation }) {
                             onPress={() => verDetalles('#PED022603')}
                         >
                             <Text style={styles.detailsButtonText}>Detalles</Text>
-                            <Ionicons name="chevron-forward" size={16} color="#007AFF" />
+                            <Ionicons name="chevron-forward" size={16} color="#FF6B00" />
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -228,7 +228,7 @@ export default function PedidosM({ navigation }) {
                             onPress={() => verDetalles('#PED022602')}
                         >
                             <Text style={styles.detailsButtonText}>Detalles</Text>
-                            <Ionicons name="chevron-forward" size={16} color="#007AFF" />
+                            <Ionicons name="chevron-forward" size={16} color="#FF6B00" />
                         </TouchableOpacity>
                     </View>
                 </TouchableOpacity>
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
     },
     detailsButtonText: {
         fontSize: 14,
-        color: '#007AFF',
+        color: '#FF6B00',
         fontWeight: '500',
         marginRight: 4,
     },

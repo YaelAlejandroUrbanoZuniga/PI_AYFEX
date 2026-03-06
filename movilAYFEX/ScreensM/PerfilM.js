@@ -82,7 +82,7 @@ export default function PerfilM({ navigation }) {
           <View style={styles.cardsContainer}>
             <View style={styles.cardItem}>
               <View style={styles.cardIconContainer}>
-                <Ionicons name="card-outline" size={24} color="#007AFF" />
+                <Ionicons name="card-outline" size={24} color="#FF6B00" />
               </View>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardType}>Visa</Text>
@@ -95,7 +95,7 @@ export default function PerfilM({ navigation }) {
 
             <View style={styles.cardItem}>
               <View style={styles.cardIconContainer}>
-                <Ionicons name="card-outline" size={24} color="#007AFF" />
+                <Ionicons name="card-outline" size={24} color="#FF6B00" />
               </View>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardType}>Visa</Text>
@@ -108,7 +108,7 @@ export default function PerfilM({ navigation }) {
 
             <TouchableOpacity style={styles.addCardButton}>
               <View style={styles.addCardIconContainer}>
-                <Ionicons name="add-circle-outline" size={24} color="#007AFF" />
+                <Ionicons name="add-circle-outline" size={24} color="#FF6B00" />
               </View>
               <Text style={styles.addCardText}>Agregar tarjeta</Text>
             </TouchableOpacity>
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FF6B00',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#E8F0FE',
+    backgroundColor: '#ff6a002d',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#E8F0FE',
+    backgroundColor: '#ff6a002d',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
   addCardText: {
     fontSize: 16,
     fontWeight: '500',
-    color: '#007AFF',
+    color: '#FF6B00',
   },
   optionItem: {
     flexDirection: 'row',

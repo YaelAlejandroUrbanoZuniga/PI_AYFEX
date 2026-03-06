@@ -47,7 +47,7 @@ export default function PedidosM_Detalles({ navigation, route }) {
         <Text style={styles.orderId}>{pedidoData.id}</Text>
 
         <TouchableOpacity style={styles.downloadButton} onPress={handleDownloadPDF}>
-          <Ionicons name="document-text-outline" size={20} color="#007AFF" />
+          <Ionicons name="document-text-outline" size={20} color="#FF6B00" />
           <Text style={styles.downloadButtonText}>Descargar Factura (PDF)</Text>
         </TouchableOpacity>
 
@@ -65,7 +65,7 @@ export default function PedidosM_Detalles({ navigation, route }) {
           <Text style={styles.sectionTitle}>Método de pago</Text>
           <View style={styles.paymentCard}>
             <View style={styles.paymentIconContainer}>
-              <Ionicons name="card-outline" size={24} color="#007AFF" />
+              <Ionicons name="card-outline" size={24} color="#FF6B00" />
             </View>
             <Text style={styles.paymentText}>{pedidoData.metodoPago}</Text>
           </View>
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   },
   downloadButtonText: {
     fontSize: 14,
-    color: '#007AFF',
+    color: '#a2c1f7',
     fontWeight: '500',
     marginLeft: 8,
     textDecorationLine: 'underline',
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#E8F0FE',
+    backgroundColor: '#ff6a002d', 
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
   },
   productQuantity: {
     fontSize: 13,
-    color: '#007AFF',
+    color: '#FF6B00',
     fontWeight: '500',
     width: 30,
   },
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   },
   totalValue: {
     fontSize: 18,
-    color: '#007AFF',
+    color: '#FF6B00',
     fontWeight: 'bold',
     textAlign: 'right',
   },
@@ -316,12 +316,12 @@ const styles = StyleSheet.create({
   },
   evaluateButton: {
     flex: 1,
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FF6B00',
     borderRadius: 12,
     paddingVertical: 14,
     alignItems: 'center',
     marginRight: 8,
-    shadowColor: '#007AFF',
+    shadowColor: '#FF6B00',
     shadowOffset: {
       width: 0,
       height: 2,

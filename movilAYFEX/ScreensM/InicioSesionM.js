@@ -10,6 +10,7 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -46,7 +47,11 @@ export default function InicioSesionM({ navigation }) {
         >
           <View style={styles.welcomeContainer}>
             <View style={styles.logoContainer}>
-              <Ionicons name="cube-outline" size={60} color="#007AFF" />
+              <Image
+                source={require('../assets/logo.png')}
+                style={styles.logo}
+                
+              />
             </View>
             <Text style={styles.welcomeTitle}>Bienvenido</Text>
             <Text style={styles.welcomeSubtitle}>Inicia sesión para continuar</Text>
@@ -155,11 +160,11 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#F0F8FF',
+    backgroundColor: '#ffa25f',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-    shadowColor: '#007AFF',
+    shadowColor: '#FF6B00',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -168,6 +173,11 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 4,
   },
+  logo: {
+  width: 60,
+  height: 60,
+  resizeMode: 'contain',
+},
   welcomeTitle: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -212,16 +222,16 @@ const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     fontSize: 12,
-    color: '#007AFF',
+    color: '#FF6B00',
     fontWeight: '500',
   },
   loginButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FF6B00',
     borderRadius: 12,
     paddingVertical: 16,
     alignItems: 'center',
     marginBottom: 20,
-    shadowColor: '#007AFF',
+    shadowColor: '#FF6B00',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -261,7 +271,7 @@ const styles = StyleSheet.create({
   },
   registerLink: {
     fontSize: 14,
-    color: '#007AFF',
+    color: '#FF6B00',
     fontWeight: '600',
   },
   bottomPadding: {
