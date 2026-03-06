@@ -2,12 +2,10 @@
 
 @section('content')
 <style>
-    
     .navbar { display: none !important; } 
     .container.mt-4 { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
     body { background-color: #f4f6f9; color: #333; overflow-x: hidden; }
 
-   
     .wrapper { 
         display: flex; 
         width: 100%; 
@@ -15,7 +13,6 @@
         overflow: hidden; 
     }
 
-   
     .sidebar {
         width: 260px;
         background: linear-gradient(180deg, #ff5722 0%, #e64a19 100%); 
@@ -65,7 +62,6 @@
     .logout-btn:hover { opacity: 1; }
     .logout-btn i { margin-right: 10px; }
 
-    
     .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 
     .topbar { 
@@ -86,7 +82,6 @@
     }
     .search-bar input::placeholder { color: #aaa; }
 
-   
     .dashboard-content { padding: 30px; }
     .page-title { margin-bottom: 0; }
     .page-title h2 { font-weight: 900; margin: 0; color: #222; }
@@ -106,7 +101,6 @@
         border: none; font-size: 0.9rem; outline: none; background: transparent;
     }
 
-   
     .rutas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px;}
     .ruta-card { background: #fff; border: 2px solid #222; border-radius: 16px; padding: 20px; }
     
@@ -157,13 +151,12 @@
         </header>
 
         <div class="dashboard-content">
-            
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="page-title">
                     <h2>Gestión de Rutas</h2>
                     <p>Administra las rutas de distribución</p>
                 </div>
-                <button class="btn-orange"><i class="fa-solid fa-plus me-2"></i> Crear Ruta</button>
+                <button class="btn-orange" data-bs-toggle="modal" data-bs-target="#modalCrearRuta"><i class="fa-solid fa-plus me-2"></i> Crear Ruta</button>
             </div>
 
             <div class="filter-bar">
@@ -221,9 +214,39 @@
                         <a href="#" class="delete"><i class="fa-regular fa-trash-can"></i></a>
                     </div>
                 </div>
-
             </div>
         </div>
     </main>
+</div>
+
+<div class="modal fade" id="modalCrearRuta" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-weight: 800;">Crear Nueva Ruta</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre de la Ruta</label>
+                        <input type="text" class="form-control" name="nombre_ruta">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Zonas Cubiertas</label>
+                        <input type="text" class="form-control" name="zonas" placeholder="Ej: Zona A, Zona B">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Operador Asignado</label>
+                        <input type="text" class="form-control" name="operador">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn-orange">Guardar Ruta</button>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
