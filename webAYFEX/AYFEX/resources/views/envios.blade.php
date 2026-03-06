@@ -2,12 +2,10 @@
 
 @section('content')
 <style>
-    
     .navbar { display: none !important; } 
     .container.mt-4 { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
     body { background-color: #f4f6f9; color: #333; overflow-x: hidden; }
 
-    
     .wrapper { 
         display: flex; 
         width: 100%; 
@@ -15,7 +13,6 @@
         overflow: hidden; 
     }
 
-    
     .sidebar {
         width: 260px;
         background: linear-gradient(180deg, #ff5722 0%, #e64a19 100%); 
@@ -65,7 +62,6 @@
     .logout-btn:hover { opacity: 1; }
     .logout-btn i { margin-right: 10px; }
 
-    
     .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 
     .topbar { 
@@ -86,13 +82,11 @@
     }
     .search-bar input::placeholder { color: #aaa; }
 
-    
     .dashboard-content { padding: 30px; }
     .page-title { margin-bottom: 0; }
     .page-title h2 { font-weight: 900; margin: 0; color: #222; }
     .page-title p { color: #666; font-size: 0.95rem; margin-bottom: 0;}
 
-    
     .content-box, .table-container { 
         background: #fff; border-radius: 16px; padding: 22px; 
         border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
@@ -103,7 +97,6 @@
     }
     .btn-orange:hover { background-color: #e64a19; color: #fff; }
 
-  
     .filter-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 22px; margin-bottom: 25px;}
     .filter-search { position: relative; flex: 1; max-width: 400px; }
     .filter-search i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #999; }
@@ -116,7 +109,6 @@
         font-size: 0.9rem; outline: none; background: #f9fafb; color: #555; cursor: pointer;
     }
 
-    
     .box-title { font-weight: 800; font-size: 1.1rem; margin-bottom: 20px; color: #222; }
     .table th { border-top: none; color: #888; font-size: 0.85rem; font-weight: 700; text-transform: capitalize; padding-bottom: 15px; }
     .table td { vertical-align: middle; font-size: 0.9rem; color: #444; border-bottom: 1px solid #f0f0f0; padding: 15px 8px; }
@@ -139,25 +131,25 @@
             <p>Gestión de Transporte Logístico de Paquetería</p>
         </div>
 
-<nav>
-    <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"><i class="fa-solid fa-border-all"></i> Dashboard</a>
-    <a href="{{ route('envios') }}" class="nav-item {{ request()->routeIs('envios') ? 'active' : '' }}"><i class="fa-solid fa-box"></i> Envíos</a>
-    <a href="{{ route('clientes') }}" class="nav-item {{ request()->routeIs('clientes') ? 'active' : '' }}"><i class="fa-solid fa-users"></i> Clientes</a>
-    <a href="{{ route('operadores') }}" class="nav-item {{ request()->routeIs('operadores') ? 'active' : '' }}"><i class="fa-solid fa-truck"></i> Operadores</a>
-    <a href="{{ route('rutas') }}" class="nav-item {{ request()->routeIs('rutas') ? 'active' : '' }}"><i class="fa-solid fa-route"></i> Rutas</a>
-    <a href="{{ route('reportes') }}" class="nav-item {{ request()->routeIs('reportes') ? 'active' : '' }}"><i class="fa-solid fa-file-lines"></i> Reportes</a>
-    <a href="{{ route('incidencias') }}" class="nav-item {{ request()->routeIs('incidencias') ? 'active' : '' }}"><i class="fa-solid fa-circle-exclamation"></i> Incidencias</a>
-</nav>
+        <nav>
+            <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="{{ route('envios') }}" class="nav-item {{ request()->routeIs('envios') ? 'active' : '' }}"><i class="fa-solid fa-box"></i> Envíos</a>
+            <a href="{{ route('clientes') }}" class="nav-item {{ request()->routeIs('clientes') ? 'active' : '' }}"><i class="fa-solid fa-users"></i> Clientes</a>
+            <a href="{{ route('operadores') }}" class="nav-item {{ request()->routeIs('operadores') ? 'active' : '' }}"><i class="fa-solid fa-truck"></i> Operadores</a>
+            <a href="{{ route('rutas') }}" class="nav-item {{ request()->routeIs('rutas') ? 'active' : '' }}"><i class="fa-solid fa-route"></i> Rutas</a>
+            <a href="{{ route('reportes') }}" class="nav-item {{ request()->routeIs('reportes') ? 'active' : '' }}"><i class="fa-solid fa-file-lines"></i> Reportes</a>
+            <a href="{{ route('incidencias') }}" class="nav-item {{ request()->routeIs('incidencias') ? 'active' : '' }}"><i class="fa-solid fa-circle-exclamation"></i> Incidencias</a>
+        </nav>
 
-<div class="sidebar-footer">
-    <a href="{{ route('perfil') }}" style="text-decoration:none; display:flex; align-items:center; margin-bottom:15px; background: {{ request()->routeIs('perfil') ? 'rgba(255,255,255,0.2)' : 'transparent' }}; padding: 10px; border-radius: 12px; transition: 0.3s;">
-        <div class="user-avatar" style="width: 38px; height: 38px; background: #fff; color: #ff5722; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px;">A</div>
-        <div>
-            <h6 style="margin: 0; font-weight: bold; font-size: 0.95rem; color: white;">Admin AYFEX</h6>
+        <div class="sidebar-footer">
+            <a href="{{ route('perfil') }}" style="text-decoration:none; display:flex; align-items:center; margin-bottom:15px; background: {{ request()->routeIs('perfil') ? 'rgba(255,255,255,0.2)' : 'transparent' }}; padding: 10px; border-radius: 12px; transition: 0.3s;">
+                <div class="user-avatar" style="width: 38px; height: 38px; background: #fff; color: #ff5722; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px;">A</div>
+                <div>
+                    <h6 style="margin: 0; font-weight: bold; font-size: 0.95rem; color: white;">Admin AYFEX</h6>
+                </div>
+            </a>
+            <a href="{{ route('login') }}" class="logout-btn" style="color:#fff; text-decoration:none; font-weight:700;"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
         </div>
-    </a>
-    <a href="{{ route('login') }}" class="logout-btn" style="color:#fff; text-decoration:none; font-weight:700;"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
-</div>
     </aside>
 
     <main class="main-content">
@@ -169,13 +161,12 @@
         </header>
 
         <div class="dashboard-content">
-            
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="page-title">
                     <h2>Gestión de Envíos</h2>
                     <p>Administra y monitorea todos los envíos del sistema</p>
                 </div>
-                <button class="btn-orange"><i class="fa-solid fa-plus me-2"></i> Crear Envío</button>
+                <button class="btn-orange" data-bs-toggle="modal" data-bs-target="#modalCrearEnvio"><i class="fa-solid fa-plus me-2"></i> Crear Envío</button>
             </div>
 
             <div class="content-box filter-bar">
@@ -301,8 +292,42 @@
                     </table>
                 </div>
             </div>
-
         </div>
     </main>
+</div>
+
+<div class="modal fade" id="modalCrearEnvio" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-weight: 800;">Registrar Nuevo Envío</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Cliente</label>
+                        <input type="text" class="form-control" name="cliente">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Origen</label>
+                        <input type="text" class="form-control" name="origen">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Destino</label>
+                        <input type="text" class="form-control" name="destino">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Peso (kg)</label>
+                        <input type="number" class="form-control" name="peso">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn-orange">Guardar Envío</button>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
