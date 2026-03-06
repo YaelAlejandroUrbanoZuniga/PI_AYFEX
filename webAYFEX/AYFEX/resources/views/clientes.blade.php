@@ -194,8 +194,8 @@
                                 <td class="total-envios">45</td>
                                 <td>
                                     <div class="action-icons">
-                                        <a href="#"><i class="fa-regular fa-pen-to-square"></i></a>
-                                        <a href="#"><i class="fa-regular fa-trash-can"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarCliente"><i class="fa-regular fa-pen-to-square"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEliminarCliente"><i class="fa-regular fa-trash-can"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -208,8 +208,8 @@
                                 <td class="total-envios">32</td>
                                 <td>
                                     <div class="action-icons">
-                                        <a href="#"><i class="fa-regular fa-pen-to-square"></i></a>
-                                        <a href="#"><i class="fa-regular fa-trash-can"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarCliente"><i class="fa-regular fa-pen-to-square"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEliminarCliente"><i class="fa-regular fa-trash-can"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -222,8 +222,8 @@
                                 <td class="total-envios">20</td>
                                 <td>
                                     <div class="action-icons">
-                                        <a href="#"><i class="fa-regular fa-pen-to-square"></i></a>
-                                        <a href="#"><i class="fa-regular fa-trash-can"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarCliente"><i class="fa-regular fa-pen-to-square"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEliminarCliente"><i class="fa-regular fa-trash-can"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -236,8 +236,8 @@
                                 <td class="total-envios">67</td>
                                 <td>
                                     <div class="action-icons">
-                                        <a href="#"><i class="fa-regular fa-pen-to-square"></i></a>
-                                        <a href="#"><i class="fa-regular fa-trash-can"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarCliente"><i class="fa-regular fa-pen-to-square"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEliminarCliente"><i class="fa-regular fa-trash-can"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -250,8 +250,8 @@
                                 <td class="total-envios">19</td>
                                 <td>
                                     <div class="action-icons">
-                                        <a href="#"><i class="fa-regular fa-pen-to-square"></i></a>
-                                        <a href="#"><i class="fa-regular fa-trash-can"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditarCliente"><i class="fa-regular fa-pen-to-square"></i></a>
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEliminarCliente"><i class="fa-regular fa-trash-can"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -293,6 +293,59 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="submit" class="btn-orange">Guardar Cliente</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEditarCliente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-weight: 800;">Editar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" name="nombre" value="Comercial López">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" name="telefono" value="555-1234">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Correo</label>
+                        <input type="email" class="form-control" name="correo" value="contacto@lopez.com">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Dirección</label>
+                        <input type="text" class="form-control" name="direccion" value="Av. Reforma 123, CDMX">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn-orange">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalEliminarCliente" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-weight: 800; color: #dc3545;">Eliminar Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer y borrará todo su historial de envíos.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger">Sí, Eliminar</button>
             </div>
         </div>
     </div>
