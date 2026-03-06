@@ -2,12 +2,10 @@
 
 @section('content')
 <style>
-    
     .navbar { display: none !important; } 
     .container.mt-4 { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
     body { background-color: #f4f6f9; color: #333; overflow-x: hidden; }
 
-    
     .wrapper { 
         display: flex; 
         width: 100%; 
@@ -15,7 +13,6 @@
         overflow: hidden; 
     }
 
-    
     .sidebar {
         width: 260px;
         background: linear-gradient(180deg, #ff5722 0%, #e64a19 100%); 
@@ -65,7 +62,6 @@
     .logout-btn:hover { opacity: 1; }
     .logout-btn i { margin-right: 10px; }
 
-    
     .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 
     .topbar { 
@@ -86,13 +82,11 @@
     }
     .search-bar input::placeholder { color: #aaa; }
 
-    
     .dashboard-content { padding: 30px; }
     .page-title { margin-bottom: 0; }
     .page-title h2 { font-weight: 900; margin: 0; color: #222; }
     .page-title p { color: #666; font-size: 0.95rem; margin-bottom: 0;}
 
-    
     .btn-orange {
         background-color: #ff5722; color: #fff; border-radius: 8px; 
         font-weight: 600; padding: 10px 24px; transition: 0.3s; border: none;
@@ -107,7 +101,6 @@
         border: none; font-size: 0.9rem; outline: none; background: transparent;
     }
 
-    
     .operator-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -154,7 +147,6 @@
         transition: 0.2s; text-decoration: none;
     }
     .btn-delete:hover { background: #fee2e2; }
-
 </style>
 
 <div class="wrapper">
@@ -164,25 +156,25 @@
             <p>Gestión de Transporte Logístico de Paquetería</p>
         </div>
 
-<nav>
-    <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"><i class="fa-solid fa-border-all"></i> Dashboard</a>
-    <a href="{{ route('envios') }}" class="nav-item {{ request()->routeIs('envios') ? 'active' : '' }}"><i class="fa-solid fa-box"></i> Envíos</a>
-    <a href="{{ route('clientes') }}" class="nav-item {{ request()->routeIs('clientes') ? 'active' : '' }}"><i class="fa-solid fa-users"></i> Clientes</a>
-    <a href="{{ route('operadores') }}" class="nav-item {{ request()->routeIs('operadores') ? 'active' : '' }}"><i class="fa-solid fa-truck"></i> Operadores</a>
-    <a href="{{ route('rutas') }}" class="nav-item {{ request()->routeIs('rutas') ? 'active' : '' }}"><i class="fa-solid fa-route"></i> Rutas</a>
-    <a href="{{ route('reportes') }}" class="nav-item {{ request()->routeIs('reportes') ? 'active' : '' }}"><i class="fa-solid fa-file-lines"></i> Reportes</a>
-    <a href="{{ route('incidencias') }}" class="nav-item {{ request()->routeIs('incidencias') ? 'active' : '' }}"><i class="fa-solid fa-circle-exclamation"></i> Incidencias</a>
-</nav>
+        <nav>
+            <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"><i class="fa-solid fa-border-all"></i> Dashboard</a>
+            <a href="{{ route('envios') }}" class="nav-item {{ request()->routeIs('envios') ? 'active' : '' }}"><i class="fa-solid fa-box"></i> Envíos</a>
+            <a href="{{ route('clientes') }}" class="nav-item {{ request()->routeIs('clientes') ? 'active' : '' }}"><i class="fa-solid fa-users"></i> Clientes</a>
+            <a href="{{ route('operadores') }}" class="nav-item {{ request()->routeIs('operadores') ? 'active' : '' }}"><i class="fa-solid fa-truck"></i> Operadores</a>
+            <a href="{{ route('rutas') }}" class="nav-item {{ request()->routeIs('rutas') ? 'active' : '' }}"><i class="fa-solid fa-route"></i> Rutas</a>
+            <a href="{{ route('reportes') }}" class="nav-item {{ request()->routeIs('reportes') ? 'active' : '' }}"><i class="fa-solid fa-file-lines"></i> Reportes</a>
+            <a href="{{ route('incidencias') }}" class="nav-item {{ request()->routeIs('incidencias') ? 'active' : '' }}"><i class="fa-solid fa-circle-exclamation"></i> Incidencias</a>
+        </nav>
 
-<div class="sidebar-footer">
-    <a href="{{ route('perfil') }}" style="text-decoration:none; display:flex; align-items:center; margin-bottom:15px; background: {{ request()->routeIs('perfil') ? 'rgba(255,255,255,0.2)' : 'transparent' }}; padding: 10px; border-radius: 12px; transition: 0.3s;">
-        <div class="user-avatar" style="width: 38px; height: 38px; background: #fff; color: #ff5722; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px;">A</div>
-        <div>
-            <h6 style="margin: 0; font-weight: bold; font-size: 0.95rem; color: white;">Admin AYFEX</h6>
+        <div class="sidebar-footer">
+            <a href="{{ route('perfil') }}" style="text-decoration:none; display:flex; align-items:center; margin-bottom:15px; background: {{ request()->routeIs('perfil') ? 'rgba(255,255,255,0.2)' : 'transparent' }}; padding: 10px; border-radius: 12px; transition: 0.3s;">
+                <div class="user-avatar" style="width: 38px; height: 38px; background: #fff; color: #ff5722; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 12px;">A</div>
+                <div>
+                    <h6 style="margin: 0; font-weight: bold; font-size: 0.95rem; color: white;">Admin AYFEX</h6>
+                </div>
+            </a>
+            <a href="{{ route('login') }}" class="logout-btn" style="color:#fff; text-decoration:none; font-weight:700;"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
         </div>
-    </a>
-    <a href="{{ route('login') }}" class="logout-btn" style="color:#fff; text-decoration:none; font-weight:700;"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
-</div>
     </aside>
 
     <main class="main-content">
@@ -194,13 +186,12 @@
         </header>
 
         <div class="dashboard-content">
-            
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div class="page-title">
                     <h2>Gestión de Operadores</h2>
                     <p>Administra tu equipo de operadores y conductores</p>
                 </div>
-                <button class="btn-orange"><i class="fa-solid fa-plus me-2"></i> Agregar Operador</button>
+                <button class="btn-orange" data-bs-toggle="modal" data-bs-target="#modalAgregarOperador"><i class="fa-solid fa-plus me-2"></i> Agregar Operador</button>
             </div>
 
             <div class="filter-bar">
@@ -211,7 +202,6 @@
             </div>
 
             <div class="operator-grid">
-                
                 <div class="operator-card">
                     <div class="op-header">
                         <div class="op-profile">
@@ -336,8 +326,39 @@
                         <a href="#" class="btn-delete"><i class="fa-regular fa-trash-can"></i></a>
                     </div>
                 </div>
-
-            </div> </div>
+            </div>
+        </div>
     </main>
+</div>
+
+<div class="modal fade" id="modalAgregarOperador" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="font-weight: 800;">Agregar Nuevo Operador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" name="nombre">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" name="telefono">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Vehículo</label>
+                        <input type="text" class="form-control" name="vehiculo">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn-orange">Guardar Operador</button>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
