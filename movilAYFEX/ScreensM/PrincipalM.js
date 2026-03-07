@@ -91,9 +91,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 4,
   },
   greetingText: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: '500',
-    color: '#333333',
+    color: '#000000',
+    fontWeight: 'bold',
   },
   statsContainer: {
     flexDirection: 'row',

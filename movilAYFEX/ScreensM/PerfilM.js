@@ -3,30 +3,24 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   StatusBar,
-  Image,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import HeaderNaranja from '../Components/HeaderNaranja';
 
 export default function PerfilM({ navigation }) {
+
+  const handleLogout = () => {
+    navigation.replace('InicioSesionM');
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Ionicons name="menu-outline" size={24} color="#000000" />
-        </View>
-        <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>AYFEX</Text>
-        </View>
-        <View style={styles.headerRight}>
-          <Text style={styles.headerGreeting}>Hola, Fidel!</Text>
-        </View>
-      </View>
+      <HeaderNaranja />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.profileHeader}>
@@ -134,10 +128,15 @@ export default function PerfilM({ navigation }) {
             <Ionicons name="chevron-forward" size={20} color="#CCCCCC" />
           </TouchableOpacity>
         </View>
-
+        <View style={styles.section}>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={20} color="#FFFFFF" />
+            <Text style={styles.logoutText}>Cerrar sesión</Text>
+          </TouchableOpacity>
+        </View>
         <View style={styles.bottomPadding} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -328,4 +327,28 @@ const styles = StyleSheet.create({
   bottomPadding: {
     height: 20,
   },
+  logoutButton: {
+  backgroundColor: '#E53935',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  paddingVertical: 16,
+  borderRadius: 12,
+  marginTop: 10,
+  shadowColor: '#E53935',
+  shadowOffset: {
+    width: 0,
+    height: 4,
+  },
+  shadowOpacity: 0.2,
+  shadowRadius: 4,
+  elevation: 4,
+},
+
+logoutText: {
+  color: '#FFFFFF',
+  fontSize: 16,
+  fontWeight: '600',
+  marginLeft: 8,
+},
 });

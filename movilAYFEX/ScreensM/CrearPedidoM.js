@@ -3,30 +3,20 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   TextInput,
   ScrollView,
   StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import HeaderNaranja from '../Components/HeaderNaranja';
 
 export default function CrearPedidoM({ navigation }) {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Ionicons name="menu-outline" size={24} color="#000000" />
-        </View>
-        <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>AYFEX</Text>
-        </View>
-        <View style={styles.headerRight}>
-          <Text style={styles.headerGreeting}>Hola, Fidel!</Text>
-        </View>
-      </View>
+      <HeaderNaranja />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={styles.screenTitle}>Crear Pedido</Text>
@@ -117,7 +107,12 @@ export default function CrearPedidoM({ navigation }) {
         <View style={styles.inputGroup}>
           <Text style={styles.inputLabel}>Descripción (opcional)</Text>
           <View style={[styles.inputContainer, styles.textAreaContainer]}>
-            <Ionicons name="document-text-outline" size={20} color="#999999" style={styles.textAreaIcon} />
+            <Ionicons
+              name="document-text-outline"
+              size={20}
+              color="#999999"
+              style={styles.textAreaIcon}
+            />
             <TextInput
               style={[styles.input, styles.textArea]}
               placeholder="Ej: Paquete frágil que debe entregarse en las manos del destinatario."
@@ -135,7 +130,7 @@ export default function CrearPedidoM({ navigation }) {
 
         <View style={styles.bottomPadding} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

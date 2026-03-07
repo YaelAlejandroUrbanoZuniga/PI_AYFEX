@@ -28,7 +28,8 @@ function PedidosStackScreen() {
       <PedidosStack.Screen
         name="PedidosDetalles"
         component={PedidosM_Detalles}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, tabBarStyle: { display: 'none' }, }}
+        
       />
     </PedidosStack.Navigator>
   );
@@ -44,7 +45,7 @@ function TabsNavigator() {
         tabBarStyle: {
           backgroundColor: '#FF6B00',
           borderTopWidth: 0,
-          height: 90,
+          height: 80,
           paddingBottom: 8,
           paddingTop: 8,
           borderTopLeftRadius: 20,
