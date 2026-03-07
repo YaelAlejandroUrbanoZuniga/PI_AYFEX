@@ -3,115 +3,203 @@
 @section('content')
 <style>
     body {
-        background-color: #fafafa; 
+        background-color: #fafafa;
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
-    .login-container {
-        max-width: 420px;
+    .login-wrapper {
+        max-width: 460px;
         width: 100%;
-        background: #ffffff;
-        border-radius: 24px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.05); 
+        margin: 0 auto;
+    }
+    .header-logo-container {
+        text-align: center;
+        margin-bottom: 2rem;
     }
     .logo-img {
-        width: 90px;
+        width: 65px;
         height: auto;
-        margin-bottom: 5px;
+        margin-bottom: 12px;
+        border-radius: 12px;
     }
     .brand-title {
         font-weight: 800;
-        letter-spacing: 1px;
-        color: #111;
-        font-size: 1.5rem;
+        letter-spacing: 0.5px;
+        color: #0f172a;
+        font-size: 1.75rem;
+        margin-bottom: 5px;
     }
-    .form-control-custom {
-        border-radius: 12px;
-        padding: 12px 16px;
-        border: 1px solid #e0e0e0;
-        background-color: #ffffff; 
+    .brand-subtitle {
+        color: #64748b;
+        font-size: 0.95rem;
     }
-    .form-control-custom:focus {
+    .login-card {
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1px solid #f1f5f9;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        padding: 2.5rem 2rem;
+    }
+    .badge-admin {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #c2410c; /* Naranja oscuro */
+        background-color: #fffaf5;
+        border: 1px solid #fed7aa;
+        padding: 6px 16px;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    .divider {
+        border-top: 1px solid #f1f5f9;
+        margin: 1.5rem 0;
+    }
+    .form-title {
+        font-weight: 600;
+        font-size: 1.25rem;
+        color: #0f172a;
+        margin-bottom: 1.5rem;
+    }
+    .form-label {
+        font-size: 0.85rem;
+        color: #334155;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+    .input-group-custom {
+        display: flex;
+        align-items: center;
+        background-color: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 8px;
+        padding: 0 14px;
+        transition: all 0.3s ease;
+    }
+    .input-group-custom:focus-within {
         border-color: #ff5722;
-        box-shadow: 0 0 0 0.2rem rgba(255, 87, 34, 0.25);
+        box-shadow: 0 0 0 3px rgba(255, 87, 34, 0.1);
+    }
+    .input-group-custom i {
+        color: #94a3b8;
+        font-size: 1.1rem;
+    }
+    .input-group-custom input {
+        border: none;
+        background: transparent;
+        padding: 12px 10px;
+        width: 100%;
+        color: #334155;
+        outline: none;
+    }
+    .input-group-custom input::placeholder {
+        color: #94a3b8;
     }
     .btn-orange {
-        background-color: #ff5722; 
-        border-color: #ff5722;
+        background-color: #ff4726; 
+        border: none;
         color: white;
-        border-radius: 12px;
-        font-weight: bold;
-        font-size: 1.1rem;
-        transition: all 0.3s;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        padding: 12px;
+        transition: background-color 0.3s;
     }
     .btn-orange:hover {
-        background-color: #e64a19;
-        border-color: #e64a19;
+        background-color: #e63919;
         color: white;
-        transform: translateY(-1px);
     }
     .text-orange {
-        color: #ff7043 !important;
+        color: #ff4726 !important;
+        font-weight: 500;
+        font-size: 0.9rem;
     }
-    .social-icon {
-        font-size: 1.8rem;
-        margin: 0 10px;
-        text-decoration: none;
-        transition: transform 0.2s;
+    .text-orange:hover {
+        color: #e63919 !important;
+        text-decoration: underline !important;
     }
-    .social-icon:hover {
-        transform: scale(1.1);
+    .test-access-box {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        font-size: 0.8rem;
+        color: #475569;
+        margin-top: 1.5rem;
     }
-    .icon-fb { color: #1877f2; }
-    .icon-wa { color: #25d366; }
-    .icon-google { color: #db4437;  }
+    .footer-text {
+        color: #94a3b8;
+        font-size: 0.85rem;
+        text-align: center;
+        margin-top: 2rem;
+    }
 </style>
 
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="login-container p-5">
-        
-        <div class="text-center mb-4">
+<div class="container d-flex flex-column justify-content-center align-items-center min-vh-100 py-4">
+    
+    <div class="login-wrapper">
+        <div class="header-logo-container">
             <img src="{{ asset('AYFEXLOGO-Photoroom.png') }}" alt="AYFEX Logo" class="logo-img">
-            <h1 class="brand-title mb-1">AYFEX</h1>
-            <p class="text-muted" style="font-size: 0.9rem;">Gestión de Transporte de Paquetería</p>
+            <h1 class="brand-title">AYFEX</h1>
+            <p class="brand-subtitle">Sistema de Gestión de Transporte de Paquetería</p>
         </div>
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-
-            <div class="mb-3">
-                <input type="email" name="email" class="form-control form-control-custom shadow-sm" placeholder="Correo Electrónico" required autofocus>
+        <div class="login-card">
+            
+            <div class="text-center">
+                <span class="badge-admin">
+                    <i class="fas fa-shield-alt"></i> Panel Administrativo
+                </span>
             </div>
+            
+            <div class="divider"></div>
 
-            <div class="mb-3">
-                <input type="password" name="password" class="form-control form-control-custom shadow-sm" placeholder="Contraseña" required>
-            </div>
+            <h3 class="form-title">Iniciar Sesión</h3>
 
-            <div class="text-center mb-4 mt-2">
-                @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="text-orange text-decoration-none" style="font-size: 0.85rem;">
-                        ¿Olvidaste tu contraseña?
-                    </a>
-                @endif
-            </div>
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
 
-            <button type="submit" class="btn btn-orange w-100 py-2 mb-4 shadow">
-                Iniciar Sesión
-            </button>
-        </form>
+                <div class="mb-3">
+                    <label class="form-label">Correo electrónico</label>
+                    <div class="input-group-custom">
+                        <i class="far fa-envelope"></i>
+                        <input type="email" name="email" placeholder="admin@ayfex.com" required autofocus>
+                    </div>
+                </div>
 
-        <div class="text-center mb-4">
-            <span class="text-muted" style="font-size: 0.9rem;">¿No tienes cuenta?</span>
-            <a href="{{ route('register') }}" class="text-orange text-decoration-none" style="font-size: 0.9rem;">Regístrate aquí</a>
+                <div class="mb-4">
+                    <label class="form-label">Contraseña</label>
+                    <div class="input-group-custom">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-orange w-100 mb-4">
+                    Ingresar al Sistema
+                </button>
+
+                <div class="text-center mb-4">
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" class="text-orange text-decoration-none">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    @endif
+                </div>
+
+                <div class="test-access-box">
+                    <strong>Acceso de prueba:</strong><br>
+                    admin@ayfex.com / cualquier contraseña
+                </div>
+
+            </form>
         </div>
 
-        <div class="text-center">
-            <p class="text-muted mb-3" style="font-size: 0.9rem;">Otras formas de iniciar sesión</p>
-            <div class="d-flex justify-content-center">
-                <a href="#" class="social-icon icon-fb" title="Facebook"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="social-icon icon-wa" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                <a href="#" class="social-icon icon-google" title="Google"><i class="fab fa-google"></i></a>
-            </div>
+        <div class="footer-text">
+            © 2026 AYFEX. Todos los derechos reservados.
         </div>
-
     </div>
+
 </div>
 @endsection
