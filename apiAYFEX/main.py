@@ -1,10 +1,7 @@
 #Importaciones
 from fastapi import FastAPI, status, HTTPException
 import asyncio
-from typing import Optional, Literal
-from pydantic import BaseModel, Field, field_validator, EmailStr
-from datetime import datetime
-from datetime import date
+
 
 
 #Instancia del servidor
@@ -22,30 +19,7 @@ async def bienvenida():
 
 #--------------------------------------- Validaciones------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #Modelo de validacion Pydantic
-class libro_create(BaseModel):
-    id: int = Field(...,gt=0, description="Identificador de usuario")
-    nombre:str = Field(...,min_length=2, max_length=100, example="Cien años de soledad" )
-    paginas: int  = Field(...,gt=1, description= "Numero de paginas validas mayor a 1")
-    anio_publicacion: int = Field(..., gt=1450, description="Año mayor a 1450")
-    estado: Literal["disponible", "prestado"]
-    @field_validator('anio_publicacion')
-    def validar_anio_actual(cls, a):
-        anio_actual = datetime.now().year
-        if a > anio_actual:
-            raise ValueError(f'El año no puede ser mayor al actual ({anio_actual})')
-        return a
-class usuario_create(BaseModel):
-    id: int = Field(..., gt=0, description="Identificador único del usuario")
-    nombre: str = Field(..., min_length=2, max_length=100, example="Fidel")
-    correo: EmailStr = Field(..., example="Fidel@gmail.com")
 
-
-class prestamo_create(BaseModel):
-    id: int = Field(..., gt=0, description="ID único del préstamo")
-    libro_id: int = Field(..., gt=0, description="ID del libro a prestar")
-    usuario_id: int = Field(..., gt=0, description="ID del usuario que recibe el libro")
-    fecha_prestamo: str = Field(default=str(date.today()), description="Fecha en formato YYYY-MM-DD")
-   
 #--------------------------------------- Tablas----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #-------------------------------------------------------Clientes---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
