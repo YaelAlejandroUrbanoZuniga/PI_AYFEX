@@ -1,18 +1,45 @@
 import React from 'react';
+import { useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   StatusBar,
   Linking,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import HeaderNaranjaVolver from '../Components/HeaderNaranjaVolver';
 
 export default function PedidosM_Detalles({ navigation, route }) {
   const { pedidoData } = route.params;
+
+  useEffect(() => {
+    navigation.getParent()?.setOptions({
+      tabBarStyle: { display: 'none' },
+    });
+
+    return () => {
+      navigation.getParent()?.setOptions({
+        tabBarStyle: {
+          backgroundColor: '#FF6B00',
+          borderTopWidth: 0,
+          height: 80,
+          paddingBottom: 8,
+          paddingTop: 8,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+      });
+    };
+  }, [navigation]);
 
   const handleDownloadPDF = () => {
     console.log('Descargando factura...');
@@ -27,19 +54,8 @@ export default function PedidosM_Detalles({ navigation, route }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-        </View>
-        <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>AYFEX</Text>
-        </View>
-        <View style={styles.headerRight}>
-          <Text style={styles.headerGreeting}>Hola, Fidel!</Text>
-        </View>
-      </View>
+    <View style={styles.container}>       
+      <HeaderNaranjaVolver navigation={navigation} />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <Text style={styles.screenTitle}>Mis Pedidos</Text>
@@ -120,7 +136,7 @@ export default function PedidosM_Detalles({ navigation, route }) {
 
         <View style={styles.bottomPadding} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

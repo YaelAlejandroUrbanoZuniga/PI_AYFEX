@@ -26,16 +26,6 @@ export default function InicioSesionM({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-        </View>
-        <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>AYFEX</Text>
-        </View>
-        <View style={styles.headerRight}>
-        </View>
-      </View>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -119,30 +109,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  headerLeft: {
-    width: 40,
-  },
-  headerCenter: {
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000000',
-  },
-  headerRight: {
-    width: 40,
-  },
   keyboardView: {
     flex: 1,
   },
@@ -157,25 +123,26 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   logoContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#ffa25f',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-    shadowColor: '#FF6B00',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
+  width: 160,
+  height: 160,
+  borderRadius: 80,
+  backgroundColor: '#ffffff',
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginBottom: 20,
+  shadowColor: '#FF6B00',
+  shadowOffset: {
+    width: 0,
+    height: 4,
   },
-  logo: {
-  width: 60,
-  height: 60,
+  shadowOpacity: 0.1,
+  shadowRadius: 8,
+  elevation: 4,
+},
+
+logo: {
+  width: 110,
+  height: 110,
   resizeMode: 'contain',
 },
   welcomeTitle: {

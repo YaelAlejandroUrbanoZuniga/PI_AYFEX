@@ -3,15 +3,16 @@ import {
     View,
     Text,
     StyleSheet,
-    SafeAreaView,
     TouchableOpacity,
     TextInput,
     ScrollView,
     StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import HeaderNaranja from '../Components/HeaderNaranja';
 
 export default function PedidosM({ navigation }) {
+
     const verDetalles = (pedidoId) => {
         let pedidoData = {};
 
@@ -30,7 +31,8 @@ export default function PedidosM({ navigation }) {
                 subtotal: 8120.00,
                 total: 8120.00,
             };
-        } else if (pedidoId === '#PED022603') {
+        } 
+        else if (pedidoId === '#PED022603') {
             pedidoData = {
                 id: '#PED022603',
                 destinatario: 'MariaAutomotriz',
@@ -44,7 +46,8 @@ export default function PedidosM({ navigation }) {
                 subtotal: 14200.00,
                 total: 14200.00,
             };
-        } else if (pedidoId === '#PED022602') {
+        } 
+        else if (pedidoId === '#PED022602') {
             pedidoData = {
                 id: '#PED022602',
                 destinatario: 'TallerMecánico López',
@@ -65,23 +68,13 @@ export default function PedidosM({ navigation }) {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
 
-            {/* Header */}
-            <View style={styles.header}>
-                <View style={styles.headerLeft}>
-                    <Ionicons name="menu-outline" size={24} color="#000000" />
-                </View>
-                <View style={styles.headerCenter}>
-                    <Text style={styles.headerTitle}>AYFEX</Text>
-                </View>
-                <View style={styles.headerRight}>
-                    <Text style={styles.headerGreeting}>Hola, Fidel!</Text>
-                </View>
-            </View>
+            <HeaderNaranja />
 
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+
                 <Text style={styles.screenTitle}>Mis Pedidos</Text>
 
                 <View style={styles.searchContainer}>
@@ -113,18 +106,14 @@ export default function PedidosM({ navigation }) {
 
                     <View style={styles.orderDetails}>
                         <View style={styles.locationRow}>
-                            <View style={styles.locationIcon}>
-                                <Ionicons name="ellipse" size={8} color="#FF3B30" />
-                            </View>
+                            <Ionicons name="ellipse" size={8} color="#FF3B30" />
                             <Text style={styles.locationText}>
                                 Origen: <Text style={styles.locationBold}>San Juan del Río, Querétaro</Text>
                             </Text>
                         </View>
 
                         <View style={styles.locationRow}>
-                            <View style={styles.locationIcon}>
-                                <Ionicons name="ellipse" size={8} color="#34C759" />
-                            </View>
+                            <Ionicons name="ellipse" size={8} color="#34C759" />
                             <Text style={styles.locationText}>
                                 Destino: <Text style={styles.locationBold}>Tampico, Tamaulipas</Text>
                             </Text>
@@ -158,18 +147,14 @@ export default function PedidosM({ navigation }) {
 
                     <View style={styles.orderDetails}>
                         <View style={styles.locationRow}>
-                            <View style={styles.locationIcon}>
-                                <Ionicons name="ellipse" size={8} color="#FF3B30" />
-                            </View>
+                            <Ionicons name="ellipse" size={8} color="#FF3B30" />
                             <Text style={styles.locationText}>
                                 Origen: <Text style={styles.locationBold}>Mérida, Yucatán</Text>
                             </Text>
                         </View>
 
                         <View style={styles.locationRow}>
-                            <View style={styles.locationIcon}>
-                                <Ionicons name="ellipse" size={8} color="#34C759" />
-                            </View>
+                            <Ionicons name="ellipse" size={8} color="#34C759" />
                             <Text style={styles.locationText}>
                                 Destino: <Text style={styles.locationBold}>Pedro Escobedo, Querétaro</Text>
                             </Text>
@@ -203,18 +188,14 @@ export default function PedidosM({ navigation }) {
 
                     <View style={styles.orderDetails}>
                         <View style={styles.locationRow}>
-                            <View style={styles.locationIcon}>
-                                <Ionicons name="ellipse" size={8} color="#FF3B30" />
-                            </View>
+                            <Ionicons name="ellipse" size={8} color="#FF3B30" />
                             <Text style={styles.locationText}>
                                 Origen: <Text style={styles.locationBold}>Tampico, Tamaulipas</Text>
                             </Text>
                         </View>
 
                         <View style={styles.locationRow}>
-                            <View style={styles.locationIcon}>
-                                <Ionicons name="ellipse" size={8} color="#34C759" />
-                            </View>
+                            <Ionicons name="ellipse" size={8} color="#34C759" />
                             <Text style={styles.locationText}>
                                 Destino: <Text style={styles.locationBold}>San Juan del Río, Querétaro</Text>
                             </Text>
@@ -235,7 +216,7 @@ export default function PedidosM({ navigation }) {
 
                 <View style={styles.bottomPadding} />
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
 

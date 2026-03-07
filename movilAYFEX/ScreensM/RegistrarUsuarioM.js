@@ -12,30 +12,18 @@ import {
     Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import HeaderNaranjaVolver from '../Components/HeaderNaranjaVolver';
 
 export default function RegistrarUsuarioM({ navigation }) {
     const handleCreateAccount = () => {
         navigation.replace('InicioSesionM');
     };
 
-    const handleBackToLogin = () => {
-        navigation.goBack();
-    };
-
     return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+        <View style={styles.container}>
+            <StatusBar barStyle="light-content" backgroundColor="#FF6B00" />
 
-            <View style={styles.header}>
-                <TouchableOpacity onPress={handleBackToLogin} style={styles.headerLeft}>
-                    <Ionicons name="arrow-back" size={24} color="#007AFF" />
-                </TouchableOpacity>
-                <View style={styles.headerCenter}>
-                    <Text style={styles.headerTitle}>AYFEX</Text>
-                </View>
-                <View style={styles.headerRight}>
-                </View>
-            </View>
+            <HeaderNaranjaVolver navigation={navigation} />
 
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -54,7 +42,7 @@ export default function RegistrarUsuarioM({ navigation }) {
                         <View style={styles.inputGroup}>
                             <Text style={styles.inputLabel}>Nombre completo</Text>
                             <View style={styles.inputContainer}>
-                                <Ionicons name="person-outline" size={20} color="#999999" />
+                                <Ionicons name="person-outline" size={20} color="#FF6B00" />
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Ej: Juan Pérez"
@@ -66,7 +54,7 @@ export default function RegistrarUsuarioM({ navigation }) {
                         <View style={styles.inputGroup}>
                             <Text style={styles.inputLabel}>Correo electrónico</Text>
                             <View style={styles.inputContainer}>
-                                <Ionicons name="mail-outline" size={20} color="#999999" />
+                                <Ionicons name="mail-outline" size={20} color="#FF6B00" />
                                 <TextInput
                                     style={styles.input}
                                     placeholder="ejemplo@correo.com"
@@ -80,7 +68,7 @@ export default function RegistrarUsuarioM({ navigation }) {
                         <View style={styles.inputGroup}>
                             <Text style={styles.inputLabel}>Teléfono</Text>
                             <View style={styles.inputContainer}>
-                                <Ionicons name="call-outline" size={20} color="#999999" />
+                                <Ionicons name="call-outline" size={20} color="#FF6B00" />
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Ej: +52 123 456 7890"
@@ -93,7 +81,7 @@ export default function RegistrarUsuarioM({ navigation }) {
                         <View style={styles.inputGroup}>
                             <Text style={styles.inputLabel}>Dirección</Text>
                             <View style={[styles.inputContainer, styles.textAreaContainer]}>
-                                <Ionicons name="location-outline" size={20} color="#999999" style={styles.textAreaIcon} />
+                                <Ionicons name="location-outline" size={20} color="#FF6B00" style={styles.textAreaIcon} />
                                 <TextInput
                                     style={[styles.input, styles.textArea]}
                                     placeholder="Ej: Díaz Mirón #1203 Col. Lázaro Cárdenas, Cd. Madero, Tamaulipas"
@@ -108,7 +96,7 @@ export default function RegistrarUsuarioM({ navigation }) {
                         <View style={styles.inputGroup}>
                             <Text style={styles.inputLabel}>Contraseña</Text>
                             <View style={styles.inputContainer}>
-                                <Ionicons name="lock-closed-outline" size={20} color="#999999" />
+                                <Ionicons name="lock-closed-outline" size={20} color="#FF6B00" />
                                 <TextInput
                                     style={styles.input}
                                     placeholder="••••••••"
@@ -121,7 +109,7 @@ export default function RegistrarUsuarioM({ navigation }) {
                         <View style={styles.inputGroup}>
                             <Text style={styles.inputLabel}>Confirmar contraseña</Text>
                             <View style={styles.inputContainer}>
-                                <Ionicons name="lock-closed-outline" size={20} color="#999999" />
+                                <Ionicons name="lock-closed-outline" size={20} color="#FF6B00" />
                                 <TextInput
                                     style={styles.input}
                                     placeholder="••••••••"
@@ -132,7 +120,7 @@ export default function RegistrarUsuarioM({ navigation }) {
                         </View>
 
                         <View style={styles.termsContainer}>
-                            <Ionicons name="checkbox-outline" size={20} color="#007AFF" />
+                            <Ionicons name="checkbox-outline" size={20} color="#FF6B00" />
                             <Text style={styles.termsText}>
                                 Acepto los <Text style={styles.termsLink}>Términos y Condiciones</Text> y la{' '}
                                 <Text style={styles.termsLink}>Política de Privacidad</Text>
@@ -142,19 +130,12 @@ export default function RegistrarUsuarioM({ navigation }) {
                         <TouchableOpacity style={styles.createButton} onPress={handleCreateAccount}>
                             <Text style={styles.createButtonText}>Crear Cuenta</Text>
                         </TouchableOpacity>
-
-                        <View style={styles.loginContainer}>
-                            <Text style={styles.loginText}>¿Ya tienes una cuenta? </Text>
-                            <TouchableOpacity onPress={handleBackToLogin}>
-                                <Text style={styles.loginLink}>Inicia Sesión</Text>
-                            </TouchableOpacity>
-                        </View>
                     </View>
 
                     <View style={styles.bottomPadding} />
                 </ScrollView>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </View>
     );
 }
 
@@ -162,30 +143,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
-    },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        backgroundColor: '#FFFFFF',
-        borderBottomWidth: 1,
-        borderBottomColor: '#F0F0F0',
-    },
-    headerLeft: {
-        width: 40,
-    },
-    headerCenter: {
-        alignItems: 'center',
-    },
-    headerTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#000000',
-    },
-    headerRight: {
-        width: 40,
     },
     keyboardView: {
         flex: 1,
@@ -202,7 +159,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#000000',
+        color: '#FF6B00',
         marginBottom: 8,
     },
     subtitle: {
@@ -224,12 +181,12 @@ const styles = StyleSheet.create({
     inputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F8F9FA',
+        backgroundColor: '#FFF3E6',
         borderRadius: 12,
         paddingHorizontal: 12,
         paddingVertical: Platform.OS === 'ios' ? 12 : 8,
         borderWidth: 1,
-        borderColor: '#EEEEEE',
+        borderColor: '#FF6B00',
     },
     input: {
         flex: 1,
@@ -262,16 +219,16 @@ const styles = StyleSheet.create({
         lineHeight: 18,
     },
     termsLink: {
-        color: '#007AFF',
+        color: '#FF6B00',
         fontWeight: '500',
     },
     createButton: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#FF6B00',
         borderRadius: 12,
         paddingVertical: 16,
         alignItems: 'center',
         marginBottom: 16,
-        shadowColor: '#007AFF',
+        shadowColor: '#FF6B00',
         shadowOffset: {
             width: 0,
             height: 4,
@@ -283,21 +240,6 @@ const styles = StyleSheet.create({
     createButtonText: {
         color: '#FFFFFF',
         fontSize: 16,
-        fontWeight: '600',
-    },
-    loginContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 8,
-    },
-    loginText: {
-        fontSize: 14,
-        color: '#666666',
-    },
-    loginLink: {
-        fontSize: 14,
-        color: '#007AFF',
         fontWeight: '600',
     },
     bottomPadding: {
