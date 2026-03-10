@@ -7,7 +7,7 @@ import asyncio
 #Instancia del servidor
 app = FastAPI(
     title='API PI AYFEX',
-    description='Sistema Gestión de Transporte Logístico de Paquetería',
+    description='Sistema Gestor de Transporte Logístico de Paquetería',
     version='1.0.0'
     )
 
