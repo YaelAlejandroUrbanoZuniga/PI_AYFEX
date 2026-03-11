@@ -15,7 +15,7 @@ import HeaderNaranja from '../Components/HeaderNaranja';
 
 const API_URL = Platform.OS === "web"
   ? "http://localhost:5000/v1/pedidos"
-  : "http://192.168.100.134:5000/v1/pedidos";
+  : "http://172.20.10.2:5000/v1/pedidos";
 
 export default function CrearPedidoM({ navigation }) {
 
