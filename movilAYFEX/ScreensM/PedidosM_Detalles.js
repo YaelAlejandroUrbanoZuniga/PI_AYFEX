@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,366 +6,365 @@ import {
   TouchableOpacity,
   ScrollView,
   StatusBar,
-  Linking,
+  Alert,
+  Modal,
+  TextInput,
+  Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderNaranjaVolver from '../Components/HeaderNaranjaVolver';
 
+const API_URL = Platform.OS === "web"
+  ? "http://localhost:5000/v1/pedidos"
+  : "http://192.168.100.134:5000/v1/pedidos";
+
 export default function PedidosM_Detalles({ navigation, route }) {
+
   const { pedidoData } = route.params;
 
-  useEffect(() => {
-    navigation.getParent()?.setOptions({
-      tabBarStyle: { display: 'none' },
-    });
+  const [modalVisible, setModalVisible] = useState(false);
 
-    return () => {
-      navigation.getParent()?.setOptions({
-        tabBarStyle: {
-          backgroundColor: '#FF6B00',
-          borderTopWidth: 0,
-          height: 80,
-          paddingBottom: 8,
-          paddingTop: 8,
-          borderTopLeftRadius: 20,
-          borderTopRightRadius: 20,
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          elevation: 0,
-          shadowOpacity: 0,
+  const [origen, setOrigen] = useState(pedidoData.origen);
+  const [destino, setDestino] = useState(pedidoData.destino);
+  const [peso, setPeso] = useState(String(pedidoData.peso));
+  const [tipo, setTipo] = useState(pedidoData.tipo);
+  const [altura, setAltura] = useState(String(pedidoData.altura));
+  const [anchura, setAnchura] = useState(String(pedidoData.anchura));
+  const [descripcion, setDescripcion] = useState(pedidoData.descripcion);
+  
+  if (!origen || origen.length < 5) {
+    Alert.alert("Error", "El origen debe tener al menos 5 caracteres");
+    return;
+  }
+
+  if (!destino || destino.length < 5) {
+    Alert.alert("Error", "El destino debe tener al menos 5 caracteres");
+    return;
+  }
+  const actualizarPedido = async () => {
+
+    try {
+
+      const pedidoActualizado = {
+        id: pedidoData.id,
+        origen,
+        destino,
+        peso: parseFloat(peso),
+        tipo,
+        altura: parseFloat(altura),
+        anchura: parseFloat(anchura),
+        descripcion
+      };
+
+      await fetch(`${API_URL}/${pedidoData.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
         },
+        body: JSON.stringify(pedidoActualizado)
       });
-    };
-  }, [navigation]);
 
-  const handleDownloadPDF = () => {
-    console.log('Descargando factura...');
+      Alert.alert("Pedido actualizado");
+
+      setModalVisible(false);
+
+      navigation.goBack();
+
+    } catch (error) {
+
+      console.log(error);
+      Alert.alert("Error", "No se pudo actualizar");
+
+    }
+
   };
 
-  const handleEvaluateSeller = () => {
-    console.log('Evaluar al vendedor...');
-  };
+  const eliminarPedido = () => {
 
-  const handleCancelOrder = () => {
-    console.log('Cancelar pedido...');
+    Alert.alert(
+      "Eliminar pedido",
+      "¿Estás seguro que deseas eliminar este pedido?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Eliminar",
+          style: "destructive",
+          onPress: async () => {
+
+            try {
+
+              await fetch(`${API_URL}/${pedidoData.id}`, {
+                method: "DELETE"
+              });
+
+              Alert.alert("Pedido eliminado");
+
+              navigation.goBack();
+
+            } catch (error) {
+
+              Alert.alert("Error", "No se pudo eliminar");
+
+            }
+
+          }
+        }
+      ]
+    );
+
   };
 
   return (
-    <View style={styles.container}>       
+
+    <View style={styles.container}>
+
+      <StatusBar barStyle="dark-content" />
+
       <HeaderNaranjaVolver navigation={navigation} />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <Text style={styles.screenTitle}>Mis Pedidos</Text>
-        
-        <Text style={styles.orderId}>{pedidoData.id}</Text>
 
-        <TouchableOpacity style={styles.downloadButton} onPress={handleDownloadPDF}>
-          <Ionicons name="document-text-outline" size={20} color="#FF6B00" />
-          <Text style={styles.downloadButtonText}>Descargar Factura (PDF)</Text>
-        </TouchableOpacity>
+        <Text style={styles.screenTitle}>Detalles del Pedido</Text>
 
-        <View style={styles.separator} />
+        <Text style={styles.orderId}>ID: {pedidoData.id}</Text>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Enviar a</Text>
-          <View style={styles.infoCard}>
-            <Text style={styles.recipientName}>{pedidoData.destinatario}</Text>
-            <Text style={styles.addressText}>{pedidoData.direccion}</Text>
-          </View>
+        <View style={styles.card}>
+
+          <Text style={styles.label}>Origen</Text>
+          <Text style={styles.value}>{pedidoData.origen}</Text>
+
+          <Text style={styles.label}>Destino</Text>
+          <Text style={styles.value}>{pedidoData.destino}</Text>
+
+          <Text style={styles.label}>Peso</Text>
+          <Text style={styles.value}>{pedidoData.peso} kg</Text>
+
+          <Text style={styles.label}>Tipo</Text>
+          <Text style={styles.value}>{pedidoData.tipo}</Text>
+
+          <Text style={styles.label}>Altura</Text>
+          <Text style={styles.value}>{pedidoData.altura} cm</Text>
+
+          <Text style={styles.label}>Anchura</Text>
+          <Text style={styles.value}>{pedidoData.anchura} cm</Text>
+
+          <Text style={styles.label}>Descripción</Text>
+          <Text style={styles.value}>{pedidoData.descripcion}</Text>
+
+          <Text style={styles.label}>Fecha</Text>
+          <Text style={styles.value}>{pedidoData.fecha}</Text>
+
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Método de pago</Text>
-          <View style={styles.paymentCard}>
-            <View style={styles.paymentIconContainer}>
-              <Ionicons name="card-outline" size={24} color="#FF6B00" />
-            </View>
-            <Text style={styles.paymentText}>{pedidoData.metodoPago}</Text>
-          </View>
-        </View>
+        <View style={styles.buttonsContainer}>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Resumen del pedido</Text>
-          <View style={styles.summaryCard}>
-            <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Pedidos:</Text>
-              <Text style={styles.summaryValue}>${pedidoData.pedidosTotal.toFixed(2)}</Text>
-            </View>
-
-            {pedidoData.productos.map((producto, index) => (
-              <View key={index} style={styles.productRow}>
-                <Text style={styles.productQuantity}>x{producto.cantidad}</Text>
-                <Text style={styles.productName}>{producto.nombre}</Text>
-                {producto.precio > 0 && (
-                  <Text style={styles.productPrice}>${producto.precio.toFixed(2)}</Text>
-                )}
-              </View>
-            ))}
-
-            <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Envío:</Text>
-              <Text style={styles.summaryValue}>${pedidoData.envio.toFixed(2)}</Text>
-            </View>
-
-            <View style={styles.divider} />
-
-            <View style={styles.summaryRow}>
-              <Text style={styles.summaryLabel}>Subtotal:</Text>
-              <Text style={styles.summaryValue}>${pedidoData.subtotal.toFixed(2)}</Text>
-            </View>
-
-            <View style={styles.totalRow}>
-              <Text style={styles.totalLabel}>Total (IVA incluido, en caso de ser aplicable):</Text>
-              <Text style={styles.totalValue}>${pedidoData.total.toFixed(2)}</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.actionButtonsContainer}>
-          <TouchableOpacity style={styles.evaluateButton} onPress={handleEvaluateSeller}>
-            <Text style={styles.evaluateButtonText}>Evaluar al vendedor</Text>
+          <TouchableOpacity
+            style={styles.updateButton}
+            onPress={() => setModalVisible(true)}
+          >
+            <Text style={styles.updateText}>Actualizar</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.cancelButton} onPress={handleCancelOrder}>
-            <Text style={styles.cancelButtonText}>Cancelar Pedido</Text>
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={eliminarPedido}
+          >
+            <Text style={styles.deleteText}>Eliminar</Text>
           </TouchableOpacity>
+
         </View>
 
-        <View style={styles.bottomPadding} />
+        <View style={{ height: 120 }} />
+
       </ScrollView>
+
+      <Modal visible={modalVisible} animationType='slide'>
+
+        <View style={styles.modalWrapper}>
+
+          <ScrollView style={styles.modalContainer} showsVerticalScrollIndicator={false}>
+
+            <Text style={styles.modalTitle}>Actualizar Pedido</Text>
+
+            <Text style={styles.inputLabel}>Origen</Text>
+            <TextInput
+              style={styles.input}
+              value={origen}
+              onChangeText={setOrigen}
+            />
+
+            <Text style={styles.inputLabel}>Destino</Text>
+            <TextInput
+              style={styles.input}
+              value={destino}
+              onChangeText={setDestino}
+            />
+
+            <Text style={styles.inputLabel}>Peso</Text>
+            <TextInput
+              style={styles.input}
+              value={peso}
+              onChangeText={setPeso}
+              keyboardType="numeric"
+            />
+
+            <Text style={styles.inputLabel}>Tipo</Text>
+            <TextInput
+              style={styles.input}
+              value={tipo}
+              onChangeText={setTipo}
+            />
+
+            <Text style={styles.inputLabel}>Altura</Text>
+            <TextInput
+              style={styles.input}
+              value={altura}
+              onChangeText={setAltura}
+              keyboardType="numeric"
+            />
+
+            <Text style={styles.inputLabel}>Anchura</Text>
+            <TextInput
+              style={styles.input}
+              value={anchura}
+              onChangeText={setAnchura}
+              keyboardType="numeric"
+            />
+
+            <Text style={styles.inputLabel}>Descripción</Text>
+            <TextInput
+              style={[styles.input, styles.textArea]}
+              value={descripcion}
+              onChangeText={setDescripcion}
+              multiline
+            />
+
+            <TouchableOpacity style={styles.saveButton} onPress={actualizarPedido}>
+              <Text style={styles.saveText}>Actualizar Pedido</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <Text style={styles.cancelText}>Cancelar</Text>
+            </TouchableOpacity>
+
+            <View style={{ height: 60 }} />
+
+          </ScrollView>
+
+        </View>
+
+      </Modal>
+
     </View>
+
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
-    borderBottomWidth: 1,
-    borderBottomColor: '#F0F0F0',
-  },
-  headerLeft: {
-    width: 40,
-  },
-  headerCenter: {
-    alignItems: 'center',
-  },
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000000',
-  },
-  headerRight: {
-    width: 40,
-    alignItems: 'flex-end',
-  },
-  headerGreeting: {
-    fontSize: 14,
-    color: '#666666',
-  },
-  content: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 20,
-  },
-  screenTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000000',
-    marginTop: 20,
-    marginBottom: 8,
-  },
-  orderId: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333333',
-    marginBottom: 12,
-  },
-  downloadButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    marginBottom: 20,
-  },
-  downloadButtonText: {
-    fontSize: 14,
-    color: '#a2c1f7',
-    fontWeight: '500',
-    marginLeft: 8,
-    textDecorationLine: 'underline',
-  },
-  separator: {
-    height: 1,
-    backgroundColor: '#F0F0F0',
-    marginBottom: 20,
-  },
-  section: {
-    marginBottom: 24,
-  },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000000',
-    marginBottom: 12,
-  },
-  infoCard: {
+
+  container: { flex: 1, backgroundColor: '#fff' },
+
+  content: { padding: 20 },
+
+  screenTitle: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+
+  orderId: { fontSize: 16, marginBottom: 20, color: "#666" },
+
+  card: {
     backgroundColor: '#F8F9FA',
     borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#EEEEEE',
+    padding: 16
   },
-  recipientName: {
+
+  label: {
+    fontSize: 13,
+    color: "#999",
+    marginTop: 10
+  },
+
+  value: {
     fontSize: 15,
-    fontWeight: '600',
-    color: '#333333',
-    marginBottom: 8,
+    color: "#333"
   },
-  addressText: {
-    fontSize: 14,
-    color: '#666666',
-    lineHeight: 20,
-  },
-  paymentCard: {
+
+  buttonsContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F8F9FA',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#EEEEEE',
+    marginTop: 30,
+    justifyContent: 'space-between'
   },
-  paymentIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#ff6a002d', 
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  paymentText: {
-    fontSize: 14,
-    color: '#333333',
-    fontWeight: '500',
+
+  updateButton: {
     flex: 1,
+    backgroundColor: "#FF6B00",
+    padding: 14,
+    borderRadius: 10,
+    marginRight: 10,
+    alignItems: 'center'
   },
-  summaryCard: {
-    backgroundColor: '#F8F9FA',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#EEEEEE',
-  },
-  summaryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 8,
-  },
-  summaryLabel: {
-    fontSize: 14,
-    color: '#666666',
-  },
-  summaryValue: {
-    fontSize: 14,
-    color: '#333333',
-    fontWeight: '500',
-  },
-  productRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginLeft: 16,
-    marginBottom: 6,
-  },
-  productQuantity: {
-    fontSize: 13,
-    color: '#FF6B00',
-    fontWeight: '500',
-    width: 30,
-  },
-  productName: {
-    fontSize: 13,
-    color: '#666666',
+
+  deleteButton: {
     flex: 1,
+    backgroundColor: "#FF3B30",
+    padding: 14,
+    borderRadius: 10,
+    alignItems: 'center'
   },
-  productPrice: {
-    fontSize: 13,
-    color: '#333333',
-    fontWeight: '500',
+
+  updateText: { color: "#fff", fontWeight: 'bold' },
+
+  deleteText: { color: "#ffffff", fontWeight: 'bold' },
+
+  modalContainer: {
+    padding: 20,
+    marginTop: 20
   },
-  divider: {
-    height: 1,
-    backgroundColor: '#EEEEEE',
-    marginVertical: 12,
-  },
-  totalRow: {
-    marginTop: 4,
-  },
-  totalLabel: {
-    fontSize: 13,
-    color: '#333333',
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  totalValue: {
-    fontSize: 18,
-    color: '#FF6B00',
+
+  modalTitle: {
+    fontSize: 22,
     fontWeight: 'bold',
-    textAlign: 'right',
+    marginBottom: 20
   },
-  actionButtonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  evaluateButton: {
-    flex: 1,
-    backgroundColor: '#FF6B00',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginRight: 8,
-    shadowColor: '#FF6B00',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  evaluateButtonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  cancelButton: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginLeft: 8,
+
+  input: {
     borderWidth: 1,
-    borderColor: '#FF3B30',
+    borderColor: "#ddd",
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 15
   },
-  cancelButtonText: {
-    color: '#FF3B30',
-    fontSize: 14,
-    fontWeight: '600',
+
+  saveButton: {
+    backgroundColor: "#FF6B00",
+    padding: 16,
+    borderRadius: 10,
+    alignItems: 'center'
   },
-  bottomPadding: {
-    height: 20,
+
+  saveText: { color: "#fff", fontWeight: "bold" },
+  modalWrapper: {
+    flex: 1,
+    backgroundColor: "#fff",
+    paddingTop: 60
   },
+
+  inputLabel: {
+    fontSize: 13,
+    color: "#666",
+    marginBottom: 6,
+    marginTop: 12,
+    fontWeight: "500"
+  },
+
+  cancelText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 15,
+    color: "#666"
+  },
+
+  textArea: {
+    height: 80,
+    textAlignVertical: 'top'
+  }
+
 });

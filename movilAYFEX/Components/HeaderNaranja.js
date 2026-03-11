@@ -19,7 +19,7 @@ export default function HeaderNaranja() {
             >
                 <Circle
                     cx={width / 2}
-                    cy={-width*0.56}        
+                    cy={-width*0.58}        
                     r={width * 1.05}
                     fill="#FF6B00"
                 />
@@ -35,7 +35,7 @@ export default function HeaderNaranja() {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
-        height: 171,
+        height: 172,
         overflow: 'hidden', 
     },
     svg: {
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         top: -20,
     },
     titleContainer: {
-        height: 210,
+        height: 200,
         justifyContent: 'center',
         alignItems: 'center',
         paddingTop:20,
