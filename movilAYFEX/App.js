@@ -29,7 +29,7 @@ function PedidosStackScreen() {
         name="PedidosDetalles"
         component={PedidosM_Detalles}
         options={{ headerShown: false, tabBarStyle: { display: 'none' }, }}
-        
+
       />
     </PedidosStack.Navigator>
   );
@@ -45,7 +45,7 @@ function TabsNavigator() {
         tabBarStyle: {
           backgroundColor: '#FF6B00',
           borderTopWidth: 0,
-          height: 80,
+          height: 86,
           paddingBottom: 8,
           paddingTop: 8,
           borderTopLeftRadius: 20,
@@ -56,6 +56,10 @@ function TabsNavigator() {
           right: 0,
           elevation: 0,
           shadowOpacity: 0,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: -3 },
+          shadowOpacity: 0.15,
+          shadowRadius: 6,
         },
         tabBarLabelStyle: {
           fontSize: 11,
@@ -68,7 +72,7 @@ function TabsNavigator() {
           if (route.name === 'Inicio') {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Pedidos') {
-            iconName = focused ? 'cube' : 'cube-outline';
+            iconName = focused ? 'receipt' : 'receipt-outline';
           } else if (route.name === 'Crear') {
             iconName = focused ? 'add-circle' : 'add-circle-outline';
           } else if (route.name === 'Perfil') {

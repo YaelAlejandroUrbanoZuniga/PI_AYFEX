@@ -16,7 +16,7 @@ import HeaderNaranjaVolver from '../Components/HeaderNaranjaVolver';
 
 const API_URL = Platform.OS === "web"
   ? "http://localhost:5000/v1/pedidos"
-  : "http://172.20.10.2:5000/v1/pedidos";
+  : "http://192.168.100.134:5000/v1/pedidos";
 
 export default function PedidosM_Detalles({ navigation, route }) {
 
@@ -31,7 +31,7 @@ export default function PedidosM_Detalles({ navigation, route }) {
   const [altura, setAltura] = useState(String(pedidoData.altura));
   const [anchura, setAnchura] = useState(String(pedidoData.anchura));
   const [descripcion, setDescripcion] = useState(pedidoData.descripcion);
-  
+
   if (!origen || origen.length < 5) {
     Alert.alert("Error", "El origen debe tener al menos 5 caracteres");
     return;
@@ -130,29 +130,43 @@ export default function PedidosM_Detalles({ navigation, route }) {
 
         <View style={styles.card}>
 
-          <Text style={styles.label}>Origen</Text>
+          <View style={styles.row}>
+            <Ionicons name="location" size={18} color="#FF6B00" />
+            <Text style={styles.label}>Origen</Text>
+          </View>
           <Text style={styles.value}>{pedidoData.origen}</Text>
 
-          <Text style={styles.label}>Destino</Text>
+          <View style={styles.row}>
+            <Ionicons name="flag" size={18} color="#34C759" />
+            <Text style={styles.label}>Destino</Text>
+          </View>
           <Text style={styles.value}>{pedidoData.destino}</Text>
 
-          <Text style={styles.label}>Peso</Text>
+          <View style={styles.row}>
+            <Ionicons name="barbell-outline" size={18} color="#555" />
+            <Text style={styles.label}>Peso</Text>
+          </View>
           <Text style={styles.value}>{pedidoData.peso} kg</Text>
 
-          <Text style={styles.label}>Tipo</Text>
+          <View style={styles.row}>
+            <Ionicons name="cube-outline" size={18} color="#555" />
+            <Text style={styles.label}>Tipo</Text>
+          </View>
           <Text style={styles.value}>{pedidoData.tipo}</Text>
 
-          <Text style={styles.label}>Altura</Text>
-          <Text style={styles.value}>{pedidoData.altura} cm</Text>
+          <View style={styles.row}>
+            <Ionicons name="resize-outline" size={18} color="#555" />
+            <Text style={styles.label}>Dimensiones</Text>
+          </View>
+          <Text style={styles.value}>
+            {pedidoData.altura} cm x {pedidoData.anchura} cm
+          </Text>
 
-          <Text style={styles.label}>Anchura</Text>
-          <Text style={styles.value}>{pedidoData.anchura} cm</Text>
-
-          <Text style={styles.label}>Descripción</Text>
+          <View style={styles.row}>
+            <Ionicons name="document-text-outline" size={18} color="#555" />
+            <Text style={styles.label}>Descripción</Text>
+          </View>
           <Text style={styles.value}>{pedidoData.descripcion}</Text>
-
-          <Text style={styles.label}>Fecha</Text>
-          <Text style={styles.value}>{pedidoData.fecha}</Text>
 
         </View>
 
@@ -365,6 +379,29 @@ const styles = StyleSheet.create({
   textArea: {
     height: 80,
     textAlignVertical: 'top'
-  }
+  },
+  row: {
+  flexDirection: "row",
+  alignItems: "center",
+  marginTop: 14
+},
+
+card: {
+  backgroundColor: "#F8F9FA",
+  borderRadius: 16,
+  padding: 18
+},
+
+label: {
+  marginLeft: 6,
+  fontSize: 13,
+  color: "#777"
+},
+
+value: {
+  fontSize: 15,
+  marginTop: 2,
+  color: "#222"
+},
 
 });
