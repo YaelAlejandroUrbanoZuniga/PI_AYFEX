@@ -1,202 +1,338 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  TextInput,
   ScrollView,
+  Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderNaranja from '../Components/HeaderNaranja';
 
+const API_URL = Platform.OS === "web"
+  ? "http://localhost:5000/v1/pedidos"
+  : "http://192.168.100.134:5000/v1/pedidos";
+
 export default function PrincipalM({ navigation }) {
+
+  const [pedidos, setPedidos] = useState([]);
+
+  const cargarPedidos = async () => {
+
+    try {
+
+      const response = await fetch(API_URL);
+      const data = await response.json();
+
+      setPedidos(data);
+
+    } catch (error) {
+
+      console.log("Error cargando pedidos:", error);
+
+    }
+
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      cargarPedidos();
+    }, [])
+  );
+
+  const verDetalles = (pedido) => {
+
+    navigation.navigate("Pedidos", {
+      screen: "PedidosDetalles",
+      params: { pedidoData: pedido }
+    });
+
+  };
+
+  const pedidosActivos = pedidos.length; // por ahora todos son activos
+  const totalPedidos = pedidos.length;
+
   return (
+
     <View style={styles.container}>
+
       <HeaderNaranja />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+
         <View style={styles.greetingContainer}>
           <Text style={styles.greetingText}>Hola, Fidel!</Text>
         </View>
 
+        {/* ESTADÍSTICAS */}
+
         <View style={styles.statsContainer}>
+
           <View style={styles.statCard}>
-            <Text style={styles.statNumber}>2</Text>
+            <Text style={styles.statNumber}>{pedidosActivos}</Text>
             <Text style={styles.statLabel}>Activos</Text>
           </View>
+
           <View style={styles.statCard}>
-            <Text style={styles.statNumber}>10</Text>
+            <Text style={styles.statNumber}>{totalPedidos}</Text>
             <Text style={styles.statLabel}>Total</Text>
           </View>
-        </View>
 
-        <View style={styles.searchContainer}>
-          <View style={styles.searchInputContainer}>
-            <Ionicons name="location-outline" size={20} color="#FF6B00" />
-            <TextInput
-              style={styles.searchInput}
-              placeholder="Rastrear Pedido"
-              placeholderTextColor="#999999"
-            />
-          </View>
-          <Text style={styles.searchExample}>Ej: #PED010101</Text>
         </View>
 
         <View style={styles.separator} />
 
+        {/* HEADER */}
+
         <View style={styles.shipmentsHeader}>
+
           <Text style={styles.shipmentsTitle}>Envíos Activos</Text>
-          <TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Pedidos")}
+          >
             <Text style={styles.viewAllText}>Ver todos</Text>
           </TouchableOpacity>
+
         </View>
 
-        <TouchableOpacity style={styles.orderCard}>
-          <Text style={styles.orderId}>ID: #PED022604</Text>
-          <Text style={styles.orderLocation}>Tampico, Tamaulipas</Text>
-          <View style={styles.orderFooter}>
-            <Ionicons name="location" size={16} color="#FF6B00" />
-            <Text style={styles.estimatedText}>Llegada estimada: 8 días</Text>
-          </View>
-        </TouchableOpacity>
+        {/* PEDIDOS */}
 
-        <TouchableOpacity style={styles.orderCard}>
-          <Text style={styles.orderId}>ID: #PED022603</Text>
-          <Text style={styles.orderLocation}>Pedro Escobedo, Querétaro</Text>
-          <View style={styles.orderFooter}>
-            <Ionicons name="location" size={16} color="#4CAF50" />
-            <Text style={[styles.estimatedText, styles.greenText]}>Llegada estimada: 3 días</Text>
-          </View>
-        </TouchableOpacity>
+        {pedidos.map((pedido) => (
 
-        <View style={styles.bottomPadding} />
+          <TouchableOpacity
+            key={pedido.id}
+            style={styles.orderCard}
+            onPress={() => verDetalles(pedido)}
+            activeOpacity={0.8}
+          >
+
+            <View style={styles.cardHeader}>
+
+              <View style={styles.packageIcon}>
+                <Ionicons name="cube" size={20} color="#fff" />
+              </View>
+
+              <Text style={styles.orderId}>
+                #{pedido.id}
+              </Text>
+
+            </View>
+
+            <View style={styles.routeContainer}>
+
+              <View style={styles.routeRow}>
+                <Ionicons name="location" size={16} color="#FF6B00" />
+                <Text style={styles.routeText}>{pedido.origen}</Text>
+              </View>
+
+              <Ionicons
+                name="arrow-down"
+                size={16}
+                color="#999"
+                style={{ marginVertical: 4 }}
+              />
+
+              <View style={styles.routeRow}>
+                <Ionicons name="flag" size={16} color="#34C759" />
+                <Text style={styles.routeText}>{pedido.destino}</Text>
+              </View>
+
+            </View>
+
+            <View style={styles.orderInfo}>
+
+              <View style={styles.infoItem}>
+                <Ionicons name="barbell-outline" size={16} color="#666" />
+                <Text style={styles.infoText}>{pedido.peso} kg</Text>
+              </View>
+
+              <View style={styles.infoItem}>
+                <Ionicons name="cube-outline" size={16} color="#666" />
+                <Text style={styles.infoText}>{pedido.tipo}</Text>
+              </View>
+
+            </View>
+
+            <View style={styles.footer}>
+
+              <Text style={styles.date}>
+                {pedido.fecha ? pedido.fecha.split("T")[0] : "Sin fecha"}
+              </Text>
+
+              <View style={styles.detailsButton}>
+                <Text style={styles.detailsText}>Ver detalles</Text>
+                <Ionicons name="chevron-forward" size={16} color="#FF6B00" />
+              </View>
+
+            </View>
+
+          </TouchableOpacity>
+
+        ))}
+
+        <View style={{ height: 100 }} />
+
       </ScrollView>
+
     </View>
+
   );
+
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF"
   },
+
   content: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20
   },
+
   greetingContainer: {
-    paddingVertical: 16,
-    paddingHorizontal: 4,
+    paddingVertical: 16
   },
+
   greetingText: {
     fontSize: 22,
-    fontWeight: '500',
-    color: '#000000',
-    fontWeight: 'bold',
+    fontWeight: "bold"
   },
+
   statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+    flexDirection: "row",
     gap: 12,
+    marginBottom: 20
   },
+
   statCard: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    paddingVertical: 12,
-    borderRadius: 10,
+    backgroundColor: "#F5F5F5",
+    borderRadius: 12,
+    padding: 16,
+    alignItems: "center"
   },
+
   statNumber: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000000',
+    fontSize: 26,
+    fontWeight: "bold"
   },
+
   statLabel: {
     fontSize: 13,
-    color: '#666666',
-    marginTop: 2,
+    color: "#666"
   },
-  searchContainer: {
-    marginBottom: 16,
-  },
-  searchInputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: '#EEEEEE',
-  },
-  searchInput: {
-    flex: 1,
-    marginLeft: 8,
-    fontSize: 14,
-    color: '#333333',
-  },
-  searchExample: {
-    fontSize: 12,
-    color: '#999999',
-    marginTop: 4,
-    marginLeft: 12,
-  },
+
   separator: {
     height: 1,
-    backgroundColor: '#F0F0F0',
-    marginBottom: 16,
+    backgroundColor: "#eee",
+    marginBottom: 16
   },
+
   shipmentsHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 12
   },
+
   shipmentsTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000000',
+    fontWeight: "600"
   },
+
   viewAllText: {
-    fontSize: 13,
-    color: '#FF6B00',
-    fontWeight: '500',
+    color: "#FF6B00",
+    fontWeight: "500"
   },
+
   orderCard: {
-    backgroundColor: '#FFFFFF',
-    marginBottom: 12,
-    padding: 14,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 18,
+    marginBottom: 18,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 4
+  },
+
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 14
+  },
+
+  packageIcon: {
+    backgroundColor: "#FF6B00",
+    padding: 8,
     borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#F0F0F0',
+    marginRight: 10
   },
+
   orderId: {
+    fontSize: 15,
+    fontWeight: "600"
+  },
+
+  routeContainer: {
+    marginBottom: 12
+  },
+
+  routeRow: {
+    flexDirection: "row",
+    alignItems: "center"
+  },
+
+  routeText: {
+    marginLeft: 6,
     fontSize: 14,
-    fontWeight: '600',
-    color: '#333333',
-    marginBottom: 6,
+    color: "#333"
   },
-  orderLocation: {
+
+  orderInfo: {
+    flexDirection: "row",
+    marginBottom: 12
+  },
+
+  infoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 20
+  },
+
+  infoText: {
+    marginLeft: 6,
     fontSize: 13,
-    color: '#666666',
-    marginBottom: 8,
+    color: "#555"
   },
-  orderFooter: {
-    flexDirection: 'row',
-    alignItems: 'center',
+
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderTopWidth: 1,
+    borderTopColor: "#eee",
+    paddingTop: 10
   },
-  estimatedText: {
+
+  date: {
     fontSize: 12,
-    color: '#FF6B00',
-    marginLeft: 4,
+    color: "#888"
   },
-  greenText: {
-    color: '#4CAF50',
+
+  detailsButton: {
+    flexDirection: "row",
+    alignItems: "center"
   },
-  bottomPadding: {
-    height: 80,
-  },
+
+  detailsText: {
+    color: "#FF6B00",
+    fontWeight: "600",
+    marginRight: 4
+  }
+
 });
