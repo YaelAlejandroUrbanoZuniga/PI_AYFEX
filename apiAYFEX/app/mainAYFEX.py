@@ -4,7 +4,7 @@ from typing import Annotated
 from datetime import datetime
 
 
-from app.data.databaseAYFEX import engine, Base
+from app.data.dbDATA import engine, Base
 
 
 Base.metadata.create_all(bind=engine)

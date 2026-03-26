@@ -1,6 +1,6 @@
 # ==================DEFINIMOS MODELO DE LA BASE DE DATOS==================
 from sqlalchemy import Column, Integer, String, Float
-from app.data.dbAYFEX import Base
+from app.data.dbDATA import Base
 
 class Crear_Pedidos(Base):
     __tablename__ = "tb-pedidos"
