@@ -1,8 +1,36 @@
+version: "3.9"
 services:
   api:
     build: .
-    container_name: ayfex
+    container_name: ServerApiAYFEX
     ports:
       - "5000:5000"
     volumes:
-      - ./app:/app/app
+      - .:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://gestor:123456@postgres:5432/DB_AYFEX
+
+  postgres:
+    image: postgres:15
+    container_name: ServerPostgreSqlAYFEX
+    restart: always
+    environment:
+      POSTGRES_USER: gestor
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: DB_AYFEX
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gestor -d DB_AYFEX"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
+
+volumes:
+  postgres_data:
