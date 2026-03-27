@@ -11,6 +11,7 @@ Base.metadata.create_all(bind=engine)
 
 from app.routers import pedidosROUTERS
 from app.routers import operadoresROUTERSW
+from app.routers import incidenciasROUTERSW
 
 app = FastAPI(
     title="API AYFEX PEDIDOS",
@@ -33,5 +34,6 @@ app.add_middleware(
 # Incluir los routers
 app.include_router(pedidosROUTERS.router)
 app.include_router(operadoresROUTERSW.router)
+app.include_router(incidenciasROUTERSW.router)
 
 

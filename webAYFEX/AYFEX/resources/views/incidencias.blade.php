@@ -104,12 +104,12 @@
     .status-pending { background: #fee2e2; color: #dc2626; }
     .status-resolved { background: #dcfce7; color: #16a34a; }
 
-    .action-icons i { cursor: pointer; margin: 0 5px; font-size: 1.1rem; transition: 0.2s; }
-    .action-icons i:hover { transform: scale(1.1); }
-    .text-view { color: #666; }
-    .text-view:hover { color: #222; }
-    .text-check { color: #16a34a; }
-    .text-check:hover { color: #14532d; }
+    .action-icons button { background: none; border: none; padding: 0; cursor: pointer; margin: 0 5px; font-size: 1.1rem; transition: 0.2s; }
+    .action-icons button:hover { transform: scale(1.1); }
+    .text-primary { color: #0d6efd; }
+    .text-primary:hover { color: #0a58ca; }
+    .text-danger { color: #dc3545; }
+    .text-danger:hover { color: #b02a37; }
 
     /* =========================================
        ESTILOS DEL MODAL Y FORMULARIOS
@@ -201,16 +201,16 @@
 
 <header class="main-header">
     <div class="header-top">
-<a href="{{ route('dashboard') }}" class="header-brand">
-    <div style="width: 45px; height: 45px; background-color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-        <img src="{{ asset('AYFEXLOGO-Photoroom.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
-    </div>
-    
-    <div class="brand-text">
-        <span class="brand-name">AYFEX</span>
-        <span class="brand-slogan">Gestión de Transporte Logistico de Paquetería</span>
-    </div>
-</a>
+        <a href="{{ route('dashboard') }}" class="header-brand">
+            <div style="width: 45px; height: 45px; background-color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <img src="{{ asset('AYFEXLOGO-Photoroom.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
+            </div>
+            
+            <div class="brand-text">
+                <span class="brand-name">AYFEX</span>
+                <span class="brand-slogan">Gestión de Transporte Logistico de Paquetería</span>
+            </div>
+        </a>
 
         <div class="header-search d-none d-md-block">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -283,21 +283,21 @@
         <div class="col-md-4">
             <div class="stat-card">
                 <h6>Total Incidencias</h6>
-                <h3>3</h3>
+                <h3 id="card-total">0</h3>
                 <div class="stat-icon icon-orange-light"><i class="fa-solid fa-triangle-exclamation"></i></div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="stat-card">
                 <h6>Pendientes</h6>
-                <h3>2</h3>
+                <h3 id="card-pendientes">0</h3>
                 <div class="stat-icon icon-red-light"><i class="fa-solid fa-circle-exclamation"></i></div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="stat-card">
                 <h6>Resueltas</h6>
-                <h3>1</h3>
+                <h3 id="card-resueltas">0</h3>
                 <div class="stat-icon icon-green-light"><i class="fa-solid fa-circle-check"></i></div>
             </div>
         </div>
@@ -305,11 +305,11 @@
 
     <div class="table-container">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-            <h5 style="font-weight: 800; margin: 0;">Lista de Incidencias (3)</h5>
-            <select class="filter-select">
-                <option>Todos los estados</option>
-                <option>Pendiente</option>
-                <option>Resuelto</option>
+            <h5 id="titulo-lista" style="font-weight: 800; margin: 0;">Lista de Incidencias (0)</h5>
+            <select id="filtro-estado" class="filter-select">
+                <option value="TODOS">Todos los estados</option>
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="RESUELTO">Resuelto</option>
             </select>
         </div>
 
@@ -327,45 +327,7 @@
                         <th class="text-secondary small fw-bold">ACCIONES</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td class="fw-bold">INC-001</td>
-                        <td>ENV-004</td>
-                        <td>Dirección incorrecta</td>
-                        <td class="text-muted small">El destinatario proporcionó una dirección inc...</td>
-                        <td><span class="badge-status status-pending">Pendiente</span></td>
-                        <td>Luis Hernández</td>
-                        <td>2026-02-21</td>
-                        <td class="action-icons">
-                            <i class="fa-regular fa-eye text-view" title="Ver detalles"></i>
-                            <i class="fa-regular fa-circle-check text-check" title="Marcar como resuelto"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">INC-002</td>
-                        <td>ENV-001</td>
-                        <td>Retraso en tránsito</td>
-                        <td class="text-muted small">Tráfico intenso en autopista</td>
-                        <td><span class="badge-status status-resolved">Resuelto</span></td>
-                        <td>Carlos Ramírez</td>
-                        <td>2026-02-20</td>
-                        <td class="action-icons">
-                            <i class="fa-regular fa-eye text-view" title="Ver detalles"></i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">INC-003</td>
-                        <td>ENV-003</td>
-                        <td>Paquete dañado</td>
-                        <td class="text-muted small">Daños menores en el empaque</td>
-                        <td><span class="badge-status status-pending">Pendiente</span></td>
-                        <td>Pedro Sánchez</td>
-                        <td>2026-02-22</td>
-                        <td class="action-icons">
-                            <i class="fa-regular fa-eye text-view" title="Ver detalles"></i>
-                            <i class="fa-regular fa-circle-check text-check" title="Marcar como resuelto"></i>
-                        </td>
-                    </tr>
+                <tbody id="tabla-incidencias">
                 </tbody>
             </table>
         </div>
@@ -380,37 +342,286 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body custom-modal-body">
-                <form action="#" method="POST">
+                <form id="formIncidencia">
                     <div class="row">
                         <div class="col-md-6 mb-4">
                             <label class="custom-form-label">ID Envío</label>
-                            <input type="text" class="custom-form-control" name="envio_id" placeholder="Ej. ENV-005">
+                            <input type="text" id="envio_id" class="custom-form-control" placeholder="Ej. ENV-005" required>
                         </div>
                         <div class="col-md-6 mb-4">
                             <label class="custom-form-label">Tipo de Incidencia</label>
-                            <select class="custom-form-select" name="tipo">
+                            <select id="tipo" class="custom-form-select" required>
                                 <option value="">Selecciona un tipo...</option>
-                                <option value="retraso">Retraso en tránsito</option>
-                                <option value="direccion">Dirección incorrecta</option>
-                                <option value="danio">Paquete dañado</option>
-                                <option value="extravio">Posible extravío</option>
-                                <option value="otro">Otro</option>
+                                <option value="Retraso en tránsito">Retraso en tránsito</option>
+                                <option value="Dirección incorrecta">Dirección incorrecta</option>
+                                <option value="Paquete dañado">Paquete dañado</option>
+                                <option value="Posible extravío">Posible extravío</option>
+                                <option value="Otro">Otro</option>
                             </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 mb-2">
                             <label class="custom-form-label">Descripción</label>
-                            <textarea class="custom-form-control" name="descripcion" rows="4" placeholder="Detalla la situación..."></textarea>
+                            <textarea id="descripcion" class="custom-form-control" rows="4" placeholder="Detalla la situación..." required></textarea>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer custom-modal-footer">
                 <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn-orange-modal"><i class="fa-solid fa-save me-2"></i> Guardar Incidencia</button>
+                <button type="submit" form="formIncidencia" class="btn-orange-modal">
+                    <i class="fa-solid fa-save me-2"></i> Guardar Incidencia
+                </button>
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modalEditarIncidencia" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content custom-modal-content">
+            <div class="modal-header custom-modal-header">
+                <h5 class="modal-title custom-modal-title">Editar Incidencia</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body custom-modal-body">
+                <form id="formEditIncidencia">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="custom-form-label">ID Envío</label>
+                            <input type="text" id="edit_envio_id" class="custom-form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <label class="custom-form-label">Tipo de Incidencia</label>
+                            <select id="edit_tipo" class="custom-form-select" required>
+                                <option value="">Selecciona un tipo...</option>
+                                <option value="Retraso en tránsito">Retraso en tránsito</option>
+                                <option value="Dirección incorrecta">Dirección incorrecta</option>
+                                <option value="Paquete dañado">Paquete dañado</option>
+                                <option value="Posible extravío">Posible extravío</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 mb-2">
+                            <label class="custom-form-label">Descripción</label>
+                            <textarea id="edit_descripcion" class="custom-form-control" rows="4" required></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer custom-modal-footer">
+                <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" form="formEditIncidencia" class="btn-orange-modal">
+                    <i class="fa-solid fa-save me-2"></i> Actualizar Incidencia
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // URL de tu API FastAPI
+    const API_URL = 'http://127.0.0.1:5000/v1/incidencias';
+
+    // Variable global para almacenar las incidencias y facilitar el filtro
+    let listaIncidencias = [];
+    let idIncidenciaEditando = null;
+
+    // Cargar datos apenas inicia la vista
+    document.addEventListener('DOMContentLoaded', cargarIncidencias);
+
+    // Escuchar el evento de enviar del formulario de REGISTRO
+    document.getElementById('formIncidencia').addEventListener('submit', function(e) {
+        e.preventDefault();
+        guardarIncidencia();
+    });
+
+    // Escuchar el evento de enviar del formulario de EDICIÓN
+    document.getElementById('formEditIncidencia').addEventListener('submit', function(e) {
+        e.preventDefault();
+        actualizarIncidencia();
+    });
+
+    // Escuchar cambios en el FILTRO
+    document.getElementById('filtro-estado').addEventListener('change', aplicarFiltro);
+
+    // -------------------------------------------------------------------
+    // FUNCIONES PRINCIPALES
+    // -------------------------------------------------------------------
+
+    // 1. Obtener datos de FastAPI
+    async function cargarIncidencias() {
+        try {
+            const response = await fetch(API_URL);
+            listaIncidencias = await response.json();
+            aplicarFiltro(); // Aplica el filtro actual y renderiza la tabla
+        } catch (error) {
+            console.error("Error al cargar incidencias:", error);
+        }
+    }
+
+    // 2. Lógica del Filtro
+    function aplicarFiltro() {
+        const estadoSeleccionado = document.getElementById('filtro-estado').value;
+        let datosFiltrados = listaIncidencias;
+
+        if (estadoSeleccionado !== 'TODOS') {
+            datosFiltrados = listaIncidencias.filter(inc => inc.estado === estadoSeleccionado);
+        }
+
+        renderTable(datosFiltrados);
+        actualizarTarjetas(listaIncidencias); // Mantenemos las tarjetas con los totales de TODAS las incidencias
+    }
+
+    // 3. Dibujar la tabla HTML
+    function renderTable(incidencias) {
+        const tbody = document.getElementById('tabla-incidencias');
+        document.getElementById('titulo-lista').innerText = `Lista de Incidencias (${incidencias.length})`;
+        tbody.innerHTML = '';
+
+        incidencias.forEach(inc => {
+            const esPendiente = inc.estado === 'PENDIENTE';
+            const badgeClass = esPendiente ? 'status-pending' : 'status-resolved';
+            const textoBadge = esPendiente ? 'Pendiente' : 'Resuelto';
+            
+            // Botones de Acción Modificados (Editar y Eliminar)
+            const btnEditar = `<button onclick="abrirModalEditar('${inc.id}')" title="Editar" class="text-primary border-0 bg-transparent mx-1"><i class="fa-solid fa-pen"></i></button>`;
+            const btnEliminar = `<button onclick="eliminarIncidencia('${inc.id}')" title="Eliminar" class="text-danger border-0 bg-transparent mx-1"><i class="fa-solid fa-trash"></i></button>`;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td class="fw-bold">${inc.id}</td>
+                    <td>${inc.envio_id}</td>
+                    <td>${inc.tipo}</td>
+                    <td class="text-muted small text-truncate" style="max-width: 200px;" title="${inc.descripcion}">
+                        ${inc.descripcion}
+                    </td>
+                    <td><span class="badge-status ${badgeClass}">${textoBadge}</span></td>
+                    <td>${inc.responsable || 'N/A'}</td>
+                    <td>${inc.fecha}</td>
+                    <td class="action-icons">
+                        ${btnEditar}
+                        ${btnEliminar}
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    // 4. Actualizar contadores superiores
+    function actualizarTarjetas(incidencias) {
+        const pendientes = incidencias.filter(i => i.estado === 'PENDIENTE').length;
+        const resueltas = incidencias.filter(i => i.estado === 'RESUELTO').length;
+        
+        document.getElementById('card-total').innerText = incidencias.length;
+        document.getElementById('card-pendientes').innerText = pendientes;
+        document.getElementById('card-resueltas').innerText = resueltas;
+    }
+
+    // 5. POST: Guardar nueva incidencia
+    async function guardarIncidencia() {
+        const nueva = {
+            envio_id: document.getElementById('envio_id').value,
+            tipo: document.getElementById('tipo').value,
+            descripcion: document.getElementById('descripcion').value
+        };
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(nueva)
+            });
+
+            if(response.ok) {
+                // Limpiar formulario y cerrar modal
+                document.getElementById('formIncidencia').reset();
+                var myModalEl = document.getElementById('modalRegistrarIncidencia');
+                var modal = bootstrap.Modal.getInstance(myModalEl);
+                modal.hide();
+                
+                // Recargar tabla para ver el nuevo registro
+                cargarIncidencias();
+            } else {
+                alert('Error al guardar la incidencia.');
+            }
+        } catch (error) {
+            console.error("Error al guardar:", error);
+        }
+    }
+
+    // 6. Preparar y abrir Modal de Edición
+    function abrirModalEditar(id) {
+        // Buscamos los datos actuales en nuestra lista global
+        const incidencia = listaIncidencias.find(i => i.id === id);
+        if (!incidencia) return;
+
+        idIncidenciaEditando = id;
+        
+        // Rellenamos el formulario con los datos actuales
+        document.getElementById('edit_envio_id').value = incidencia.envio_id;
+        document.getElementById('edit_tipo').value = incidencia.tipo;
+        document.getElementById('edit_descripcion').value = incidencia.descripcion;
+
+        // Abrimos el modal
+        var myModal = new bootstrap.Modal(document.getElementById('modalEditarIncidencia'));
+        myModal.show();
+    }
+
+    // 7. PUT: Actualizar incidencia existente
+    async function actualizarIncidencia() {
+        const editada = {
+            envio_id: document.getElementById('edit_envio_id').value,
+            tipo: document.getElementById('edit_tipo').value,
+            descripcion: document.getElementById('edit_descripcion').value
+        };
+
+        try {
+            // Asegúrate de que FastAPI soporte el método PUT para esta ruta
+            const response = await fetch(`${API_URL}/${idIncidenciaEditando}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(editada)
+            });
+
+            if(response.ok) {
+                // Limpiar y cerrar modal
+                document.getElementById('formEditIncidencia').reset();
+                var myModalEl = document.getElementById('modalEditarIncidencia');
+                var modal = bootstrap.Modal.getInstance(myModalEl);
+                modal.hide();
+                
+                // Recargar para ver los cambios
+                cargarIncidencias();
+            } else {
+                alert('Error al actualizar la incidencia en el servidor.');
+            }
+        } catch (error) {
+            console.error("Error al actualizar:", error);
+        }
+    }
+
+    // 8. DELETE: Eliminar incidencia
+    async function eliminarIncidencia(id) {
+        if(!confirm(`¿Estás seguro de que deseas eliminar la incidencia ${id}?`)) return;
+        
+        try {
+            // Asegúrate de que FastAPI soporte el método DELETE para esta ruta
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'DELETE'
+            });
+            
+            if(response.ok) {
+                cargarIncidencias(); // Recargar la tabla si se eliminó con éxito
+            } else {
+                alert('Error al eliminar la incidencia.');
+            }
+        } catch (error) {
+            console.error("Error al eliminar:", error);
+        }
+    }
+</script>
 @endsection
