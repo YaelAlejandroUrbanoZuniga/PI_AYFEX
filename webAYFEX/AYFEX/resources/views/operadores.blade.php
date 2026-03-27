@@ -215,16 +215,16 @@
 
 <header class="main-header">
     <div class="header-top">
-<a href="{{ route('dashboard') }}" class="header-brand">
-    <div style="width: 45px; height: 45px; background-color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-        <img src="{{ asset('AYFEXLOGO-Photoroom.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
-    </div>
-    
-    <div class="brand-text">
-        <span class="brand-name">AYFEX</span>
-        <span class="brand-slogan">Gestión de Transporte Logistico de Paquetería</span>
-    </div>
-</a>
+        <a href="{{ route('dashboard') }}" class="header-brand">
+            <div style="width: 45px; height: 45px; background-color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <img src="{{ asset('AYFEXLOGO-Photoroom.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
+            </div>
+            
+            <div class="brand-text">
+                <span class="brand-name">AYFEX</span>
+                <span class="brand-slogan">Gestión de Transporte Logistico de Paquetería</span>
+            </div>
+        </a>
 
         <div class="header-search">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -288,7 +288,7 @@
             <h2>Gestión de Operadores</h2>
             <p>Administra tu equipo de operadores y conductores</p>
         </div>
-        <button class="btn-orange" data-bs-toggle="modal" data-bs-target="#modalAgregarOperador">
+        <button class="btn-orange" data-bs-toggle="modal" data-bs-target="#modalAgregarOperador" onclick="limpiarFormulario()">
             <i class="fa-solid fa-plus me-2"></i> Agregar Operador
         </button>
     </div>
@@ -300,130 +300,10 @@
         </div>
     </div>
 
-    <div class="operator-grid">
-        <div class="operator-card">
-            <div class="op-header">
-                <div class="op-profile">
-                    <div class="op-avatar">CR</div>
-                    <div class="op-info">
-                        <h5>Carlos Ramírez</h5>
-                        <span>OP-001</span>
-                    </div>
-                </div>
-                <span class="op-status status-en-ruta">En ruta</span>
-            </div>
-            <div class="op-details">
-                <p><i class="fa-solid fa-phone"></i> 555-0001</p>
-                <p><i class="fa-solid fa-truck"></i> Camioneta - ABC-123</p>
-            </div>
-            <div class="op-stats">
-                <span>Envíos asignados</span>
-                <span class="count">3</span>
-            </div>
-            <div class="op-actions">
-                <a href="#" class="btn-edit"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                <a href="#" class="btn-delete"><i class="fa-regular fa-trash-can"></i></a>
-            </div>
-        </div>
-
-        <div class="operator-card">
-            <div class="op-header">
-                <div class="op-profile">
-                    <div class="op-avatar" style="background: #16a34a;">MG</div>
-                    <div class="op-info">
-                        <h5>María González</h5>
-                        <span>OP-002</span>
-                    </div>
-                </div>
-                <span class="op-status status-disponible">Disponible</span>
-            </div>
-            <div class="op-details">
-                <p><i class="fa-solid fa-phone"></i> 555-0002</p>
-                <p><i class="fa-solid fa-truck"></i> Van - XYZ-456</p>
-            </div>
-            <div class="op-stats">
-                <span>Envíos asignados</span>
-                <span class="count" style="color:#16a34a;">0</span>
-            </div>
-            <div class="op-actions">
-                <a href="#" class="btn-edit"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                <a href="#" class="btn-delete"><i class="fa-regular fa-trash-can"></i></a>
-            </div>
-        </div>
-
-        <div class="operator-card">
-            <div class="op-header">
-                <div class="op-profile">
-                    <div class="op-avatar">PS</div>
-                    <div class="op-info">
-                        <h5>Pedro Sánchez</h5>
-                        <span>OP-003</span>
-                    </div>
-                </div>
-                <span class="op-status status-en-ruta">En ruta</span>
-            </div>
-            <div class="op-details">
-                <p><i class="fa-solid fa-phone"></i> 555-0003</p>
-                <p><i class="fa-solid fa-truck"></i> Camión - DEF-789</p>
-            </div>
-            <div class="op-stats">
-                <span>Envíos asignados</span>
-                <span class="count">5</span>
-            </div>
-            <div class="op-actions">
-                <a href="#" class="btn-edit"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                <a href="#" class="btn-delete"><i class="fa-regular fa-trash-can"></i></a>
-            </div>
-        </div>
-
-        <div class="operator-card">
-            <div class="op-header">
-                <div class="op-profile">
-                    <div class="op-avatar">LH</div>
-                    <div class="op-info">
-                        <h5>Luis Hernández</h5>
-                        <span>OP-004</span>
-                    </div>
-                </div>
-                <span class="op-status status-en-ruta">En ruta</span>
-            </div>
-            <div class="op-details">
-                <p><i class="fa-solid fa-phone"></i> 555-0004</p>
-                <p><i class="fa-solid fa-truck"></i> Camioneta - GHI-012</p>
-            </div>
-            <div class="op-stats">
-                <span>Envíos asignados</span>
-                <span class="count">2</span>
-            </div>
-            <div class="op-actions">
-                <a href="#" class="btn-edit"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                <a href="#" class="btn-delete"><i class="fa-regular fa-trash-can"></i></a>
-            </div>
-        </div>
-
-        <div class="operator-card">
-            <div class="op-header">
-                <div class="op-profile">
-                    <div class="op-avatar">AM</div>
-                    <div class="op-info">
-                        <h5>Ana Martínez</h5>
-                        <span>OP-005</span>
-                    </div>
-                </div>
-                <span class="op-status status-en-ruta">En ruta</span>
-            </div>
-            <div class="op-details">
-                <p><i class="fa-solid fa-phone"></i> 555-0005</p>
-                <p><i class="fa-solid fa-truck"></i> Van - JKL-345</p>
-            </div>
-            <div class="op-stats">
-                <span>Envíos asignados</span>
-                <span class="count">4</span>
-            </div>
-            <div class="op-actions">
-                <a href="#" class="btn-edit"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                <a href="#" class="btn-delete"><i class="fa-regular fa-trash-can"></i></a>
-            </div>
+    <div class="operator-grid" id="operatorGrid">
+        <div style="width: 100%; text-align: center; padding: 40px; color: #888;">
+            <i class="fa-solid fa-spinner fa-spin fa-2x mb-3"></i>
+            <p>Cargando operadores desde la base de datos...</p>
         </div>
     </div>
 </div>
@@ -432,39 +312,207 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content custom-modal-content">
             <div class="modal-header custom-modal-header">
-                <h5 class="modal-title custom-modal-title">Agregar Nuevo Operador</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title custom-modal-title" id="modalTitle">Agregar Nuevo Operador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="limpiarFormulario()"></button>
             </div>
-            <div class="modal-body custom-modal-body">
-                <form action="#" method="POST">
-                    <div class="row">
+            <form id="formOperador">
+                <div class="modal-body custom-modal-body">
+                    <input type="hidden" id="operador_id_db"> <div class="row">
                         <div class="col-md-8 mb-4">
                             <label class="custom-form-label">Nombre Completo</label>
-                            <input type="text" class="custom-form-control" name="nombre" placeholder="Ej. Carlos Ramírez">
+                            <input type="text" class="custom-form-control" id="nombre_completo" required placeholder="Ej. Carlos Ramírez">
                         </div>
                         <div class="col-md-4 mb-4">
                             <label class="custom-form-label">Identificador (ID)</label>
-                            <input type="text" class="custom-form-control" name="operador_id" placeholder="Ej. OP-006">
+                            <input type="text" class="custom-form-control" id="identificador" required placeholder="Ej. OP-006">
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="custom-form-label">Teléfono</label>
-                            <input type="text" class="custom-form-control" name="telefono" placeholder="Ej. 555-0000">
+                            <input type="text" class="custom-form-control" id="telefono" required placeholder="Ej. 555-0000">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="custom-form-label">Vehículo Asignado</label>
-                            <input type="text" class="custom-form-control" name="vehiculo" placeholder="Ej. Camioneta - ABC-123">
+                            <input type="text" class="custom-form-control" id="vehiculo_asignado" required placeholder="Ej. Camioneta - ABC-123">
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer custom-modal-footer">
-                <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn-orange"><i class="fa-solid fa-save me-2"></i> Guardar Operador</button>
-            </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="custom-form-label">Estado</label>
+                            <select class="custom-form-control" id="estado">
+                                <option value="DISPONIBLE">Disponible</option>
+                                <option value="EN RUTA">En Ruta</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer custom-modal-footer">
+                    <button type="button" class="btn-cancel" data-bs-dismiss="modal" onclick="limpiarFormulario()">Cancelar</button>
+                    <button type="submit" class="btn-orange" id="btnGuardar"><i class="fa-solid fa-save me-2"></i> Guardar Operador</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<script>
+    // IMPORTANTE: Asegúrate de que este puerto (8000 o 8001) sea en el que corre tu FastAPI
+    // Si Laravel usa el 8000, corre FastAPI en el 8001 (uvicorn main:app --port 8001)
+    const API_URL = 'http://127.0.0.1:5000/v1/operadores';
+
+    document.addEventListener('DOMContentLoaded', cargarOperadores);
+
+    // --- LEER OPERADORES (GET) ---
+    async function cargarOperadores() {
+        try {
+            const response = await fetch(API_URL);
+            if (!response.ok) throw new Error('Error al obtener datos');
+            
+            const data = await response.json();
+            const grid = document.getElementById('operatorGrid');
+            grid.innerHTML = ''; // Limpiar cuadrícula
+
+            if(data.operadores && data.operadores.length > 0) {
+                data.operadores.forEach(op => {
+                    const isEnRuta = op.estado === 'EN RUTA';
+                    const statusClass = isEnRuta ? 'status-en-ruta' : 'status-disponible';
+                    const avatarBg = isEnRuta ? '#ff5722' : '#16a34a'; 
+                    // Obtener iniciales (ej: "Carlos Ramírez" -> "CR")
+                    const partesNombre = op.nombre_completo.split(' ');
+                    let iniciales = partesNombre[0].charAt(0).toUpperCase();
+                    if (partesNombre.length > 1) {
+                        iniciales += partesNombre[1].charAt(0).toUpperCase();
+                    }
+
+                    const card = `
+                        <div class="operator-card">
+                            <div class="op-header">
+                                <div class="op-profile">
+                                    <div class="op-avatar" style="background: ${avatarBg};">${iniciales}</div>
+                                    <div class="op-info">
+                                        <h5>${op.nombre_completo}</h5>
+                                        <span>${op.identificador}</span>
+                                    </div>
+                                </div>
+                                <span class="op-status ${statusClass}">${op.estado}</span>
+                            </div>
+                            <div class="op-details">
+                                <p><i class="fa-solid fa-phone"></i> ${op.telefono}</p>
+                                <p><i class="fa-solid fa-truck"></i> ${op.vehiculo_asignado}</p>
+                            </div>
+                            <div class="op-stats">
+                                <span>Envíos asignados</span>
+                                <span class="count" style="color: ${avatarBg}">0</span>
+                            </div>
+                            <div class="op-actions">
+                                <button onclick='abrirModalEditar(${JSON.stringify(op).replace(/'/g, "\\'")})' class="btn-edit" style="cursor:pointer; width:100%; border:none; background:#f4f6f9;"><i class="fa-regular fa-pen-to-square"></i> Editar</button>
+                                <button onclick="eliminarOperador(${op.id})" class="btn-delete" style="cursor:pointer; border:none; background:#fee2e2;"><i class="fa-regular fa-trash-can"></i></button>
+                            </div>
+                        </div>
+                    `;
+                    grid.innerHTML += card;
+                });
+            } else {
+                grid.innerHTML = '<div style="width: 100%; text-align: center; padding: 40px;"><p>No hay operadores registrados aún.</p></div>';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('operatorGrid').innerHTML = '<div style="width: 100%; text-align: center; color: red;"><p>Error de conexión con la base de datos (FastAPI).</p></div>';
+        }
+    }
+
+    // --- CREAR Y ACTUALIZAR (POST / PUT) ---
+    document.getElementById('formOperador').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const btnGuardar = document.getElementById('btnGuardar');
+        btnGuardar.disabled = true;
+        btnGuardar.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Guardando...';
+
+        const id_db = document.getElementById('operador_id_db').value;
+        const operadorData = {
+            nombre_completo: document.getElementById('nombre_completo').value,
+            identificador: document.getElementById('identificador').value,
+            telefono: document.getElementById('telefono').value,
+            vehiculo_asignado: document.getElementById('vehiculo_asignado').value,
+            estado: document.getElementById('estado').value
+        };
+
+        const method = id_db ? 'PUT' : 'POST';
+        const url = id_db ? `${API_URL}/${id_db}` : API_URL;
+
+        try {
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(operadorData)
+            });
+
+            if (response.ok) {
+                // Cerrar modal
+                const modalEl = document.getElementById('modalAgregarOperador');
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if(modal) { modal.hide(); }
+                
+                limpiarFormulario();
+                cargarOperadores(); // Recargar la lista
+                
+                // Pequeña notificación (puedes cambiarla por SweetAlert si lo usas)
+                alert(id_db ? 'Operador actualizado correctamente' : 'Operador agregado correctamente');
+            } else {
+                const err = await response.json();
+                console.error("Detalle del error:", err);
+                alert("Error al guardar: Revisa la consola para más detalles.");
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert("No se pudo conectar con el servidor.");
+        } finally {
+            btnGuardar.disabled = false;
+            btnGuardar.innerHTML = '<i class="fa-solid fa-save me-2"></i> Guardar Operador';
+        }
+    });
+
+    // --- ELIMINAR (DELETE) ---
+    async function eliminarOperador(id) {
+        if(confirm('¿Estás seguro de que deseas eliminar este operador? Esta acción no se puede deshacer.')) {
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    cargarOperadores();
+                } else {
+                    alert('Error al eliminar el operador');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    }
+
+    // --- FUNCIONES AUXILIARES ---
+    function abrirModalEditar(operador) {
+        document.getElementById('modalTitle').innerText = 'Editar Operador';
+        document.getElementById('operador_id_db').value = operador.id;
+        document.getElementById('nombre_completo').value = operador.nombre_completo;
+        document.getElementById('identificador').value = operador.identificador;
+        document.getElementById('telefono').value = operador.telefono;
+        document.getElementById('vehiculo_asignado').value = operador.vehiculo_asignado;
+        document.getElementById('estado').value = operador.estado;
+        
+        const modal = new bootstrap.Modal(document.getElementById('modalAgregarOperador'));
+        modal.show();
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('modalTitle').innerText = 'Agregar Nuevo Operador';
+        document.getElementById('formOperador').reset();
+        document.getElementById('operador_id_db').value = '';
+        document.getElementById('estado').value = 'DISPONIBLE';
+    }
+</script>
 @endsection
