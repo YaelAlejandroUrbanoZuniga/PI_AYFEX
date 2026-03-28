@@ -1,5 +1,5 @@
 # ==================DEFINIMOS MODELO DE LA BASE DE DATOS==================
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, Date
 from app.data.dbDATA import Base
 
 class Crear_Pedidos(Base):
@@ -18,3 +18,4 @@ class Crear_Pedidos(Base):
     anchura = Column(Float, nullable=False)
 
     descripcion = Column(String(300), default="")
+    fecha = Column(Date, nullable=False)
