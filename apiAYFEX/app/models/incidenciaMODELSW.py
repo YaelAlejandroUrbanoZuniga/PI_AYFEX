@@ -1,19 +1,20 @@
 from pydantic import BaseModel
-from typing import Optional
 from datetime import date
+from typing import Optional
 
-# Lo que recibimos del formulario de Laravel
-class IncidenciaCreate(BaseModel):
+class IncidenciaBase(BaseModel):
     envio_id: str
     tipo: str
     descripcion: str
 
-# Lo que enviamos hacia Laravel (la tabla)
-class Incidencia(BaseModel):
+class IncidenciaCreate(IncidenciaBase):
+    pass
+
+class Incidencia(IncidenciaBase):
     id: str
-    envio_id: str
-    tipo: str
-    descripcion: str
     estado: str
-    responsable: str
-    fecha: str
+    responsable: Optional[str] = None
+    fecha: date
+
+    class Config:
+        from_attributes = True # Permite convertir el modelo de DB a JSON

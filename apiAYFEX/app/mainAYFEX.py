@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.data.crear_operadoresDATAW import Crear_Operadores
 from app.data.dbDATA import engine, Base
 from app.data.crear_pedidosDATA import Crear_Pedidos
+from app.data.crear_incidenciasDATAW import Crear_Incidencias
 
 Base.metadata.create_all(bind=engine)
 
