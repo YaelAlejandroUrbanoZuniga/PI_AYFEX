@@ -1,9 +1,11 @@
 # ==================DEFINIMOS MODELO DE LA BASE DE DATOS==================
 from sqlalchemy import Column, Integer, String, Float, Date
 from app.data.dbDATA import Base
+from datetime import date
+
 
 class Crear_Pedidos(Base):
-    __tablename__ = "tb-pedidos"
+    __tablename__ = "CrearPedidos"
     
     id = Column(Integer, primary_key=True, index=True)
 
@@ -18,4 +20,4 @@ class Crear_Pedidos(Base):
     anchura = Column(Float, nullable=False)
 
     descripcion = Column(String(300), default="")
-    fecha = Column(Date, nullable=False)
+    fecha = Column(Date, default=date.today, nullable=False)

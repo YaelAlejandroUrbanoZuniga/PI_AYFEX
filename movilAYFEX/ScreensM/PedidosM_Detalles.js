@@ -32,16 +32,16 @@ export default function PedidosM_Detalles({ navigation, route }) {
   const [anchura, setAnchura] = useState(String(pedidoData.anchura));
   const [descripcion, setDescripcion] = useState(pedidoData.descripcion);
 
-  if (!origen || origen.length < 5) {
+  const actualizarPedido = async () => {
+    if (!origen || origen.length < 5) {
     Alert.alert("Error", "El origen debe tener al menos 5 caracteres");
     return;
-  }
+    }
 
-  if (!destino || destino.length < 5) {
+    if (!destino || destino.length < 5) {
     Alert.alert("Error", "El destino debe tener al menos 5 caracteres");
     return;
-  }
-  const actualizarPedido = async () => {
+    }
 
     try {
 

@@ -15,8 +15,8 @@ import { Ionicons } from '@expo/vector-icons';
 import HeaderNaranja from '../Components/HeaderNaranja';
 
 const API_URL = Platform.OS === "web"
-  ? "http://localhost:5000/v1/pedidos"
-  : "http://192.168.100.134:5000/v1/pedidos";
+  ? "http://localhost:5000/v1/pedidos/"
+  : "http://192.168.100.134:5000/v1/pedidos/";
 
 export default function PedidosM({ navigation }) {
 

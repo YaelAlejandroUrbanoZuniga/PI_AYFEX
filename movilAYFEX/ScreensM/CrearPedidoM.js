@@ -14,8 +14,8 @@ import { Ionicons } from '@expo/vector-icons';
 import HeaderNaranja from '../Components/HeaderNaranja';
 
 const API_URL = Platform.OS === "web"
-  ? "http://localhost:5000/v1/pedidos"
-  : "http://192.168.100.134:5000/v1/pedidos";
+  ? "http://localhost:5000/v1/pedidos/"
+  : "http://192.168.100.134:5000/v1/pedidos/";
 
 export default function CrearPedidoM({ navigation }) {
 
@@ -57,7 +57,6 @@ export default function CrearPedidoM({ navigation }) {
     try {
 
       const pedido = {
-        id: Date.now(),
         origen: origen,
         destino: destino,
         peso: peso ? parseFloat(peso) : 1,
@@ -77,7 +76,14 @@ export default function CrearPedidoM({ navigation }) {
         body: JSON.stringify(pedido)
       });
 
-      const data = await response.json();
+      let data;
+
+      try {
+        data = await response.json();
+      } catch {
+        throw new Error("El servidor no respondió correctamente");
+      }
+
       console.log("Respuesta API:", data);
 
       if (!response.ok) {
