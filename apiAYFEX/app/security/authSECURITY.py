@@ -1,34 +1,37 @@
-# -----------------------------------SEGURIDAD HTTP BASIC-----------------------------------
 from fastapi import status, HTTPException, Depends
-
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from sqlalchemy.orm import Session
 import secrets
+
+# Importamos la conexión y el modelo de usuario
+from app.data.dbDATA import get_db
+from app.data.crear_perfilDATAW import UsuarioDB
 
 security = HTTPBasic()
 
-usuariosVerificados = {
-    "JuanFidelJuarezTorres": "Gege1234",
-    "MiguelAngelTovarMorales": "1234",
-    "YaelAlejandroUrbanoZuniga": "1234"
-}
-
-def verificar_Peticion(credenciales: HTTPBasicCredentials = Depends(security)):
+def verificar_Peticion(credenciales: HTTPBasicCredentials = Depends(security), db: Session = Depends(get_db)):
     username = credenciales.username
     password = credenciales.password
 
-    if username not in usuariosVerificados:
+    # Buscamos al usuario en la Base de Datos (por correo o username)
+    usuario = db.query(UsuarioDB).filter(
+        (UsuarioDB.correo_electronico == username) | 
+        (UsuarioDB.username == username)
+    ).first()
+
+    # Si el usuario no existe
+    if not usuario:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciales no autorizadas"
+            detail="Usuario no encontrado"
         )
 
-    password_correcta = usuariosVerificados[username]
-    passAuth = secrets.compare_digest(password, password_correcta)
-
-    if not passAuth:
+    # Comparamos la contraseña de la BD con la que escribió el usuario
+    # Usamos secrets.compare_digest por seguridad
+    if not secrets.compare_digest(password, usuario.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Credenciales no autorizadas"
+            detail="Contraseña incorrecta"
         )
 
-    return username
+    return usuario.username

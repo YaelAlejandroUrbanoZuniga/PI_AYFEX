@@ -157,14 +157,18 @@
 
             <h3 class="form-title">Iniciar Sesión</h3>
 
-            <form method="POST" action="{{ route('login') }}">
+            <div id="errorMensaje" class="alert alert-danger" style="display: none; background-color: #fee2e2; color: #dc2626; border-radius: 8px; padding: 10px; font-size: 0.9rem; text-align: center; margin-bottom: 1rem; border: 1px solid #fca5a5;">
+                Usuario o contraseña incorrectos.
+            </div>
+
+            <form id="formLogin">
                 @csrf
 
                 <div class="mb-3">
                     <label class="form-label">Correo electrónico</label>
                     <div class="input-group-custom">
                         <i class="far fa-envelope"></i>
-                        <input type="email" name="email" placeholder="admin@ayfex.com" required autofocus>
+                        <input type="email" id="inputUsuario" name="email" placeholder="ejemplo@ayfex.com" required autofocus>
                     </div>
                 </div>
 
@@ -172,25 +176,32 @@
                     <label class="form-label">Contraseña</label>
                     <div class="input-group-custom">
                         <i class="fas fa-lock"></i>
-                        <input type="password" name="password" placeholder="••••••••" required>
+                        <input type="password" id="inputPassword" name="password" placeholder="••••••••" required>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-orange w-100 mb-4">
+                <button type="submit" id="btnSubmit" class="btn btn-orange w-100 mb-3">
                     Ingresar al Sistema
                 </button>
 
-                <div class="text-center mb-4">
+                <div class="text-center mb-2">
                     @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}" class="text-orange text-decoration-none">
+                        <a href="{{ route('password.request') }}" class="text-orange text-decoration-none" style="font-size: 0.85rem;">
                             ¿Olvidaste tu contraseña?
                         </a>
                     @endif
                 </div>
 
+                <div class="text-center mt-3">
+                    <span style="color: #64748b; font-size: 0.9rem;">¿No tienes cuenta?</span> 
+                    <a href="{{ route('registro') }}" class="text-orange text-decoration-none ms-1">
+                        Regístrate aquí
+                    </a>
+                </div>
+
                 <div class="test-access-box">
-                    <strong>Acceso de prueba:</strong><br>
-                    admin@ayfex.com / cualquier contraseña
+                    <strong>¿No sabes tus credenciales?</strong><br>
+                    Regístrate para crear un nuevo usuario.
                 </div>
 
             </form>
@@ -202,4 +213,61 @@
     </div>
 
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const formLogin = document.getElementById("formLogin");
+    const errorMensaje = document.getElementById("errorMensaje");
+    const btnSubmit = document.getElementById("btnSubmit");
+
+    // Limpiamos credenciales anteriores si la persona regresó al login
+    localStorage.removeItem("authCredentials");
+
+    formLogin.addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        // 1. Obtener valores ingresados (Cambiamos el nombre para que coincida abajo)
+        const email = document.getElementById("inputUsuario").value; // Antes era 'usuario'
+        const password = document.getElementById("inputPassword").value;
+
+        // 2. Crear el token Basic Auth (Base64)
+        // Usamos 'email' que acabamos de definir arriba
+        const tokenBase64 = btoa(`${email}:${password}`);
+
+        btnSubmit.disabled = true;
+        btnSubmit.innerText = "Verificando...";
+        errorMensaje.style.display = "none";
+
+        // 3. Hacer petición a FastAPI
+        fetch("http://127.0.0.1:5000/v1/login/", {
+            method: 'POST',
+            headers: {
+                // CORRECCIÓN: Usamos 'tokenBase64' que es el nombre de la variable arriba
+                'Authorization': `Basic ${tokenBase64}`, 
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.status === 401 || response.status === 404) {
+                throw new Error("Credenciales inválidas");
+            }
+            if (!response.ok) {
+                throw new Error("Error en el servidor");
+            }
+            return response.json(); 
+        })
+        .then(data => {
+            // 4. ÉXITO: Guardar token
+            localStorage.setItem("authCredentials", tokenBase64);
+            window.location.href = "/dashboard"; 
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            errorMensaje.style.display = "block";
+            btnSubmit.disabled = false;
+            btnSubmit.innerText = "Ingresar al Sistema";
+        });
+    });
+});
+</script>
 @endsection

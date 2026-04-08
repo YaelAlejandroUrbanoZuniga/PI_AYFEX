@@ -65,3 +65,7 @@ Route::get('/incidencias', function () {
 Route::get('/perfil', function () {
      return view('perfil'); 
      })->name('perfil');
+Route::get('/registro', function () {
+    // Como tu archivo está suelto en la raíz de "views", solo ponemos su nombre
+    return view('registro'); 
+})->name('registro');
