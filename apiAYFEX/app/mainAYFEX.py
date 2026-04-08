@@ -10,7 +10,7 @@ from app.data.crear_incidenciasDATAW import Crear_Incidencias
 
 Base.metadata.create_all(bind=engine)
 
-from app.routers import pedidosROUTERS
+from apiAYFEX.app.routers.movilROUTERS import pedidosROUTERS
 from app.routers import operadoresROUTERSW
 from app.routers import incidenciasROUTERSW
 
@@ -22,17 +22,15 @@ app = FastAPI(
 @app.get("/")
 def read_root():
     return {"mensaje": "¡Bienvenido a la API de AYFEX PEDIDOS!"}
-# --- CONFIGURACIÓN DE CORS ---
-# Esto le dice a tu API que acepte peticiones desde tu web Laravel
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # El "*" permite cualquier origen. (En producción se cambia por la URL real de tu web)
+    allow_origins=["*"],  
     allow_credentials=True,
-    allow_methods=["*"],  # Permite GET, POST, PUT, DELETE
-    allow_headers=["*"],  # Permite cualquier cabecera
+    allow_methods=["*"], 
+    allow_headers=["*"],
 )
 
-# Incluir los routers
 app.include_router(pedidosROUTERS.router)
 app.include_router(operadoresROUTERSW.router)
 app.include_router(incidenciasROUTERSW.router)
