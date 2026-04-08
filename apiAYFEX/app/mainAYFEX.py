@@ -4,25 +4,22 @@ from typing import Annotated
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 
-# --- MODELOS DE BASE DE DATOS ---
+
 from app.data.crear_operadoresDATAW import Crear_Operadores
 from app.data.dbDATA import engine, Base
-from app.data.crear_pedidosDATA import Crear_Pedidos
+from app.data.movilDATA.crear_pedidosDATA import Crear_Pedidos
 from app.data.crear_incidenciasDATAW import Crear_Incidencias
-# 1. Agregamos la importación del modelo de Perfil para que SQLAlchemy sepa que existe
-from app.data.crear_perfilDATAW import UsuarioDB 
+from app.data.crear_perfilDATAW import UsuarioDB
+from app.data.movilDATA.crear_usuarioDATA import UsuarioMDB 
 
-# Esto crea todas las tablas en la base de datos
 Base.metadata.create_all(bind=engine)
 
-from apiAYFEX.app.routers.movilROUTERS import pedidosROUTERS
+from app.routers.movilROUTERS import pedidosROUTERS
+from app.routers.movilROUTERS import authROUTERS
 from app.routers import operadoresROUTERSW
 from app.routers import incidenciasROUTERSW
-# 2. Importamos el router del Perfil
 from app.routers import perfilROUTERSW 
-# Importamos el router del Login
 from app.routers import loginROUTERSW
-#  Importamos el router de Registro (Asegúrate de que el archivo se llame registroROUTERSW.py)
 from app.routers import registroROUTERSW
 
 app = FastAPI(
@@ -44,11 +41,12 @@ app.add_middleware(
 )
 
 app.include_router(pedidosROUTERS.router)
+app.include_router(authROUTERS.router)
+
+
+
 app.include_router(operadoresROUTERSW.router)
 app.include_router(incidenciasROUTERSW.router)
-# 3. Encendemos los endpoints del perfil en la API
 app.include_router(perfilROUTERSW.router)
-# Encendemos el endpoint de login en la API
 app.include_router(loginROUTERSW.router)
-# Encendemos el endpoint de registro en la API
 app.include_router(registroROUTERSW.router)
