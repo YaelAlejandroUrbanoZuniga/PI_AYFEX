@@ -14,13 +14,8 @@ from app.data.movilDATA.crear_usuarioDATA import UsuarioMDB
 
 Base.metadata.create_all(bind=engine)
 
-<<<<<<< HEAD
-# --- ROUTERS ---
-from app.routers import pedidosROUTERS
-=======
 from app.routers.movilROUTERS import pedidosROUTERS
 from app.routers.movilROUTERS import authROUTERS
->>>>>>> 623e856e8af5406e81fd91278f0e9c0505c0d377
 from app.routers import operadoresROUTERSW
 from app.routers import incidenciasROUTERSW
 from app.routers import perfilROUTERSW 
@@ -32,34 +27,21 @@ app = FastAPI(
     description="Sistema de gestión de pedidos",
     version="1.0.0"
 )
-<<<<<<< HEAD
-# --- CONFIGURACIÓN DE CORS ---
-# Esto le dice a tu API que acepte peticiones desde tu web
-=======
 
 @app.get("/")
 def read_root():
     return {"mensaje": "¡Bienvenido a la API de AYFEX PEDIDOS!"}
 
->>>>>>> 623e856e8af5406e81fd91278f0e9c0505c0d377
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # El "*" permite cualquier origen. (En producción se cambia por la URL real de tu web)
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Permite GET, POST, PUT, DELETE
-    allow_headers=["*"],  # Permite cualquier cabecera
+    allow_methods=["*"],
+    allow_headers=["*"], 
 )
 
-<<<<<<< HEAD
-@app.get("/")
-def read_root():
-    return {"mensaje": "¡Bienvenido a la API de AYFEX PEDIDOS!"}
 
 
-
-# --- INCLUSIÓN DE ROUTERS EN LA APP ---
-=======
->>>>>>> 623e856e8af5406e81fd91278f0e9c0505c0d377
 app.include_router(pedidosROUTERS.router)
 app.include_router(authROUTERS.router)
 
