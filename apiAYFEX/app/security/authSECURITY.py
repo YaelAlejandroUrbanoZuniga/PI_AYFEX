@@ -1,37 +1,47 @@
-from fastapi import status, HTTPException, Depends
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from sqlalchemy.orm import Session
-import secrets
+from datetime import datetime, timedelta
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jose import JWTError, jwt
+from passlib.context import CryptContext
 
-# Importamos la conexión y el modelo de usuario
-from app.data.dbDATA import get_db
-from app.data.crear_perfilDATAW import UsuarioDB
+SECRET_KEY = "parangaricutirimicuarizador1234567890987654321ggpapaefeefe"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
-security = HTTPBasic()
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def verificar_Peticion(credenciales: HTTPBasicCredentials = Depends(security), db: Session = Depends(get_db)):
-    username = credenciales.username
-    password = credenciales.password
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/auth/login")
 
-    # Buscamos al usuario en la Base de Datos (por correo o username)
-    usuario = db.query(UsuarioDB).filter(
-        (UsuarioDB.correo_electronico == username) | 
-        (UsuarioDB.username == username)
-    ).first()
+usuarios_db = {
+    "JuanFidelJuarezTorres": {
+        "username": "JuanFidelJuarezTorres",
+        "password_hash": pwd_context.hash("Gege1234")
+    },
+    "MiguelAngelTovarMorales": {
+        "username": "MiguelAngelTovarMorales",
+        "password_hash": pwd_context.hash("1234")
+    },
+    "YaelAlejandroUrbanoZuniga": {
+        "username": "YaelAlejandroUrbanoZuniga",
+        "password_hash": pwd_context.hash("1234")
+    }
+}
 
-    # Si el usuario no existe
-    if not usuario:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Usuario no encontrado"
-        )
+def verificar_password(password_plano, password_hash):
+    return pwd_context.verify(password_plano, password_hash)
 
-    # Comparamos la contraseña de la BD con la que escribió el usuario
-    # Usamos secrets.compare_digest por seguridad
-    if not secrets.compare_digest(password, usuario.password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Contraseña incorrecta"
-        )
+def crear_token(data: dict):
+    to_encode = data.copy()
+    expiracion = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expiracion})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-    return usuario.username
+def verificar_Peticion(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido")
+        return username
+    except JWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Token inválido o expirado")

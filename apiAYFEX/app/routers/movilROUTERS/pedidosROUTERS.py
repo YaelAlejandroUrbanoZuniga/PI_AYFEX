@@ -1,81 +1,90 @@
-from fastapi import status , HTTPException, Depends, APIRouter
-from apiAYFEX.app.models.movilMODELS.pedidoMODELS import PedidoBase
+from fastapi import status, HTTPException, Depends, APIRouter
+from app.models.movilMODELS.pedidoMODELS import PedidoBase, Pedido
 from app.security.authSECURITY import verificar_Peticion
-from datetime import datetime
-from apiAYFEX.app.models.movilMODELS.pedidoMODELS import Pedido
 from datetime import date
-
-
 from sqlalchemy.orm import Session
 from app.data.dbDATA import get_db
-from app.data.crear_pedidosDATA import Crear_Pedidos
+from app.data.movilDATA.crear_pedidosDATA import Crear_Pedidos
 
 router = APIRouter(
     prefix="/v1/pedidos",
-    tags=["Pedidos"]
+    tags=["Móvil | Pedidos"]
 )
 
-# ---------- Endpoints Pedidos --------------- 
-
-#Endpoint GET Obtener Pedidos
 @router.get("/", response_model=list[Pedido])
-async def leer_pedidos(db: Session = Depends(get_db)):
-    return db.query(Crear_Pedidos).all()
+async def leer_pedidos(
+    db: Session = Depends(get_db),
+    usuario_id: str = Depends(verificar_Peticion)
+):
+    return db.query(Crear_Pedidos).filter(
+        Crear_Pedidos.usuario_id == int(usuario_id)
+    ).all()
 
-#Endpoint Post Crear Pedidos
 @router.post("/", response_model=Pedido, status_code=status.HTTP_201_CREATED)
-async def crear_pedido(pedidoP: PedidoBase, db: Session = Depends(get_db)):
-    
+async def crear_pedido(
+    pedidoP: PedidoBase,
+    db: Session = Depends(get_db),
+    usuario_id: str = Depends(verificar_Peticion)
+):
     nuevoPedido = Crear_Pedidos(
-    origen=pedidoP.origen,
-    destino=pedidoP.destino,
-    peso=pedidoP.peso,
-    tipo=pedidoP.tipo,
-    altura=pedidoP.altura,
-    anchura=pedidoP.anchura,
-    descripcion=pedidoP.descripcion,
-    fecha=date.today()
+        usuario_id=int(usuario_id),
+        origen=pedidoP.origen,
+        destino=pedidoP.destino,
+        peso=pedidoP.peso,
+        tipo=pedidoP.tipo,
+        altura=pedidoP.altura,
+        anchura=pedidoP.anchura,
+        descripcion=pedidoP.descripcion,
+        fecha=date.today()
     )
     
     db.add(nuevoPedido)
     db.commit()
-    db.refresh(nuevoPedido) 
-
+    db.refresh(nuevoPedido)
     return nuevoPedido
 
-#Endpoint Put Editar Pedido
 @router.put("/{id}", status_code=status.HTTP_200_OK)
-async def actualizar_pedido(id: int, pedidoP: PedidoBase, db: Session = Depends(get_db)):
-    pedido_db = db.query(Crear_Pedidos).filter(Crear_Pedidos.id == id).first()
+async def actualizar_pedido(
+    id: int,
+    pedidoP: PedidoBase,
+    db: Session = Depends(get_db),
+    usuario_id: str = Depends(verificar_Peticion)
+):
+    pedido_db = db.query(Crear_Pedidos).filter(
+        Crear_Pedidos.id == id,
+        Crear_Pedidos.usuario_id == int(usuario_id)
+    ).first()
     
-    if pedido_db:
-        
-        pedido_db.origen = pedidoP.origen
-        pedido_db.destino = pedidoP.destino
-        pedido_db.peso = pedidoP.peso
-        pedido_db.tipo = pedidoP.tipo
-        pedido_db.altura = pedidoP.altura
-        pedido_db.anchura = pedidoP.anchura
-        pedido_db.descripcion = pedidoP.descripcion
-        
-        db.commit()
-        db.refresh(pedido_db)
-        
-        return {
-            "mensaje": "Pedido Actualizado",
-            "Pedido": pedido_db
-        }
-        
-    raise HTTPException(status_code=404, detail="El ID del pedido no existe")
+    if not pedido_db:
+        raise HTTPException(status_code=404, detail="Pedido no encontrado")
 
-#Endpoint Delete Eliminar Pedido
-@router.delete("/{id}", status_code=status.HTTP_200_OK)
-async def eliminar_pedido(id: int, db: Session = Depends(get_db)):
-    pedido_db = db.query(Crear_Pedidos).filter(Crear_Pedidos.id == id).first()
+    pedido_db.origen = pedidoP.origen
+    pedido_db.destino = pedidoP.destino
+    pedido_db.peso = pedidoP.peso
+    pedido_db.tipo = pedidoP.tipo
+    pedido_db.altura = pedidoP.altura
+    pedido_db.anchura = pedidoP.anchura
+    pedido_db.descripcion = pedidoP.descripcion
     
-    if pedido_db:
-        db.delete(pedido_db)
-        db.commit()
-        return {"mensaje": "Pedido eliminado correctamente"}
-        
-    raise HTTPException(status_code=404, detail="El ID del pedido no existe")
+    db.commit()
+    db.refresh(pedido_db)
+    
+    return {"mensaje": "Pedido Actualizado", "Pedido": pedido_db}
+
+@router.delete("/{id}", status_code=status.HTTP_200_OK)
+async def eliminar_pedido(
+    id: int,
+    db: Session = Depends(get_db),
+    usuario_id: str = Depends(verificar_Peticion)
+):
+    pedido_db = db.query(Crear_Pedidos).filter(
+        Crear_Pedidos.id == id,
+        Crear_Pedidos.usuario_id == int(usuario_id)
+    ).first()
+    
+    if not pedido_db:
+        raise HTTPException(status_code=404, detail="Pedido no encontrado")
+
+    db.delete(pedido_db)
+    db.commit()
+    return {"mensaje": "Pedido eliminado correctamente"}

@@ -23,20 +23,18 @@ export default function PedidosM({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
 
   const cargarPedidos = async () => {
-
     try {
-
-      const response = await fetch(API_URL);
+      const response = await fetch(API_URL, {
+        headers: {
+          "Authorization": `Bearer ${global.authToken}`
+        }
+      });
       const data = await response.json();
-
-      setPedidos(data);
-
+      setPedidos(Array.isArray(data) ? data : []);
     } catch (error) {
-
       console.log("Error cargando pedidos:", error);
-
+      setPedidos([]);
     }
-
   };
 
   const onRefresh = async () => {
