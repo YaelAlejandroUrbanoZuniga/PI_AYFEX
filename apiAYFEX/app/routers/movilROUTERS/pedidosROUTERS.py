@@ -1,9 +1,8 @@
 from fastapi import status , HTTPException, Depends, APIRouter
-from app.models.pedidoMODELS import PedidoBase
-from app.data.databaseDATA import pedidos
+from apiAYFEX.app.models.movilMODELS.pedidoMODELS import PedidoBase
 from app.security.authSECURITY import verificar_Peticion
 from datetime import datetime
-from app.models.pedidoMODELS import Pedido
+from apiAYFEX.app.models.movilMODELS.pedidoMODELS import Pedido
 from datetime import date
 
 
@@ -77,5 +76,6 @@ async def eliminar_pedido(id: int, db: Session = Depends(get_db)):
     if pedido_db:
         db.delete(pedido_db)
         db.commit()
+        return {"mensaje": "Pedido eliminado correctamente"}
         
     raise HTTPException(status_code=404, detail="El ID del pedido no existe")

@@ -12,10 +12,9 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import HeaderNaranja from '../Components/HeaderNaranja';
+import { API_BASE_URL } from '../config';
 
-const API_URL = Platform.OS === "web"
-  ? "http://localhost:5000/v1/pedidos/"
-  : "http://192.168.100.134:5000/v1/pedidos/";
+const API_URL = `${API_BASE_URL}/v1/pedidos/`;
 
 export default function CrearPedidoM({ navigation }) {
 
