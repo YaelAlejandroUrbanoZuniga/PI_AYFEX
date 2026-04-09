@@ -4,8 +4,8 @@ from typing import List
 from datetime import date
 
 # Importamos el modelo de DB y los esquemas
-from app.data.crear_incidenciasDATAW import Crear_Incidencias
-from app.models.incidenciaMODELSW import Incidencia, IncidenciaCreate
+from app.data.webDATA.crear_incidenciasDATAW import Crear_Incidencias
+from app.models.webMODELS.incidenciaMODELSW import Incidencia, IncidenciaCreate
 
 # Importa tu función get_db (ajusta la ruta según cómo lo tengas en tu proyecto)
 from app.data.dbDATA import get_db 

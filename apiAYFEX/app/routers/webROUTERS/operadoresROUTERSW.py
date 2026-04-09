@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.data.dbDATA import get_db
-from app.models.operadorMODELSW import OperadorBase
-from app.data.crear_operadoresDATAW import Crear_Operadores
+from app.models.webMODELS.operadorMODELSW import OperadorBase
+from app.data.webDATA.crear_operadoresDATAW import Crear_Operadores
 # Si quieres proteger la ruta de eliminar, descomenta la siguiente línea:
 from app.security.authSECURITY import verificar_Peticion 
 

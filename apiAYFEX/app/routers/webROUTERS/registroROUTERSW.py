@@ -3,7 +3,7 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 
 # Importamos tu modelo de base de datos y la conexión
-from app.data.crear_perfilDATAW import UsuarioDB
+from app.data.webDATA.crear_perfilDATAW import UsuarioDB
 from app.data.dbDATA import get_db
 
 router = APIRouter(
@@ -18,7 +18,7 @@ class UsuarioRegistro(BaseModel):
     telefono: str
     password: str
 
-@router.post("/")
+@router.post("")
 def registrar_usuario(datos: UsuarioRegistro, db: Session = Depends(get_db)):
     # 1. Verificamos si el correo ya está registrado
     usuario_existente = db.query(UsuarioDB).filter(

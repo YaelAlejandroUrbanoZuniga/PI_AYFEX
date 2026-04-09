@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function() {
         btnSubmit.innerText = "Registrando...";
 
         // 5. Enviar petición a tu API
-        fetch("http://127.0.0.1:5000/v1/registro/", {
+        fetch("http://127.0.0.1:5000/v1/registro", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

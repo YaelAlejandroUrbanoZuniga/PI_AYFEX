@@ -43,7 +43,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        color: #c2410c; /* Naranja oscuro */
+        color: #c2410c; 
         background-color: #fffaf5;
         border: 1px solid #fed7aa;
         padding: 6px 16px;
@@ -220,32 +220,34 @@ document.addEventListener("DOMContentLoaded", function() {
     const errorMensaje = document.getElementById("errorMensaje");
     const btnSubmit = document.getElementById("btnSubmit");
 
-    // Limpiamos credenciales anteriores si la persona regresó al login
-    localStorage.removeItem("authCredentials");
+    // Limpiamos tokens anteriores al entrar al login por seguridad
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("authUserName");
 
     formLogin.addEventListener("submit", function(event) {
         event.preventDefault();
 
-        // 1. Obtener valores ingresados (Cambiamos el nombre para que coincida abajo)
-        const email = document.getElementById("inputUsuario").value; // Antes era 'usuario'
+        const email = document.getElementById("inputUsuario").value;
         const password = document.getElementById("inputPassword").value;
 
-        // 2. Crear el token Basic Auth (Base64)
-        // Usamos 'email' que acabamos de definir arriba
-        const tokenBase64 = btoa(`${email}:${password}`);
+        // 1. JWT requiere formato x-www-form-urlencoded
+        // Obligatorio: El backend de FastAPI buscará el campo llamado 'username'
+        const formData = new URLSearchParams();
+        formData.append("username", email); 
+        formData.append("password", password);
 
         btnSubmit.disabled = true;
         btnSubmit.innerText = "Verificando...";
         errorMensaje.style.display = "none";
 
-        // 3. Hacer petición a FastAPI
+        // 2. Hacer petición a FastAPI
         fetch("http://127.0.0.1:5000/v1/login/", {
             method: 'POST',
             headers: {
-                // CORRECCIÓN: Usamos 'tokenBase64' que es el nombre de la variable arriba
-                'Authorization': `Basic ${tokenBase64}`, 
+                'Content-Type': 'application/x-www-form-urlencoded',
                 'Accept': 'application/json'
-            }
+            },
+            body: formData
         })
         .then(response => {
             if (response.status === 401 || response.status === 404) {
@@ -257,8 +259,15 @@ document.addEventListener("DOMContentLoaded", function() {
             return response.json(); 
         })
         .then(data => {
-            // 4. ÉXITO: Guardar token
-            localStorage.setItem("authCredentials", tokenBase64);
+            // 3. ÉXITO: Guardar el token de acceso devuelto por FastAPI
+            if(data.access_token) {
+                localStorage.setItem("authToken", data.access_token);
+            }
+            
+            if(data.nombre) {
+                localStorage.setItem("authUserName", data.nombre);
+            }
+            
             window.location.href = "/dashboard"; 
         })
         .catch(error => {

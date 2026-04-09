@@ -91,16 +91,18 @@
     }
 
     .rutas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px;}
-    .ruta-card { background: #fff; border: 2px solid #222; border-radius: 16px; padding: 20px; }
+    .ruta-card { background: #fff; border: 2px solid #222; border-radius: 16px; padding: 20px; transition: transform 0.2s;}
+    .ruta-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05);}
     
     .badge-activa { color: #16a34a; background: #dcfce7; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;}
+    .badge-inactiva { color: #dc2626; background: #fee2e2; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;}
     .zone-tag { display: inline-block; background: #f3f4f6; border: 1px solid #e5e7eb; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; color: #4b5563; margin: 4px 4px 4px 0;}
     
     .btn-edit-del { display: flex; gap: 10px; border-top: 1px solid #eee; margin-top: 15px; padding-top: 15px; }
-    .btn-edit-del a { flex: 1; text-align: center; padding: 8px; border-radius: 8px; font-weight: 600; text-decoration: none; border: 1px solid #ddd; color: #555; transition: 0.2s;}
-    .btn-edit-del a.delete { flex: 0 0 45px; border-color: #fee2e2; color: #ef4444; background: #fff;}
-    .btn-edit-del a:hover { background: #f9f9f9; color: #222; border-color: #222;}
-    .btn-edit-del a.delete:hover { background: #fee2e2; border-color: #fee2e2;}
+    .btn-edit-del a, .btn-edit-del button { flex: 1; text-align: center; padding: 8px; border-radius: 8px; font-weight: 600; text-decoration: none; border: 1px solid #ddd; color: #555; transition: 0.2s; background: white; cursor: pointer;}
+    .btn-edit-del button.delete { flex: 0 0 45px; border-color: #fee2e2; color: #ef4444; background: #fff;}
+    .btn-edit-del a:hover, .btn-edit-del button:hover { background: #f9f9f9; color: #222; border-color: #222;}
+    .btn-edit-del button.delete:hover { background: #fee2e2; border-color: #fee2e2;}
 </style>
 
 <header class="main-header">
@@ -186,115 +188,258 @@
     <div class="filter-bar">
         <div class="filter-search">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Buscar por nombre, zona o operador...">
+            <input type="text" id="buscadorRutas" placeholder="Buscar por nombre, zona o operador...">
         </div>
     </div>
 
-    <div class="rutas-grid">
-        <div class="ruta-card">
-            <div class="d-flex justify-content-between mb-3">
-                <div><h5 style="font-weight: 800; margin:0; font-size:1.1rem; color:#222;">Ruta Centro</h5><small class="text-muted" style="font-weight:600;">RUT-001</small></div>
-                <span class="badge-activa">Activa</span>
-            </div>
-            <p style="font-size: 0.8rem; color:#666; font-weight:600; margin-bottom: 5px;"><i class="fa-solid fa-location-dot"></i> Zonas Cubiertas</p>
-            <div style="margin-bottom: 15px;">
-                <span class="zone-tag">CDMX Centro</span> <span class="zone-tag">Polanco</span> <span class="zone-tag">Reforma</span>
-            </div>
-            <p style="font-size: 0.85rem; color:#444;"><i class="fa-solid fa-truck text-muted me-2"></i> Operador: <strong>Carlos Ramírez</strong></p>
-            <div class="btn-edit-del">
-                <a href="#"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                <a href="#" class="delete"><i class="fa-regular fa-trash-can"></i></a>
-            </div>
-        </div>
-        
-        <div class="ruta-card">
-            <div class="d-flex justify-content-between mb-3">
-                <div><h5 style="font-weight: 800; margin:0; font-size:1.1rem; color:#222;">Ruta Norte</h5><small class="text-muted" style="font-weight:600;">RUT-002</small></div>
-                <span class="badge-activa">Activa</span>
-            </div>
-            <p style="font-size: 0.8rem; color:#666; font-weight:600; margin-bottom: 5px;"><i class="fa-solid fa-location-dot"></i> Zonas Cubiertas</p>
-            <div style="margin-bottom: 15px;">
-                <span class="zone-tag">Monterrey</span> <span class="zone-tag">San Pedro</span> <span class="zone-tag">Santa Catarina</span>
-            </div>
-            <p style="font-size: 0.85rem; color:#444;"><i class="fa-solid fa-truck text-muted me-2"></i> Operador: <strong>María González</strong></p>
-            <div class="btn-edit-del">
-                <a href="#"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                <a href="#" class="delete"><i class="fa-regular fa-trash-can"></i></a>
-            </div>
-        </div>
-
-        <div class="ruta-card">
-            <div class="d-flex justify-content-between mb-3">
-                <div><h5 style="font-weight: 800; margin:0; font-size:1.1rem; color:#222;">Ruta Bajío</h5><small class="text-muted" style="font-weight:600;">RUT-003</small></div>
-                <span class="badge-activa">Activa</span>
-            </div>
-            <p style="font-size: 0.8rem; color:#666; font-weight:600; margin-bottom: 5px;"><i class="fa-solid fa-location-dot"></i> Zonas Cubiertas</p>
-            <div style="margin-bottom: 15px;">
-                <span class="zone-tag">Querétaro</span> <span class="zone-tag">León</span> <span class="zone-tag">Celaya</span>
-            </div>
-            <p style="font-size: 0.85rem; color:#444;"><i class="fa-solid fa-truck text-muted me-2"></i> Operador: <strong>Pedro Sánchez</strong></p>
-            <div class="btn-edit-del">
-                <a href="#"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                <a href="#" class="delete"><i class="fa-regular fa-trash-can"></i></a>
-            </div>
+    <div class="rutas-grid" id="rutasContainer">
+        <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+            <i class="fa-solid fa-spinner fa-spin fa-2x mb-3" style="color: #ff5722;"></i>
+            <p>Cargando rutas...</p>
         </div>
     </div>
 </div>
 
 <div class="modal fade" id="modalCrearRuta" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg"> <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+    <div class="modal-dialog modal-lg"> 
+        <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             <div class="modal-header" style="border-bottom: 1px solid #f0f0f0; padding: 20px;">
                 <h5 class="modal-title" style="font-weight: 800; color: #333;">Crear Nueva Ruta</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <form action="#" method="POST">
+            <form id="formCrearRuta">
                 <div class="modal-body" style="padding: 25px;">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label" style="font-weight: 600; font-size: 0.9rem; color: #555;">Nombre de la Ruta</label>
-                            <input type="text" class="form-control" name="nombre_ruta" placeholder="Ej. Ruta Pacífico" style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
+                            <input type="text" class="form-control" name="nombre" placeholder="Ej. Ruta Pacífico" required style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label" style="font-weight: 600; font-size: 0.9rem; color: #555;">Código de Ruta</label>
-                            <input type="text" class="form-control" name="codigo_ruta" placeholder="Ej. RUT-004" style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
+                            <input type="text" class="form-control" name="codigo" placeholder="Ej. RUT-004" required style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label" style="font-weight: 600; font-size: 0.9rem; color: #555;">Operador Asignado</label>
-                            <select class="form-select" name="operador" style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
-                                <option value="" selected disabled>Seleccione un operador...</option>
-                                <option value="1">Carlos Ramírez</option>
-                                <option value="2">María González</option>
-                                <option value="3">Pedro Sánchez</option>
-                                <option value="4">Luis Hernández</option>
-                                <option value="5">Ana Martínez</option>
+                            <select class="form-select" name="operador_id" id="selectOperadores" style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
+                                <option value="" selected disabled>Cargando operadores...</option>
                             </select>
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label" style="font-weight: 600; font-size: 0.9rem; color: #555;">Estado de la Ruta</label>
                             <select class="form-select" name="estado" style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
-                                <option value="activa" selected>Activa</option>
-                                <option value="inactiva">Inactiva</option>
-                                <option value="mantenimiento">En Mantenimiento</option>
+                                <option value="Activa" selected>Activa</option>
+                                <option value="Inactiva">Inactiva</option>
                             </select>
                         </div>
 
                         <div class="col-md-12 mb-3">
                             <label class="form-label" style="font-weight: 600; font-size: 0.9rem; color: #555;">Zonas Cubiertas (separadas por comas)</label>
-                            <input type="text" class="form-control" name="zonas" placeholder="Ej: Zona A, Zona B, Zona C" style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
+                            <input type="text" class="form-control" name="zonas_cubiertas" placeholder="Ej: Zona A, Zona B, Zona C" required style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
                         </div>
                     </div>
                 </div>
                 
                 <div class="modal-footer" style="border-top: 1px solid #f0f0f0; padding: 15px 25px;">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px; font-weight: 600;">Cancelar</button>
-                    <button type="submit" class="btn-orange">Guardar Ruta</button>
+                    <button type="submit" class="btn-orange" id="btnGuardarRuta">Guardar Ruta</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // URL base de tu API FastAPI (Asegúrate de que el puerto sea el correcto)
+    const API_URL = 'http://127.0.0.1:8000/v1/rutas';
+    
+    // Obtenemos el token de donde lo estés guardando al hacer Login (ej. localStorage)
+    // Si usas otro método, actualiza esta línea.
+    const token = localStorage.getItem('ayfex_token'); 
+    
+    // Configuración estándar para las cabeceras HTTP
+    const getHeaders = () => ({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    });
+
+    // Elementos del DOM
+    const rutasContainer = document.getElementById('rutasContainer');
+    const selectOperadores = document.getElementById('selectOperadores');
+    const formCrearRuta = document.getElementById('formCrearRuta');
+    const buscadorRutas = document.getElementById('buscadorRutas');
+
+    // 1. FUNCIÓN PARA CARGAR TODAS LAS RUTAS
+    async function cargarRutas(query = '') {
+        try {
+            const url = query ? `${API_URL}/?query=${encodeURIComponent(query)}` : `${API_URL}/`;
+            const response = await fetch(url, { headers: getHeaders() });
+            
+            if (!response.ok) throw new Error('Error al cargar rutas');
+            
+            const rutas = await response.json();
+            renderizarRutas(rutas);
+        } catch (error) {
+            console.error(error);
+            rutasContainer.innerHTML = `<div style="grid-column: 1/-1; color: red;">Error de conexión con la API.</div>`;
+        }
+    }
+
+    // 2. FUNCIÓN PARA DIBUJAR LAS TARJETAS (REEMPLAZA EL HTML ESTÁTICO)
+    function renderizarRutas(rutas) {
+        rutasContainer.innerHTML = ''; // Limpiar el contenedor
+        
+        if (rutas.length === 0) {
+            rutasContainer.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #666;">No se encontraron rutas.</div>`;
+            return;
+        }
+
+        rutas.forEach(ruta => {
+            // Determinar color del badge
+            const badgeClass = ruta.estado.toUpperCase() === 'ACTIVA' ? 'badge-activa' : 'badge-inactiva';
+            
+            // Generar los tags de zonas
+            const zonasHtml = ruta.zonas_cubiertas.map(zona => `<span class="zone-tag">${zona}</span>`).join('');
+            
+            // Operador asignado
+            const nombreOp = ruta.nombre_operador ? ruta.nombre_operador : 'Sin asignar';
+
+            // Crear el HTML de la tarjeta
+            const card = document.createElement('div');
+            card.className = 'ruta-card';
+            card.innerHTML = `
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <h5 style="font-weight: 800; margin:0; font-size:1.1rem; color:#222;">${ruta.nombre}</h5>
+                        <small class="text-muted" style="font-weight:600;">${ruta.codigo}</small>
+                    </div>
+                    <span class="${badgeClass}">${ruta.estado}</span>
+                </div>
+                <p style="font-size: 0.8rem; color:#666; font-weight:600; margin-bottom: 5px;"><i class="fa-solid fa-location-dot"></i> Zonas Cubiertas</p>
+                <div style="margin-bottom: 15px;">
+                    ${zonasHtml}
+                </div>
+                <p style="font-size: 0.85rem; color:#444;"><i class="fa-solid fa-truck text-muted me-2"></i> Operador: <strong>${nombreOp}</strong></p>
+                <div class="btn-edit-del">
+                    <a href="#" onclick="alert('Funcionalidad de editar pendiente')"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
+                    <button class="delete" data-id="${ruta.id}" title="Eliminar Ruta"><i class="fa-regular fa-trash-can"></i></button>
+                </div>
+            `;
+            rutasContainer.appendChild(card);
+        });
+
+        // Asignar eventos a los botones de eliminar recién creados
+        document.querySelectorAll('.delete').forEach(btn => {
+            btn.addEventListener('click', function() {
+                eliminarRuta(this.getAttribute('data-id'));
+            });
+        });
+    }
+
+    // 3. FUNCIÓN PARA CARGAR OPERADORES EN EL SELECT DEL MODAL
+    async function cargarOperadores() {
+        try {
+            const response = await fetch(`${API_URL}/operadores/activos`, { headers: getHeaders() });
+            if (!response.ok) throw new Error('Error al cargar operadores');
+            
+            const operadores = await response.json();
+            
+            selectOperadores.innerHTML = '<option value="" selected disabled>Seleccione un operador...</option>';
+            operadores.forEach(op => {
+                selectOperadores.innerHTML += `<option value="${op.id}">${op.nombre_completo}</option>`;
+            });
+        } catch (error) {
+            console.error(error);
+            selectOperadores.innerHTML = '<option value="" disabled>Error al cargar</option>';
+        }
+    }
+
+    // 4. FUNCIÓN PARA CREAR UNA NUEVA RUTA (POST)
+    formCrearRuta.addEventListener('submit', async function(e) {
+        e.preventDefault(); // Evita que la página se recargue
+        const btnGuardar = document.getElementById('btnGuardarRuta');
+        btnGuardar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+        btnGuardar.disabled = true;
+
+        // Convertir el texto separado por comas en un array real para Pydantic
+        const zonasArray = formCrearRuta.zonas_cubiertas.value.split(',').map(z => z.trim()).filter(z => z !== '');
+
+        const payload = {
+            nombre: formCrearRuta.nombre.value,
+            codigo: formCrearRuta.codigo.value,
+            estado: formCrearRuta.estado.value,
+            zonas_cubiertas: zonasArray,
+            operador_id: formCrearRuta.operador_id.value ? parseInt(formCrearRuta.operador_id.value) : null
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/`, {
+                method: 'POST',
+                headers: getHeaders(),
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const err = await response.json();
+                throw new Error(err.detail || 'Error al guardar la ruta');
+            }
+
+            // Si todo sale bien:
+            formCrearRuta.reset(); // Limpiar formulario
+            
+            // Cerrar el modal usando la instancia de Bootstrap
+            const modalEl = document.getElementById('modalCrearRuta');
+            const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modalInst.hide();
+            
+            cargarRutas(); // Recargar la lista de tarjetas
+            alert("¡Ruta creada exitosamente!");
+
+        } catch (error) {
+            alert("Error: " + error.message);
+        } finally {
+            btnGuardar.innerHTML = 'Guardar Ruta';
+            btnGuardar.disabled = false;
+        }
+    });
+
+    // 5. FUNCIÓN PARA ELIMINAR RUTA (DELETE)
+    async function eliminarRuta(id) {
+        if (!confirm('¿Estás seguro de que deseas eliminar esta ruta? Esta acción no se puede deshacer.')) return;
+
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'DELETE',
+                headers: getHeaders()
+            });
+
+            if (!response.ok) throw new Error('Error al eliminar');
+            
+            cargarRutas(); // Recargamos para reflejar los cambios
+            
+        } catch (error) {
+            alert("Error al eliminar la ruta.");
+        }
+    }
+
+    // 6. BUSCADOR INTERACTIVO
+    let debounceTimer;
+    buscadorRutas.addEventListener('input', function(e) {
+        clearTimeout(debounceTimer);
+        // Esperamos medio segundo después de que deja de teclear para no saturar la API
+        debounceTimer = setTimeout(() => {
+            cargarRutas(e.target.value);
+        }, 500);
+    });
+
+    // INICIALIZACIÓN
+    // Al cargar la página, traemos los datos de la BD
+    cargarRutas();
+    cargarOperadores();
+});
+</script>
 @endsection

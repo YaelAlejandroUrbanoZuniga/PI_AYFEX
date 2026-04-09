@@ -126,7 +126,7 @@
                 </div>
                 <div class="user-avatar" id="header_avatar_letra">?</div>
             </a>
-            <a href="{{ route('login') }}" class="user-profile" style="margin-left:5px" title="Cerrar Sesión">
+            <a href="javascript:void(0)" onclick="cerrarSesion()" class="user-profile" style="margin-left:5px" title="Cerrar Sesión">
                 <i class="fa-solid fa-right-from-bracket" style="color:white;font-size:1.2rem"></i>
             </a>
         </div>
@@ -166,7 +166,6 @@
     </div>
 </header>
 
-<!-- MODAL EDITAR -->
 <div class="modal-overlay" id="modalEditar">
     <div class="modal-card">
         <div class="modal-header-row">
@@ -280,16 +279,26 @@
 </div>
 
 <script>
+// Función agregada para cerrar sesión de forma correcta
+function cerrarSesion() {
+    localStorage.removeItem("authToken");
+    window.location.href = "{{ route('login') }}";
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-    const authCredentials = localStorage.getItem("authCredentials");
-    if (!authCredentials) {
+    // 1. Ahora buscamos el "authToken" que generó tu nuevo Login
+    const authToken = localStorage.getItem("authToken");
+    
+    if (!authToken) {
         alert("Atención: Primero debes iniciar sesión.");
         window.location.href = "/";
         return;
     }
 
     const API_URL = "http://127.0.0.1:5000/v1/mi-perfil/";
-    const headers = { 'Authorization': `Basic ${authCredentials}`, 'Accept': 'application/json' };
+    
+    // 2. Cambiamos "Basic" por "Bearer"
+    const headers = { 'Authorization': `Bearer ${authToken}`, 'Accept': 'application/json' };
 
     function actualizarVista(u) {
         const inicial = (u.nombre_completo || '?').charAt(0).toUpperCase();
@@ -314,10 +323,20 @@ document.addEventListener("DOMContentLoaded", function () {
         el.className   = 'permission-status ' + (ok ? 'status-completo' : 'status-bloqueado');
     }
 
+    // Petición GET para cargar los datos del perfil
     fetch(API_URL, { method: 'GET', headers })
-        .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+        .then(r => { 
+            if (r.status === 401) {
+                // Si el token expiró o es inválido, lo sacamos
+                localStorage.removeItem("authToken");
+                window.location.href = "/";
+                throw new Error("Token inválido");
+            }
+            if (!r.ok) throw new Error("Error en la petición"); 
+            return r.json(); 
+        })
         .then(u => actualizarVista(u))
-        .catch(() => alert("Error al cargar el perfil. Verifica la conexión con la API."));
+        .catch(() => console.error("Error al cargar el perfil."));
 
     window.abrirModal = function () {
         document.getElementById('modal_nombre').value   = document.getElementById('disp_nombre2').innerText.replace('—','');
@@ -341,13 +360,18 @@ document.addEventListener("DOMContentLoaded", function () {
             telefono:           document.getElementById('modal_telefono').value
         };
 
+        // Petición PUT para guardar los cambios
         fetch(API_URL, {
             method: 'PUT',
             headers: { ...headers, 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         })
         .then(r => {
-            if (r.status === 401) { localStorage.removeItem("authCredentials"); window.location.href = "{{ route('login') }}"; throw new Error(); }
+            if (r.status === 401) { 
+                localStorage.removeItem("authToken"); 
+                window.location.href = "/"; 
+                throw new Error(); 
+            }
             if (r.status === 400) { alert("Ese correo electrónico ya está en uso."); throw new Error(); }
             if (!r.ok) throw new Error("Error al guardar");
             return r.json();
