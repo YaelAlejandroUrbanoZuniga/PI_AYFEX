@@ -18,12 +18,12 @@ export default function PrincipalM({ navigation }) {
 
   const [pedidos, setPedidos] = useState([]);
 
+  const primerNombre = global.usuarioActual?.nombre_completo?.split(' ')[0] || 'Usuario';
+
   const cargarPedidos = async () => {
     try {
       const response = await fetch(API_URL, {
-        headers: {
-          "Authorization": `Bearer ${global.authToken}`
-        }
+        headers: { "Authorization": `Bearer ${global.authToken}` }
       });
       const data = await response.json();
       setPedidos(Array.isArray(data) ? data : []);
@@ -40,39 +40,47 @@ export default function PrincipalM({ navigation }) {
   );
 
   const verDetalles = (pedido) => {
-
     navigation.navigate("Pedidos", {
       screen: "PedidosDetalles",
       params: { pedidoData: pedido }
     });
-
   };
 
-  const pedidosActivos = pedidos.length; // por ahora todos son activos
+  const pedidosActivos = pedidos.length;
   const totalPedidos = pedidos.length;
 
   return (
-
     <View style={styles.container}>
 
       <HeaderNaranja />
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
 
+        {/* SALUDO */}
         <View style={styles.greetingContainer}>
-          <Text style={styles.greetingText}>Hola, Fidel!</Text>
+          <Text style={styles.greetingText}>
+            Hola, <Text style={styles.greetingName}>{primerNombre}!</Text>
+          </Text>
+          <Text style={styles.greetingSubtitle}>
+            Aquí tienes un resumen de tus envíos
+          </Text>
         </View>
 
         {/* ESTADÍSTICAS */}
-
         <View style={styles.statsContainer}>
 
           <View style={styles.statCard}>
+            <View style={styles.statIconContainer}>
+              <Ionicons name="time-outline" size={20} color="#FF6B00" />
+            </View>
             <Text style={styles.statNumber}>{pedidosActivos}</Text>
             <Text style={styles.statLabel}>Activos</Text>
           </View>
 
           <View style={styles.statCard}>
+            <View style={styles.statIconContainer}>
+              <Ionicons name="cube-outline" size={20} color="#FF6B00" />
+            </View>
             <Text style={styles.statNumber}>{totalPedidos}</Text>
             <Text style={styles.statLabel}>Total</Text>
           </View>
@@ -81,24 +89,32 @@ export default function PrincipalM({ navigation }) {
 
         <View style={styles.separator} />
 
-        {/* HEADER */}
-
+        {/* HEADER ENVÍOS */}
         <View style={styles.shipmentsHeader}>
-
           <Text style={styles.shipmentsTitle}>Envíos Activos</Text>
-
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Pedidos")}
-          >
+          <TouchableOpacity onPress={() => navigation.navigate("Pedidos")}>
             <Text style={styles.viewAllText}>Ver todos</Text>
           </TouchableOpacity>
-
         </View>
 
+        {/* MENSAJE VACÍO */}
+        {pedidos.length === 0 && (
+          <View style={styles.emptyContainer}>
+            <Ionicons name="cube-outline" size={40} color="#DDDDDD" />
+            <Text style={styles.emptyText}>
+              Aquí se reflejarán tus pedidos activos
+            </Text>
+            <TouchableOpacity
+              style={styles.emptyButton}
+              onPress={() => navigation.navigate("Crear")}
+            >
+              <Text style={styles.emptyButtonText}>Crear mi primer pedido</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
         {/* PEDIDOS */}
-
         {pedidos.map((pedido) => (
-
           <TouchableOpacity
             key={pedido.id}
             style={styles.orderCard}
@@ -107,97 +123,82 @@ export default function PrincipalM({ navigation }) {
           >
 
             <View style={styles.cardHeader}>
-
               <View style={styles.packageIcon}>
                 <Ionicons name="cube" size={20} color="#fff" />
               </View>
-
-              <Text style={styles.orderId}>
-                #{pedido.id}
-              </Text>
-
+              <Text style={styles.orderId}>#{pedido.id}</Text>
             </View>
 
             <View style={styles.routeContainer}>
-
               <View style={styles.routeRow}>
                 <Ionicons name="location" size={16} color="#FF6B00" />
                 <Text style={styles.routeText}>{pedido.origen}</Text>
               </View>
-
-              <Ionicons
-                name="arrow-down"
-                size={16}
-                color="#999"
-                style={{ marginVertical: 4 }}
-              />
-
+              <Ionicons name="arrow-down" size={16} color="#999" style={{ marginVertical: 4 }} />
               <View style={styles.routeRow}>
                 <Ionicons name="flag" size={16} color="#34C759" />
                 <Text style={styles.routeText}>{pedido.destino}</Text>
               </View>
-
             </View>
 
             <View style={styles.orderInfo}>
-
               <View style={styles.infoItem}>
                 <Ionicons name="barbell-outline" size={16} color="#666" />
                 <Text style={styles.infoText}>{pedido.peso} kg</Text>
               </View>
-
               <View style={styles.infoItem}>
                 <Ionicons name="cube-outline" size={16} color="#666" />
                 <Text style={styles.infoText}>{pedido.tipo}</Text>
               </View>
-
             </View>
 
             <View style={styles.footer}>
-
               <Text style={styles.date}>
                 {pedido.fecha ? pedido.fecha.split("T")[0] : "Sin fecha"}
               </Text>
-
               <View style={styles.detailsButton}>
                 <Text style={styles.detailsText}>Ver detalles</Text>
                 <Ionicons name="chevron-forward" size={16} color="#FF6B00" />
               </View>
-
             </View>
 
           </TouchableOpacity>
-
         ))}
 
         <View style={{ height: 100 }} />
 
       </ScrollView>
-
     </View>
-
   );
-
 }
 
 const styles = StyleSheet.create({
 
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF"
-  },
+  container: { flex: 1, backgroundColor: "#FFFFFF" },
 
-  content: {
-    paddingHorizontal: 20
-  },
+  content: { paddingHorizontal: 20 },
 
   greetingContainer: {
-    paddingVertical: 16
+    paddingTop: 20,
+    paddingBottom: 16,
   },
 
   greetingText: {
-    fontSize: 22,
-    fontWeight: "bold"
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#000000",
+  },
+
+  greetingName: {
+    color: "#FF6B00",
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+
+  greetingSubtitle: {
+    fontSize: 13,
+    color: "#999999",
+    marginTop: 4,
   },
 
   statsContainer: {
@@ -208,20 +209,31 @@ const styles = StyleSheet.create({
 
   statCard: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
-    borderRadius: 12,
+    backgroundColor: "#F8F9FA",
+    borderRadius: 16,
     padding: 16,
-    alignItems: "center"
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#EEEEEE",
+  },
+
+  statIconContainer: {
+    backgroundColor: "#FFF3E6",
+    borderRadius: 10,
+    padding: 8,
+    marginBottom: 8,
   },
 
   statNumber: {
     fontSize: 26,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#000000",
   },
 
   statLabel: {
     fontSize: 13,
-    color: "#666"
+    color: "#888",
+    marginTop: 2,
   },
 
   separator: {
@@ -233,6 +245,7 @@ const styles = StyleSheet.create({
   shipmentsHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 12
   },
 
@@ -243,7 +256,38 @@ const styles = StyleSheet.create({
 
   viewAllText: {
     color: "#FF6B00",
-    fontWeight: "500"
+    fontWeight: "500",
+    fontSize: 13,
+  },
+
+  emptyContainer: {
+    alignItems: "center",
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+
+  emptyText: {
+    fontSize: 13,
+    color: "#CCCCCC",
+    textAlign: "center",
+    marginTop: 12,
+    marginBottom: 20,
+    lineHeight: 20,
+  },
+
+  emptyButton: {
+    backgroundColor: "#FFF3E6",
+    borderRadius: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderColor: "#FF6B00",
+  },
+
+  emptyButtonText: {
+    color: "#FF6B00",
+    fontWeight: "600",
+    fontSize: 13,
   },
 
   orderCard: {
@@ -271,42 +315,19 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
 
-  orderId: {
-    fontSize: 15,
-    fontWeight: "600"
-  },
+  orderId: { fontSize: 15, fontWeight: "600" },
 
-  routeContainer: {
-    marginBottom: 12
-  },
+  routeContainer: { marginBottom: 12 },
 
-  routeRow: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
+  routeRow: { flexDirection: "row", alignItems: "center" },
 
-  routeText: {
-    marginLeft: 6,
-    fontSize: 14,
-    color: "#333"
-  },
+  routeText: { marginLeft: 6, fontSize: 14, color: "#333" },
 
-  orderInfo: {
-    flexDirection: "row",
-    marginBottom: 12
-  },
+  orderInfo: { flexDirection: "row", marginBottom: 12 },
 
-  infoItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginRight: 20
-  },
+  infoItem: { flexDirection: "row", alignItems: "center", marginRight: 20 },
 
-  infoText: {
-    marginLeft: 6,
-    fontSize: 13,
-    color: "#555"
-  },
+  infoText: { marginLeft: 6, fontSize: 13, color: "#555" },
 
   footer: {
     flexDirection: "row",
@@ -316,20 +337,10 @@ const styles = StyleSheet.create({
     paddingTop: 10
   },
 
-  date: {
-    fontSize: 12,
-    color: "#888"
-  },
+  date: { fontSize: 12, color: "#888" },
 
-  detailsButton: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
+  detailsButton: { flexDirection: "row", alignItems: "center" },
 
-  detailsText: {
-    color: "#FF6B00",
-    fontWeight: "600",
-    marginRight: 4
-  }
+  detailsText: { color: "#FF6B00", fontWeight: "600", marginRight: 4 },
 
 });
