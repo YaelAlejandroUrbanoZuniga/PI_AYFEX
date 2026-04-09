@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 # Importamos tu base de datos
 from app.data.dbDATA import get_db
 from app.data.webDATA.crear_perfilDATAW import UsuarioDB
+from app.data.movilDATA.crear_usuarioDATA import UsuarioMDB
 
 SECRET_KEY = "parangaricutirimicuarizador1234567890987654321ggpapaefeefe"
 ALGORITHM = "HS256"
@@ -49,3 +50,23 @@ def verificar_Peticion(token: str = Depends(oauth2_scheme), db: Session = Depend
         raise credenciales_excepcion
         
     return usuario_db
+
+def verificar_Peticion_Movil(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    credenciales_excepcion = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="No se pudieron validar las credenciales",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        usuario_id: str = payload.get("sub")
+        if usuario_id is None:
+            raise credenciales_excepcion
+    except JWTError:
+        raise credenciales_excepcion
+
+    usuario_db = db.query(UsuarioMDB).filter(UsuarioMDB.id == int(usuario_id)).first()
+    if usuario_db is None:
+        raise credenciales_excepcion
+
+    return str(usuario_db.id)

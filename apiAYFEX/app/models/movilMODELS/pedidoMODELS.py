@@ -15,7 +15,7 @@ class PedidoCreate(PedidoBase):
     pass
 
 class Pedido(PedidoBase):
-    id: int
+    id: str
     usuario_id: int
     fecha: date
 

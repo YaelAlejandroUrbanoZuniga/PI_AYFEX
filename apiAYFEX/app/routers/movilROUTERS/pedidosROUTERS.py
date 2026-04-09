@@ -1,6 +1,6 @@
 from fastapi import status, HTTPException, Depends, APIRouter
 from app.models.movilMODELS.pedidoMODELS import PedidoBase, Pedido
-from app.security.authSECURITY import verificar_Peticion
+from app.security.authSECURITY import verificar_Peticion_Movil
 from datetime import date
 from sqlalchemy.orm import Session
 from app.data.dbDATA import get_db
@@ -8,13 +8,25 @@ from app.data.movilDATA.crear_pedidosDATA import Crear_Pedidos
 
 router = APIRouter(
     prefix="/v1/pedidos",
-    tags=["Móvil | Pedidos"]
+    tags=["Movil | Pedidos"]
 )
+
+def generar_id_pedido(db: Session) -> str:
+    hoy = date.today()
+    prefijo = f"PED{hoy.strftime('%d%m%y')}"
+    
+    # Contamos cuántos pedidos hay hoy
+    pedidos_hoy = db.query(Crear_Pedidos).filter(
+        Crear_Pedidos.id.like(f"{prefijo}%")
+    ).count()
+    
+    consecutivo = pedidos_hoy + 1
+    return f"{prefijo}{consecutivo:04d}"
 
 @router.get("/", response_model=list[Pedido])
 async def leer_pedidos(
     db: Session = Depends(get_db),
-    usuario_id: str = Depends(verificar_Peticion)
+    usuario_id: str = Depends(verificar_Peticion_Movil)
 ):
     return db.query(Crear_Pedidos).filter(
         Crear_Pedidos.usuario_id == int(usuario_id)
@@ -24,9 +36,12 @@ async def leer_pedidos(
 async def crear_pedido(
     pedidoP: PedidoBase,
     db: Session = Depends(get_db),
-    usuario_id: str = Depends(verificar_Peticion)
+    usuario_id: str = Depends(verificar_Peticion_Movil)
 ):
+    nuevo_id = generar_id_pedido(db)
+    
     nuevoPedido = Crear_Pedidos(
+        id=nuevo_id,
         usuario_id=int(usuario_id),
         origen=pedidoP.origen,
         destino=pedidoP.destino,
@@ -45,10 +60,10 @@ async def crear_pedido(
 
 @router.put("/{id}", status_code=status.HTTP_200_OK)
 async def actualizar_pedido(
-    id: int,
+    id: str,
     pedidoP: PedidoBase,
     db: Session = Depends(get_db),
-    usuario_id: str = Depends(verificar_Peticion)
+    usuario_id: str = Depends(verificar_Peticion_Movil)
 ):
     pedido_db = db.query(Crear_Pedidos).filter(
         Crear_Pedidos.id == id,
@@ -68,14 +83,13 @@ async def actualizar_pedido(
     
     db.commit()
     db.refresh(pedido_db)
-    
     return {"mensaje": "Pedido Actualizado", "Pedido": pedido_db}
 
 @router.delete("/{id}", status_code=status.HTTP_200_OK)
 async def eliminar_pedido(
-    id: int,
+    id: str,
     db: Session = Depends(get_db),
-    usuario_id: str = Depends(verificar_Peticion)
+    usuario_id: str = Depends(verificar_Peticion_Movil)
 ):
     pedido_db = db.query(Crear_Pedidos).filter(
         Crear_Pedidos.id == id,

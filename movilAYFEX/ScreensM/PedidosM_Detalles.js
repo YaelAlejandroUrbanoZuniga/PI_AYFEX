@@ -5,9 +5,10 @@ import {
   TextInput, Platform
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import QRCode from 'react-native-qrcode-svg';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Print from 'expo-print';
 import * as Sharing from 'expo-sharing';
+import { Asset } from 'expo-asset';
 import HeaderNaranjaVolver from '../Components/HeaderNaranjaVolver';
 import { API_BASE_URL } from '../config';
 
@@ -104,119 +105,295 @@ export default function PedidosM_Detalles({ navigation, route }) {
     try {
       setGenerandoPDF(true);
 
-      // Generamos el QR como SVG string para el PDF
-      const qrSvg = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="150" height="150">
-          <rect width="150" height="150" fill="white"/>
-          <text x="75" y="80" text-anchor="middle" font-size="10" fill="#333">QR-${pedidoData.id}</text>
-          <rect x="10" y="10" width="130" height="130" fill="none" stroke="#FF6B00" stroke-width="2"/>
-        </svg>
-      `;
+      // Cargar logo como base64
+      const asset = Asset.fromModule(require('../assets/logo.png'));
+      await asset.downloadAsync();
+      const logoBase64 = await FileSystem.readAsStringAsync(asset.localUri, {
+        encoding: 'base64',
+      });
+      const logoSrc = `data:image/png;base64,${logoBase64}`;
+
+      // Patrón QR visual representativo (para el PDF real usaremos texto codificado)
+      const qrDataString = encodeURIComponent(qrData);
 
       const html = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { font-family: Arial, sans-serif; padding: 40px; color: #333; }
-            .header { background: #FF6B00; color: white; padding: 24px; border-radius: 12px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
-            .header h1 { font-size: 28px; letter-spacing: 4px; }
-            .header p { font-size: 13px; opacity: 0.85; margin-top: 4px; }
-            .badge { background: white; color: #FF6B00; padding: 6px 16px; border-radius: 20px; font-weight: bold; font-size: 13px; }
-            .section { background: #F8F9FA; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #EEEEEE; }
-            .section-title { font-size: 13px; color: #999; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; font-weight: 600; }
-            .row { display: flex; justify-content: space-between; margin-bottom: 10px; }
-            .label { font-size: 13px; color: #888; }
-            .value { font-size: 14px; color: #222; font-weight: 500; text-align: right; max-width: 60%; }
-            .divider { height: 1px; background: #EEEEEE; margin: 8px 0; }
-            .qr-section { display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 24px; }
-            .qr-box { border: 2px dashed #FF6B00; padding: 16px; border-radius: 12px; margin-bottom: 10px; }
-            .qr-label { font-size: 12px; color: #999; text-align: center; }
-            .footer { text-align: center; font-size: 11px; color: #CCC; margin-top: 24px; }
-            .estado { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; background: #FFF3E6; color: #FF6B00; }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <div>
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: #FAFAFA;
+            padding: 32px;
+            color: #1A1A1A;
+          }
+
+          .header {
+            background: linear-gradient(135deg, #FF6B00, #FF8C00);
+            border-radius: 16px;
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
+          .header-left { display: flex; align-items: center; gap: 16px; }
+          .logo {
+            width: 56px; height: 56px;
+            border-radius: 12px;
+            background: white; padding: 6px;
+            object-fit: contain;
+          }
+          .header-text h1 {
+            font-size: 26px; font-weight: 900;
+            color: white; letter-spacing: 3px;
+          }
+          .header-text p {
+            font-size: 12px;
+            color: rgba(255,255,255,0.85);
+            margin-top: 3px;
+          }
+          .header-right { text-align: right; }
+          .pedido-num {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: white;
+            padding: 8px 18px; border-radius: 30px;
+            font-size: 14px; font-weight: 700; letter-spacing: 1px;
+          }
+          .fecha-gen {
+            font-size: 11px;
+            color: rgba(255,255,255,0.75);
+            margin-top: 6px;
+          }
+
+          .estado-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #E0E0E0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          }
+          .estado-label { font-size: 13px; color: #555; font-weight: 600; }
+          .estado-badge {
+            background: #FFF3E6;
+            color: #FF6B00;
+            padding: 6px 18px; border-radius: 20px;
+            font-size: 13px; font-weight: 800;
+            border: 1px solid #FFD4A8;
+          }
+
+          .card {
+            background: white;
+            border-radius: 14px;
+            padding: 22px 24px;
+            margin-bottom: 16px;
+            border: 1px solid #E0E0E0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+          }
+          .card-title {
+            font-size: 12px;
+            color: #FF6B00;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #FFF3E6;
+          }
+
+          .route-item { display: flex; align-items: flex-start; gap: 14px; padding: 10px 0; }
+          .route-dot {
+            width: 12px; height: 12px;
+            border-radius: 50%; margin-top: 4px; flex-shrink: 0;
+          }
+          .dot-origin { background: #FF6B00; }
+          .dot-dest { background: #34C759; }
+          .route-connector {
+            width: 2px; height: 22px;
+            background: #DDDDDD;
+            margin-left: 5px; margin-top: -4px; margin-bottom: -4px;
+          }
+          .route-label { font-size: 12px; color: #777; font-weight: 500; margin-bottom: 3px; }
+          .route-value { font-size: 15px; color: #111; font-weight: 700; }
+
+          .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+          }
+          .detail-item {
+            background: #F5F5F5;
+            border-radius: 10px;
+            padding: 14px 16px;
+            border: 1px solid #E8E8E8;
+          }
+          .detail-label { font-size: 12px; color: #666; margin-bottom: 6px; font-weight: 600; }
+          .detail-value { font-size: 17px; color: #111; font-weight: 800; }
+          .detail-unit { font-size: 12px; color: #666; font-weight: 500; }
+
+          .desc-box {
+            background: #FFF8F3;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 14px;
+            border-left: 4px solid #FF6B00;
+            border: 1px solid #FFE0C8;
+          }
+          .desc-label { font-size: 12px; color: #888; margin-bottom: 6px; font-weight: 600; }
+          .desc-text { font-size: 14px; color: #333; line-height: 1.6; }
+
+          .qr-card {
+            background: white;
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid #E0E0E0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 24px;
+          }
+          .qr-image-box {
+            border: 2px dashed #FF6B00;
+            border-radius: 12px;
+            padding: 12px;
+            flex-shrink: 0;
+            background: #FFFAF7;
+          }
+          .qr-image { width: 110px; height: 110px; }
+          .qr-info h3 { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 8px; }
+          .qr-info p { font-size: 13px; color: #555; line-height: 1.7; }
+          .qr-data {
+            font-size: 10px; color: #AAAAAA;
+            margin-top: 10px; word-break: break-all;
+            font-family: monospace;
+          }
+
+          .footer {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #E0E0E0;
+            margin-top: 8px;
+          }
+          .footer p { font-size: 12px; color: #999; line-height: 2; }
+          .footer strong { color: #FF6B00; }
+        </style>
+      </head>
+      <body>
+
+        <div class="header">
+          <div class="header-left">
+            <img class="logo" src="${logoSrc}" />
+            <div class="header-text">
               <h1>AYFEX</h1>
-              <p>Comprobante de envío</p>
+              <p>Comprobante oficial de envio</p>
             </div>
-            <div class="badge">Pedido #${pedidoData.id}</div>
           </div>
+          <div class="header-right">
+            <div class="pedido-num">Pedido #${pedidoData.id}</div>
+            <div class="fecha-gen">Generado: ${new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
+          </div>
+        </div>
 
-          <div class="section">
-            <div class="section-title">Estado del pedido</div>
-            <span class="estado">${estadoActual}</span>
-          </div>
+        <div class="estado-bar">
+          <span class="estado-label">Estado actual del pedido</span>
+          <span class="estado-badge">${estadoActual}</span>
+        </div>
 
-          <div class="section">
-            <div class="section-title">Ruta</div>
-            <div class="row">
-              <span class="label">📍 Origen</span>
-              <span class="value">${pedidoData.origen}</span>
-            </div>
-            <div class="divider"></div>
-            <div class="row">
-              <span class="label">🏁 Destino</span>
-              <span class="value">${pedidoData.destino}</span>
+        <div class="card">
+          <div class="card-title">Ruta de envio</div>
+          <div class="route-item">
+            <div class="route-dot dot-origin"></div>
+            <div>
+              <div class="route-label">Origen</div>
+              <div class="route-value">${pedidoData.origen}</div>
             </div>
           </div>
+          <div class="route-connector"></div>
+          <div class="route-item">
+            <div class="route-dot dot-dest"></div>
+            <div>
+              <div class="route-label">Destino</div>
+              <div class="route-value">${pedidoData.destino}</div>
+            </div>
+          </div>
+        </div>
 
-          <div class="section">
-            <div class="section-title">Detalles del paquete</div>
-            <div class="row">
-              <span class="label">Peso</span>
-              <span class="value">${pedidoData.peso} kg</span>
+        <div class="card">
+          <div class="card-title">Detalles del paquete</div>
+          <div class="details-grid">
+            <div class="detail-item">
+              <div class="detail-label">Peso</div>
+              <div class="detail-value">${pedidoData.peso} <span class="detail-unit">kg</span></div>
             </div>
-            <div class="divider"></div>
-            <div class="row">
-              <span class="label">Tipo</span>
-              <span class="value">${pedidoData.tipo}</span>
+            <div class="detail-item">
+              <div class="detail-label">Tipo de paquete</div>
+              <div class="detail-value">${pedidoData.tipo}</div>
             </div>
-            <div class="divider"></div>
-            <div class="row">
-              <span class="label">Dimensiones</span>
-              <span class="value">${pedidoData.altura} cm × ${pedidoData.anchura} cm</span>
+            <div class="detail-item">
+              <div class="detail-label">Altura</div>
+              <div class="detail-value">${pedidoData.altura} <span class="detail-unit">cm</span></div>
             </div>
-            <div class="divider"></div>
-            <div class="row">
-              <span class="label">Fecha</span>
-              <span class="value">${pedidoData.fecha ? pedidoData.fecha.split('T')[0] : 'Sin fecha'}</span>
+            <div class="detail-item">
+              <div class="detail-label">Anchura</div>
+              <div class="detail-value">${pedidoData.anchura} <span class="detail-unit">cm</span></div>
             </div>
-            ${pedidoData.descripcion ? `
-            <div class="divider"></div>
-            <div class="row">
-              <span class="label">Descripción</span>
-              <span class="value">${pedidoData.descripcion}</span>
-            </div>` : ''}
+            <div class="detail-item" style="grid-column: span 2;">
+              <div class="detail-label">Fecha de registro</div>
+              <div class="detail-value">${pedidoData.fecha ? pedidoData.fecha.split('T')[0] : 'Sin fecha'}</div>
+            </div>
           </div>
+          ${pedidoData.descripcion ? `
+          <div class="desc-box">
+            <div class="desc-label">Descripcion adicional</div>
+            <div class="desc-text">${pedidoData.descripcion}</div>
+          </div>` : ''}
+        </div>
 
-          <div class="section qr-section">
-            <div class="section-title" style="text-align:center">Código de verificación</div>
-            <div class="qr-box">
-              ${qrSvg}
-            </div>
-            <p class="qr-label">Escanea para verificar este pedido</p>
-            <p class="qr-label" style="margin-top:6px; font-size:10px;">ID: ${pedidoData.id} · AYFEX</p>
+        <div class="qr-card">
+          <div class="qr-image-box">
+            <img
+              class="qr-image"
+              src="https://api.qrserver.com/v1/create-qr-code/?size=110x110&data=${qrDataString}&color=111111&bgcolor=FFFFFF&qzone=1&margin=0"
+            />
           </div>
+          <div class="qr-info">
+            <h3>Codigo de verificacion</h3>
+            <p>Escanea este codigo QR para verificar la autenticidad y ver los detalles completos de este pedido.</p>
+            <div class="qr-data">ID: ${pedidoData.id} · AYFEX PEDIDOS</div>
+          </div>
+        </div>
 
-          <div class="footer">
-            Generado por AYFEX · ${new Date().toLocaleDateString('es-MX')}
-          </div>
-        </body>
-        </html>
-      `;
+        <div class="footer">
+          <p>
+            Este documento es un comprobante oficial generado por <strong>AYFEX</strong>.<br>
+            Para cualquier aclaracion contacta a soporte · ${new Date().getFullYear()} AYFEX Todos los derechos reservados.
+          </p>
+        </div>
+
+      </body>
+      </html>
+    `;
 
       const { uri } = await Print.printToFileAsync({ html });
-      await Sharing.shareAsync(uri, {
+
+      const nombreArchivo = `${FileSystem.documentDirectory}AYFEX_${pedidoData.id}.pdf`;
+      await FileSystem.moveAsync({ from: uri, to: nombreArchivo });
+      await Sharing.shareAsync(nombreArchivo, {
         mimeType: 'application/pdf',
-        dialogTitle: `Pedido #${pedidoData.id} - AYFEX`,
+        dialogTitle: `Pedido ${pedidoData.id} - AYFEX`,
+        UTI: 'com.adobe.pdf',
       });
 
     } catch (error) {
+      console.log(error);
       Alert.alert("Error", "No se pudo generar el PDF");
     } finally {
       setGenerandoPDF(false);
@@ -320,20 +497,6 @@ export default function PedidosM_Detalles({ navigation, route }) {
               </View>
             </>
           ) : null}
-        </View>
-
-        {/* QR */}
-        <View style={styles.sectionCard}>
-          <View style={styles.sectionCardHeader}>
-            <View style={styles.sectionIcon}>
-              <Ionicons name="qr-code-outline" size={16} color="#FF6B00" />
-            </View>
-            <Text style={styles.sectionTitle}>Código de verificación</Text>
-          </View>
-          <View style={styles.qrContainer}>
-            <QRCode value={qrData} size={150} color="#333333" backgroundColor="white" />
-            <Text style={styles.qrLabel}>Escanea para verificar este pedido</Text>
-          </View>
         </View>
 
         {/* ACCIONES */}

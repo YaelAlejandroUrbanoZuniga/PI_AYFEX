@@ -24,6 +24,15 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-asset",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "AYFEX necesita acceso a tu cámara para escanear códigos QR."
+        }
+      ]
+    ]
   }
 }
