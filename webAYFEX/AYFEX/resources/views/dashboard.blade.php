@@ -2,9 +2,7 @@
 
 @section('content')
 <style>
-    /* =========================================
-       ESTILOS DEL HEADER ESTÁTICO (NARANJA)
-       ========================================= */
+    
     .main-header {
         position: sticky;
         top: 0;
@@ -90,14 +88,12 @@
     .nav-item.active i { color: #ff5722; }
     .nav-item i.chevron { font-size: 0.75rem; margin-left: 4px; transition: color 0.3s;}
     
-    /* Menú desplegable (Blanco) */
+    
     .dropdown-menu { border: none; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border-radius: 0 8px 8px 8px; padding: 8px 0; margin-top: 0 !important;}
     .dropdown-item { padding: 10px 20px; font-size: 0.9rem; color: #444; font-weight: 500;}
     .dropdown-item:hover { background-color: #fffaf5; color: #ff5722; }
 
-    /* =========================================
-       ESTILOS DEL DASHBOARD (CONTENIDO)
-       ========================================= */
+    
     body { background-color: #f4f6f9; color: #333; overflow-x: hidden; margin: 0; }
     .navbar { display: none !important; }
     .container.mt-4 { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }

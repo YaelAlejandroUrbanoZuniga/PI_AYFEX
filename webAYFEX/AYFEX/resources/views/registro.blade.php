@@ -8,7 +8,7 @@
         font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     }
     .login-wrapper {
-        max-width: 500px; /* Un poco más ancho que el login para acomodar más campos */
+        max-width: 500px; 
         width: 100%;
         margin: 0 auto;
     }
@@ -210,25 +210,25 @@ document.addEventListener("DOMContentLoaded", function() {
     formRegistro.addEventListener("submit", function(event) {
         event.preventDefault();
 
-        // 1. Ocultar alertas anteriores
+        
         alertaError.style.display = "none";
         alertaExito.style.display = "none";
 
-        // 2. Obtener valores
+        
         const nombre = document.getElementById("inputNombre").value;
         const email = document.getElementById("inputEmail").value;
         const telefono = document.getElementById("inputTelefono").value;
         const password = document.getElementById("inputPassword").value;
         const passwordConfirm = document.getElementById("inputPasswordConfirm").value;
 
-        // 3. Validar que las contraseñas coincidan
+        
         if (password !== passwordConfirm) {
             alertaError.innerText = "Las contraseñas no coinciden.";
             alertaError.style.display = "block";
             return;
         }
 
-        // 4. Preparar datos para enviar a FastAPI
+        
         const datosRegistro = {
             nombre_completo: nombre,
             correo_electronico: email,
@@ -236,11 +236,11 @@ document.addEventListener("DOMContentLoaded", function() {
             password: password
         };
 
-        // Cambiar estado del botón
+        
         btnSubmit.disabled = true;
         btnSubmit.innerText = "Registrando...";
 
-        // 5. Enviar petición a tu API
+        
         fetch("http://127.0.0.1:5000/v1/registro", {
             method: 'POST',
             headers: {
@@ -259,16 +259,16 @@ document.addEventListener("DOMContentLoaded", function() {
             return response.json();
         })
         .then(data => {
-            // ÉXITO
+            
             alertaExito.style.display = "block";
             
-            // Esperar 2 segundos y redirigir al login
+            
             setTimeout(() => {
                 window.location.href = "{{ route('login') }}";
             }, 2000);
         })
         .catch(error => {
-            // ERROR
+            
             alertaError.innerText = error.message;
             alertaError.style.display = "block";
             btnSubmit.disabled = false;

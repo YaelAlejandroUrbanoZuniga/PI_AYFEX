@@ -2,9 +2,7 @@
 
 @section('content')
 <style>
-    /* =========================================
-       ESTILOS DEL HEADER ESTÁTICO (NARANJA)
-       ========================================= */
+
     .main-header {
         position: sticky;
         top: 0;
@@ -59,9 +57,7 @@
     .dropdown-item { padding: 10px 20px; font-size: 0.9rem; color: #444; font-weight: 500;}
     .dropdown-item:hover { background-color: #fffaf5; color: #ff5722; }
 
-    /* =========================================
-       ESTILOS DE LA PÁGINA (CLIENTES)
-       ========================================= */
+    
     body { background-color: #f4f6f9; color: #333; overflow-x: hidden; margin: 0;}
     .navbar { display: none !important; }
     .container.mt-4 { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }

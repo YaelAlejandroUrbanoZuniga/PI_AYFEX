@@ -2,9 +2,7 @@
 
 @section('content')
 <style>
-    /* =========================================
-       ESTILOS DEL HEADER ESTÁTICO (NARANJA)
-       ========================================= */
+    
     .main-header {
         position: sticky;
         top: 0;
@@ -59,9 +57,7 @@
     .dropdown-item { padding: 10px 20px; font-size: 0.9rem; color: #444; font-weight: 500;}
     .dropdown-item:hover { background-color: #fffaf5; color: #ff5722; }
 
-    /* =========================================
-       ESTILOS DE LA PÁGINA (RUTAS)
-       ========================================= */
+    
     body { background-color: #f4f6f9; color: #333; overflow-x: hidden; margin: 0;}
     .navbar { display: none !important; }
     .container.mt-4 { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -101,7 +97,7 @@
     .btn-edit-del { display: flex; gap: 10px; border-top: 1px solid #eee; margin-top: 15px; padding-top: 15px; }
     .btn-edit-del a, .btn-edit-del button { flex: 1; text-align: center; padding: 8px; border-radius: 8px; font-weight: 600; text-decoration: none; border: 1px solid #ddd; color: #555; transition: 0.2s; background: white; cursor: pointer;}
     .btn-edit-del button.delete { flex: 0 0 45px; border-color: #fee2e2; color: #ef4444; background: #fff;}
-    .btn-edit-del a:hover, .btn-edit-del button:hover { background: #f9f9f9; color: #222; border-color: #222;}
+    .btn-edit-del button.edit:hover { background: #f9f9f9; color: #222; border-color: #222;}
     .btn-edit-del button.delete:hover { background: #fee2e2; border-color: #fee2e2;}
 </style>
 
@@ -180,7 +176,7 @@
             <h2>Gestión de Rutas</h2>
             <p>Administra las rutas de distribución</p>
         </div>
-        <button class="btn-orange" data-bs-toggle="modal" data-bs-target="#modalCrearRuta">
+        <button class="btn-orange" id="btnAbrirModalCrear">
             <i class="fa-solid fa-plus me-2"></i> Crear Ruta
         </button>
     </div>
@@ -200,25 +196,25 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalCrearRuta" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modalRuta" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg"> 
         <div class="modal-content" style="border-radius: 12px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
             <div class="modal-header" style="border-bottom: 1px solid #f0f0f0; padding: 20px;">
-                <h5 class="modal-title" style="font-weight: 800; color: #333;">Crear Nueva Ruta</h5>
+                <h5 class="modal-title" id="tituloModal" style="font-weight: 800; color: #333;">Crear Nueva Ruta</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
-            <form id="formCrearRuta">
+            <form id="formRuta">
                 <div class="modal-body" style="padding: 25px;">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label" style="font-weight: 600; font-size: 0.9rem; color: #555;">Nombre de la Ruta</label>
-                            <input type="text" class="form-control" name="nombre" placeholder="Ej. Ruta Pacífico" required style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
+                            <input type="text" class="form-control" name="nombre" id="nombreRuta" placeholder="Ej. Ruta Pacífico" required style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
                         </div>
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label" style="font-weight: 600; font-size: 0.9rem; color: #555;">Código de Ruta</label>
-                            <input type="text" class="form-control" name="codigo" placeholder="Ej. RUT-004" required style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
+                            <input type="text" class="form-control" name="codigo" id="codigoRuta" placeholder="Ej. RUT-004" required style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -230,7 +226,7 @@
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label" style="font-weight: 600; font-size: 0.9rem; color: #555;">Estado de la Ruta</label>
-                            <select class="form-select" name="estado" style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
+                            <select class="form-select" name="estado" id="estadoRuta" style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
                                 <option value="Activa" selected>Activa</option>
                                 <option value="Inactiva">Inactiva</option>
                             </select>
@@ -238,7 +234,7 @@
 
                         <div class="col-md-12 mb-3">
                             <label class="form-label" style="font-weight: 600; font-size: 0.9rem; color: #555;">Zonas Cubiertas (separadas por comas)</label>
-                            <input type="text" class="form-control" name="zonas_cubiertas" placeholder="Ej: Zona A, Zona B, Zona C" required style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
+                            <input type="text" class="form-control" name="zonas_cubiertas" id="zonasRuta" placeholder="Ej: Zona A, Zona B, Zona C" required style="border-radius: 8px; border: 1px solid #ddd; padding: 10px;">
                         </div>
                     </div>
                 </div>
@@ -254,26 +250,29 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // URL base de tu API FastAPI (Asegúrate de que el puerto sea el correcto)
-    const API_URL = 'http://127.0.0.1:8000/v1/rutas';
+    const API_URL = 'http://127.0.0.1:5000/v1/rutas';
+    const token = localStorage.getItem('authToken'); 
     
-    // Obtenemos el token de donde lo estés guardando al hacer Login (ej. localStorage)
-    // Si usas otro método, actualiza esta línea.
-    const token = localStorage.getItem('ayfex_token'); 
-    
-    // Configuración estándar para las cabeceras HTTP
     const getHeaders = () => ({
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
     });
 
-    // Elementos del DOM
+    
     const rutasContainer = document.getElementById('rutasContainer');
     const selectOperadores = document.getElementById('selectOperadores');
-    const formCrearRuta = document.getElementById('formCrearRuta');
+    const formRuta = document.getElementById('formRuta');
     const buscadorRutas = document.getElementById('buscadorRutas');
+    const btnAbrirModalCrear = document.getElementById('btnAbrirModalCrear');
+    
+    
+    let rutasActuales = []; 
+    let rutaEditandoId = null; 
 
-    // 1. FUNCIÓN PARA CARGAR TODAS LAS RUTAS
+    
+    const modalRuta = new bootstrap.Modal(document.getElementById('modalRuta'));
+
+    
     async function cargarRutas(query = '') {
         try {
             const url = query ? `${API_URL}/?query=${encodeURIComponent(query)}` : `${API_URL}/`;
@@ -281,17 +280,17 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!response.ok) throw new Error('Error al cargar rutas');
             
-            const rutas = await response.json();
-            renderizarRutas(rutas);
+            rutasActuales = await response.json(); 
+            renderizarRutas(rutasActuales);
         } catch (error) {
             console.error(error);
             rutasContainer.innerHTML = `<div style="grid-column: 1/-1; color: red;">Error de conexión con la API.</div>`;
         }
     }
 
-    // 2. FUNCIÓN PARA DIBUJAR LAS TARJETAS (REEMPLAZA EL HTML ESTÁTICO)
+    
     function renderizarRutas(rutas) {
-        rutasContainer.innerHTML = ''; // Limpiar el contenedor
+        rutasContainer.innerHTML = ''; 
         
         if (rutas.length === 0) {
             rutasContainer.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: #666;">No se encontraron rutas.</div>`;
@@ -299,16 +298,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         rutas.forEach(ruta => {
-            // Determinar color del badge
             const badgeClass = ruta.estado.toUpperCase() === 'ACTIVA' ? 'badge-activa' : 'badge-inactiva';
-            
-            // Generar los tags de zonas
             const zonasHtml = ruta.zonas_cubiertas.map(zona => `<span class="zone-tag">${zona}</span>`).join('');
-            
-            // Operador asignado
             const nombreOp = ruta.nombre_operador ? ruta.nombre_operador : 'Sin asignar';
 
-            // Crear el HTML de la tarjeta
             const card = document.createElement('div');
             card.className = 'ruta-card';
             card.innerHTML = `
@@ -325,22 +318,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <p style="font-size: 0.85rem; color:#444;"><i class="fa-solid fa-truck text-muted me-2"></i> Operador: <strong>${nombreOp}</strong></p>
                 <div class="btn-edit-del">
-                    <a href="#" onclick="alert('Funcionalidad de editar pendiente')"><i class="fa-regular fa-pen-to-square"></i> Editar</a>
-                    <button class="delete" data-id="${ruta.id}" title="Eliminar Ruta"><i class="fa-regular fa-trash-can"></i></button>
+                    <button class="edit btn-edit" data-id="${ruta.id}" title="Editar Ruta"><i class="fa-regular fa-pen-to-square"></i> Editar</button>
+                    <button class="delete btn-delete" data-id="${ruta.id}" title="Eliminar Ruta"><i class="fa-regular fa-trash-can"></i></button>
                 </div>
             `;
             rutasContainer.appendChild(card);
         });
 
-        // Asignar eventos a los botones de eliminar recién creados
-        document.querySelectorAll('.delete').forEach(btn => {
+        
+        document.querySelectorAll('.btn-delete').forEach(btn => {
             btn.addEventListener('click', function() {
                 eliminarRuta(this.getAttribute('data-id'));
             });
         });
+
+        
+        document.querySelectorAll('.btn-edit').forEach(btn => {
+            btn.addEventListener('click', function() {
+                abrirModalEditar(this.getAttribute('data-id'));
+            });
+        });
     }
 
-    // 3. FUNCIÓN PARA CARGAR OPERADORES EN EL SELECT DEL MODAL
+    
     async function cargarOperadores() {
         try {
             const response = await fetch(`${API_URL}/operadores/activos`, { headers: getHeaders() });
@@ -358,27 +358,57 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 4. FUNCIÓN PARA CREAR UNA NUEVA RUTA (POST)
-    formCrearRuta.addEventListener('submit', async function(e) {
-        e.preventDefault(); // Evita que la página se recargue
+    
+    btnAbrirModalCrear.addEventListener('click', () => {
+        rutaEditandoId = null; 
+        document.getElementById('tituloModal').innerText = "Crear Nueva Ruta";
+        formRuta.reset();
+        modalRuta.show();
+    });
+
+    
+    function abrirModalEditar(id) {
+        
+        const ruta = rutasActuales.find(r => r.id == id);
+        if(!ruta) return;
+
+        rutaEditandoId = ruta.id; 
+        document.getElementById('tituloModal').innerText = "Editar Ruta";
+        
+        
+        document.getElementById('nombreRuta').value = ruta.nombre;
+        document.getElementById('codigoRuta').value = ruta.codigo;
+        document.getElementById('selectOperadores').value = ruta.operador_id || "";
+        document.getElementById('estadoRuta').value = ruta.estado;
+        document.getElementById('zonasRuta').value = ruta.zonas_cubiertas.join(', ');
+
+        modalRuta.show();
+    }
+
+    
+    formRuta.addEventListener('submit', async function(e) {
+        e.preventDefault(); 
         const btnGuardar = document.getElementById('btnGuardarRuta');
         btnGuardar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
         btnGuardar.disabled = true;
 
-        // Convertir el texto separado por comas en un array real para Pydantic
-        const zonasArray = formCrearRuta.zonas_cubiertas.value.split(',').map(z => z.trim()).filter(z => z !== '');
+        const zonasArray = formRuta.zonas_cubiertas.value.split(',').map(z => z.trim()).filter(z => z !== '');
 
         const payload = {
-            nombre: formCrearRuta.nombre.value,
-            codigo: formCrearRuta.codigo.value,
-            estado: formCrearRuta.estado.value,
+            nombre: formRuta.nombre.value,
+            codigo: formRuta.codigo.value,
+            estado: formRuta.estado.value,
             zonas_cubiertas: zonasArray,
-            operador_id: formCrearRuta.operador_id.value ? parseInt(formCrearRuta.operador_id.value) : null
+            operador_id: formRuta.operador_id.value ? parseInt(formRuta.operador_id.value) : null
         };
 
+        
+        const metodo = rutaEditandoId ? 'PUT' : 'POST';
+        const urlPeticion = rutaEditandoId ? `${API_URL}/${rutaEditandoId}` : `${API_URL}/`;
+
         try {
-            const response = await fetch(`${API_URL}/`, {
-                method: 'POST',
+            const response = await fetch(urlPeticion, {
+                method: metodo,
                 headers: getHeaders(),
                 body: JSON.stringify(payload)
             });
@@ -388,16 +418,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error(err.detail || 'Error al guardar la ruta');
             }
 
-            // Si todo sale bien:
-            formCrearRuta.reset(); // Limpiar formulario
+            formRuta.reset(); 
+            modalRuta.hide();
+            cargarRutas(); 
             
-            // Cerrar el modal usando la instancia de Bootstrap
-            const modalEl = document.getElementById('modalCrearRuta');
-            const modalInst = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-            modalInst.hide();
             
-            cargarRutas(); // Recargar la lista de tarjetas
-            alert("¡Ruta creada exitosamente!");
+            alert(rutaEditandoId ? "¡Ruta actualizada exitosamente!" : "¡Ruta creada exitosamente!");
 
         } catch (error) {
             alert("Error: " + error.message);
@@ -407,7 +433,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 5. FUNCIÓN PARA ELIMINAR RUTA (DELETE)
+    
     async function eliminarRuta(id) {
         if (!confirm('¿Estás seguro de que deseas eliminar esta ruta? Esta acción no se puede deshacer.')) return;
 
@@ -418,26 +444,23 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (!response.ok) throw new Error('Error al eliminar');
-            
-            cargarRutas(); // Recargamos para reflejar los cambios
+            cargarRutas(); 
             
         } catch (error) {
             alert("Error al eliminar la ruta.");
         }
     }
 
-    // 6. BUSCADOR INTERACTIVO
+    
     let debounceTimer;
     buscadorRutas.addEventListener('input', function(e) {
         clearTimeout(debounceTimer);
-        // Esperamos medio segundo después de que deja de teclear para no saturar la API
         debounceTimer = setTimeout(() => {
             cargarRutas(e.target.value);
         }, 500);
     });
 
-    // INICIALIZACIÓN
-    // Al cargar la página, traemos los datos de la BD
+    
     cargarRutas();
     cargarOperadores();
 });

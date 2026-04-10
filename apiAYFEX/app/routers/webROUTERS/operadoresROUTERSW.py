@@ -8,10 +8,10 @@ from app.security.authSECURITY import verificar_Peticion
 
 router = APIRouter(
     prefix="/v1/operadores",
-    tags=["Operadores"]
+    tags=["Web | Operadores"]
 )
 
-# GET: Obtener todos los operadores
+
 @router.get("/")
 async def leer_operadores(db: Session = Depends(get_db)):
     queryOperadores = db.query(Crear_Operadores).all()
@@ -21,7 +21,7 @@ async def leer_operadores(db: Session = Depends(get_db)):
         "operadores": queryOperadores
     }
 
-# POST: Crear un nuevo operador
+
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def crear_operador(operadorP: OperadorBase, db: Session = Depends(get_db)):
     nuevoOperador = Crear_Operadores(
@@ -41,7 +41,7 @@ async def crear_operador(operadorP: OperadorBase, db: Session = Depends(get_db))
         "Operador": nuevoOperador
     }
 
-# PUT: Editar un operador
+
 @router.put("/{id}", status_code=status.HTTP_200_OK)
 async def actualizar_operador(id: int, operadorP: OperadorBase, db: Session = Depends(get_db)):
     operador_db = db.query(Crear_Operadores).filter(Crear_Operadores.id == id).first()
@@ -64,10 +64,10 @@ async def actualizar_operador(id: int, operadorP: OperadorBase, db: Session = De
         
     raise HTTPException(status_code=404, detail="El ID del operador no existe")
 
-# DELETE: Eliminar un operador
+
 @router.delete("/{id}", status_code=status.HTTP_200_OK)
 async def eliminar_operador(id: int, db: Session = Depends(get_db),userAuth: str = Depends(verificar_Peticion)): 
-    # Si quieres usar autenticación, agrega: userAuth: str = Depends(verificar_Peticion) en los parámetros
+    
     operador_db = db.query(Crear_Operadores).filter(Crear_Operadores.id == id).first()
     
     if operador_db:

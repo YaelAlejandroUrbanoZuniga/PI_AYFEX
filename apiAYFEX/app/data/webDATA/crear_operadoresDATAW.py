@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String
 from app.data.dbDATA import Base
 
 class Crear_Operadores(Base):
-    __tablename__ = "operadores"
+    __tablename__ = "operadores_web"
 
     id = Column(Integer, primary_key=True, index=True)
     nombre_completo = Column(String(150), nullable=False)

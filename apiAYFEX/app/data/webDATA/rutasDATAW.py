@@ -2,9 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, or_
 from sqlalchemy.orm import relationship, Session
 from app.data.dbDATA import Base
 from app.data.webDATA.crear_operadoresDATAW import Crear_Operadores
-# ==========================================
-# 1. MODELO DE BASE DE DATOS (SQLAlchemy)
-# ==========================================
+
 class RutaDB(Base):
     __tablename__ = "web_rutas"
 
@@ -13,13 +11,13 @@ class RutaDB(Base):
     codigo = Column(String(50), nullable=False, unique=True)
     estado = Column(String(20), default="Activa")
     
-    # Almacenamos las zonas como string para simplicidad en la DB
+    
     zonas_cubiertas_raw = Column(String(500), nullable=True)
 
-    # CORRECCIÓN CLAVE: 
-    # Apuntamos a la tabla 'operadores' que existe en tu DB
-    # Usamos la clase 'Crear_Operadores' que es como la tienes definida
-    operador_id = Column(Integer, ForeignKey("operadores.id"), nullable=True)
+     
+    
+    
+    operador_id = Column(Integer, ForeignKey("operadores_web.id"), nullable=True)
     operador = relationship("Crear_Operadores", backref="rutas")
 
     @property
@@ -35,9 +33,7 @@ class RutaDB(Base):
         else:
             self.zonas_cubiertas_raw = ", ".join(zonas)
 
-# ==========================================
-# 2. FUNCIONES CRUD
-# ==========================================
+
 
 def obtener_todas_las_rutas(db: Session, query: str = None):
     """Obtiene rutas y hace join con operadores para evitar errores de relación."""
@@ -55,11 +51,11 @@ def obtener_todas_las_rutas(db: Session, query: str = None):
     return db_query.all()
 
 def crear_nueva_ruta_db(db: Session, nueva_ruta_data: dict):
-    # Extraemos zonas_cubiertas si viene como lista para procesarla
+    
     zonas = nueva_ruta_data.pop("zonas_cubiertas", [])
     
     db_ruta = RutaDB(**nueva_ruta_data)
-    db_ruta.zonas_cubiertas = zonas # El @property lo convierte a string
+    db_ruta.zonas_cubiertas = zonas 
     
     db.add(db_ruta)
     db.commit()

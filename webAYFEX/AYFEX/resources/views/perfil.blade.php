@@ -2,9 +2,7 @@
 
 @section('content')
 <style>
-    /* =========================================
-       ESTILOS DEL HEADER ESTÁTICO (NARANJA)
-       ========================================= */
+    
     .main-header { position:sticky;top:0;z-index:1000;background:linear-gradient(90deg,#ff5722 0%,#e64a19 100%);font-family:'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;box-shadow:0 4px 15px rgba(0,0,0,0.1); }
     .header-top { display:flex;justify-content:space-between;align-items:center;padding:12px 24px;border-bottom:1px solid rgba(255,255,255,0.2); }
     .header-brand { display:flex;align-items:center;gap:12px;text-decoration:none; }
@@ -32,9 +30,7 @@
     .dropdown-item { padding:10px 20px;font-size:0.9rem;color:#444;font-weight:500; }
     .dropdown-item:hover { background-color:#fffaf5;color:#ff5722; }
 
-    /* =========================================
-       ESTILOS DE LA PÁGINA (PERFIL)
-       ========================================= */
+    
     .navbar { display:none !important; }
     .container.mt-4 { max-width:100% !important;padding:0 !important;margin:0 !important; }
     body { background-color:#f4f6f9;color:#333;overflow-x:hidden;font-family:'Segoe UI',sans-serif;margin:0; }
@@ -48,7 +44,7 @@
     .content-box:hover { box-shadow:0 8px 25px rgba(0,0,0,0.06);transform:translateY(-2px); }
     .box-title { font-weight:800;font-size:0.85rem;margin-bottom:16px;color:#555;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid #f4f6f9;padding-bottom:10px; }
 
-    /* Avatar */
+    
     .profile-avatar-container { display:flex;justify-content:center;align-items:center;padding:10px 0 14px; }
     .avatar-circle { width:110px;height:110px;background:linear-gradient(135deg,#ff8a65 0%,#ff5722 100%);border-radius:50%;display:flex;justify-content:center;align-items:center;font-size:3rem;color:white;position:relative;border:4px solid #fff;box-shadow:0 8px 20px rgba(255,87,34,0.25); }
     .camera-btn { position:absolute;bottom:2px;right:4px;background:white;width:34px;height:34px;border-radius:50%;display:flex;justify-content:center;align-items:center;box-shadow:0 4px 10px rgba(0,0,0,0.15);color:#ff5722;cursor:pointer;border:2px solid #fff;transition:0.3s; }
@@ -57,7 +53,7 @@
     .user-display-email { font-size:0.88rem;color:#888;text-align:center;margin-top:2px; }
     .status-active-pill { display:inline-flex;align-items:center;gap:6px;background:#dcfce7;color:#166534;font-size:0.78rem;font-weight:700;padding:5px 14px;border-radius:999px;margin-top:8px; }
 
-    /* Permisos */
+    
     .permission-item { display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid #f2f2f2; }
     .permission-item:last-child { border-bottom:none; }
     .permission-label { font-weight:600;color:#555;font-size:0.9rem; }
@@ -65,24 +61,24 @@
     .status-completo { color:#16a34a;background:#dcfce7; }
     .status-bloqueado { color:#dc2626;background:#fee2e2; }
 
-    /* Información en modo lectura */
+    
     .info-grid { display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px; }
     .info-field { display:flex;flex-direction:column;gap:4px; }
     .info-field.full { grid-column:1/-1; }
     .info-field-label { font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#999; }
     .info-field-value { font-size:1rem;font-weight:700;color:#222; }
 
-    /* Detalles cuenta */
+    
     .meta-row { display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f2f2f2; }
     .meta-row:last-child { border-bottom:none; }
     .meta-label { font-size:0.9rem;color:#777; }
     .meta-value { font-size:0.9rem;font-weight:700;color:#333; }
 
-    /* Botón editar */
+    
     .btn-edit-profile { background:linear-gradient(135deg,#ff5722 0%,#e64a19 100%);border:none;color:white;padding:13px 20px;border-radius:12px;font-weight:800;transition:0.3s;cursor:pointer;width:100%;font-size:0.95rem;text-transform:uppercase;letter-spacing:1px;display:flex;align-items:center;justify-content:center;gap:8px; }
     .btn-edit-profile:hover { transform:translateY(-2px);box-shadow:0 8px 20px rgba(230,74,25,0.3); }
 
-    /* MODAL */
+    
     .modal-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:9999;align-items:center;justify-content:center; }
     .modal-overlay.show { display:flex; }
     .modal-card { background:#fff;border-radius:18px;padding:30px;width:100%;max-width:460px;box-shadow:0 20px 50px rgba(0,0,0,0.2);position:relative; }
@@ -279,14 +275,14 @@
 </div>
 
 <script>
-// Función agregada para cerrar sesión de forma correcta
+
 function cerrarSesion() {
     localStorage.removeItem("authToken");
     window.location.href = "{{ route('login') }}";
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // 1. Ahora buscamos el "authToken" que generó tu nuevo Login
+    
     const authToken = localStorage.getItem("authToken");
     
     if (!authToken) {
@@ -297,7 +293,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const API_URL = "http://127.0.0.1:5000/v1/mi-perfil/";
     
-    // 2. Cambiamos "Basic" por "Bearer"
+    
     const headers = { 'Authorization': `Bearer ${authToken}`, 'Accept': 'application/json' };
 
     function actualizarVista(u) {
@@ -323,11 +319,11 @@ document.addEventListener("DOMContentLoaded", function () {
         el.className   = 'permission-status ' + (ok ? 'status-completo' : 'status-bloqueado');
     }
 
-    // Petición GET para cargar los datos del perfil
+    
     fetch(API_URL, { method: 'GET', headers })
         .then(r => { 
             if (r.status === 401) {
-                // Si el token expiró o es inválido, lo sacamos
+                
                 localStorage.removeItem("authToken");
                 window.location.href = "/";
                 throw new Error("Token inválido");
@@ -360,7 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
             telefono:           document.getElementById('modal_telefono').value
         };
 
-        // Petición PUT para guardar los cambios
+        
         fetch(API_URL, {
             method: 'PUT',
             headers: { ...headers, 'Content-Type': 'application/json' },

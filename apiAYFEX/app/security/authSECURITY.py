@@ -5,7 +5,6 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-# Importamos tu base de datos
 from app.data.dbDATA import get_db
 from app.data.webDATA.crear_perfilDATAW import UsuarioDB
 from app.data.movilDATA.crear_usuarioDATA import UsuarioMDB
@@ -16,12 +15,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# URL donde el frontend pedirá el token
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/login/") 
 
 def verificar_password(password_plano, password_hash):
-    # NOTA: Por ahora, como tienes "Hola1234" en tu DB, lo validamos en texto plano.
-    # Cuando arreglen el registro para usar hash, cambia esto a: return pwd_context.verify(password_plano, password_hash)
+    
     return password_plano == password_hash
 
 def crear_token(data: dict):
@@ -44,7 +42,7 @@ def verificar_Peticion(token: str = Depends(oauth2_scheme), db: Session = Depend
     except JWTError:
         raise credenciales_excepcion
         
-    # Buscamos al usuario real en la base de datos
+    
     usuario_db = db.query(UsuarioDB).filter(UsuarioDB.username == username).first()
     if usuario_db is None:
         raise credenciales_excepcion

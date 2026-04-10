@@ -11,7 +11,7 @@ from app.data.movilDATA.crear_pedidosDATA import Crear_Pedidos
 from app.data.webDATA.crear_incidenciasDATAW import Crear_Incidencias
 from app.data.webDATA.crear_perfilDATAW import UsuarioDB
 from app.data.movilDATA.crear_usuarioDATA import UsuarioMDB 
-
+from app.data.webDATA.rutasDATAW import RutaDB
 Base.metadata.create_all(bind=engine)
 
 from app.routers.movilROUTERS import pedidosROUTERS

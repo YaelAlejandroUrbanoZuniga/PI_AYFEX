@@ -2,9 +2,7 @@
 
 @section('content')
 <style>
-    /* =========================================
-       ESTILOS DEL HEADER ESTÁTICO (NARANJA)
-       ========================================= */
+
     .main-header {
         position: sticky;
         top: 0;
@@ -59,9 +57,7 @@
     .dropdown-item { padding: 10px 20px; font-size: 0.9rem; color: #444; font-weight: 500;}
     .dropdown-item:hover { background-color: #fffaf5; color: #ff5722; }
 
-    /* =========================================
-       ESTILOS DE LA PÁGINA (OPERADORES)
-       ========================================= */
+ 
     body { background-color: #f4f6f9; color: #333; overflow-x: hidden; margin: 0;}
     .navbar { display: none !important; }
     .container.mt-4 { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -141,9 +137,7 @@
     }
     .btn-delete:hover { background: #fee2e2; color: #dc2626; border-color: #fca5a5; }
 
-    /* =========================================
-       ESTILOS DEL MODAL (NUEVOS)
-       ========================================= */
+   
     .custom-modal-content {
         border-radius: 16px;
         border: none;
@@ -296,7 +290,7 @@
     <div class="filter-bar">
         <div class="filter-search">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Buscar por nombre, teléfono o vehículos...">
+            <input type="text" id="buscadorOperadores" placeholder="Buscar por nombre, teléfono o vehículos...">
         </div>
     </div>
 
@@ -359,13 +353,36 @@
 </div>
 
 <script>
-    // IMPORTANTE: Asegúrate de que este puerto (8000 o 8001) sea en el que corre tu FastAPI
-    // Si Laravel usa el 8000, corre FastAPI en el 8001 (uvicorn main:app --port 8001)
+   
     const API_URL = 'http://127.0.0.1:5000/v1/operadores';
 
-    document.addEventListener('DOMContentLoaded', cargarOperadores);
+    document.addEventListener('DOMContentLoaded', () => {
+        cargarOperadores();
+        inicializarBuscador(); 
+    });
 
-    // --- LEER OPERADORES (GET) ---
+    
+    function inicializarBuscador() {
+        const buscador = document.getElementById('buscadorOperadores');
+        
+        buscador.addEventListener('input', function(e) {
+            const textoBuscado = e.target.value.toLowerCase();
+            const tarjetas = document.querySelectorAll('.operator-card'); 
+
+            tarjetas.forEach(tarjeta => {
+                
+                const contenidoTarjeta = tarjeta.textContent.toLowerCase();
+                
+                
+                if (contenidoTarjeta.includes(textoBuscado)) {
+                    tarjeta.style.display = '';
+                } else {
+                    tarjeta.style.display = 'none';
+                }
+            });
+        });
+    }
+
     async function cargarOperadores() {
         try {
             const response = await fetch(API_URL);
@@ -373,14 +390,14 @@
             
             const data = await response.json();
             const grid = document.getElementById('operatorGrid');
-            grid.innerHTML = ''; // Limpiar cuadrícula
+            grid.innerHTML = ''; 
 
             if(data.operadores && data.operadores.length > 0) {
                 data.operadores.forEach(op => {
                     const isEnRuta = op.estado === 'EN RUTA';
                     const statusClass = isEnRuta ? 'status-en-ruta' : 'status-disponible';
                     const avatarBg = isEnRuta ? '#ff5722' : '#16a34a'; 
-                    // Obtener iniciales (ej: "Carlos Ramírez" -> "CR")
+                    
                     const partesNombre = op.nombre_completo.split(' ');
                     let iniciales = partesNombre[0].charAt(0).toUpperCase();
                     if (partesNombre.length > 1) {
@@ -415,6 +432,13 @@
                     `;
                     grid.innerHTML += card;
                 });
+                
+              
+                const buscador = document.getElementById('buscadorOperadores');
+                if (buscador.value !== "") {
+                    buscador.dispatchEvent(new Event('input'));
+                }
+                
             } else {
                 grid.innerHTML = '<div style="width: 100%; text-align: center; padding: 40px;"><p>No hay operadores registrados aún.</p></div>';
             }
@@ -424,7 +448,7 @@
         }
     }
 
-    // --- CREAR Y ACTUALIZAR (POST / PUT) ---
+    
     document.getElementById('formOperador').addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -452,7 +476,7 @@
             });
 
             if (response.ok) {
-                // Cerrar modal
+                
                 const modalEl = document.getElementById('modalAgregarOperador');
                 const modal = bootstrap.Modal.getInstance(modalEl);
                 if(modal) { modal.hide(); }
@@ -460,7 +484,7 @@
                 limpiarFormulario();
                 cargarOperadores(); // Recargar la lista
                 
-                // Pequeña notificación (puedes cambiarla por SweetAlert si lo usas)
+                
                 alert(id_db ? 'Operador actualizado correctamente' : 'Operador agregado correctamente');
             } else {
                 const err = await response.json();
@@ -476,7 +500,7 @@
         }
     });
 
-    // --- ELIMINAR (DELETE) ---
+    
     async function eliminarOperador(id) {
         if(confirm('¿Estás seguro de que deseas eliminar este operador? Esta acción no se puede deshacer.')) {
             try {
@@ -494,7 +518,7 @@
         }
     }
 
-    // --- FUNCIONES AUXILIARES ---
+    
     function abrirModalEditar(operador) {
         document.getElementById('modalTitle').innerText = 'Editar Operador';
         document.getElementById('operador_id_db').value = operador.id;

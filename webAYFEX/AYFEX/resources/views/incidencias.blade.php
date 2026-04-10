@@ -2,9 +2,7 @@
 
 @section('content')
 <style>
-    /* =========================================
-       ESTILOS DEL HEADER ESTÁTICO (NARANJA)
-       ========================================= */
+    
     .main-header {
         position: sticky;
         top: 0;
@@ -59,9 +57,7 @@
     .dropdown-item { padding: 10px 20px; font-size: 0.9rem; color: #444; font-weight: 500;}
     .dropdown-item:hover { background-color: #fffaf5; color: #ff5722; }
 
-    /* =========================================
-       ESTILOS DE LA PÁGINA (INCIDENCIAS)
-       ========================================= */
+    
     body { background-color: #f4f6f9; color: #333; overflow-x: hidden; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
     .navbar { display: none !important; } 
     .container.mt-4 { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -111,9 +107,7 @@
     .text-danger { color: #dc3545; }
     .text-danger:hover { color: #b02a37; }
 
-    /* =========================================
-       ESTILOS DEL MODAL Y FORMULARIOS
-       ========================================= */
+    
     .custom-modal-content {
         border-radius: 16px;
         border: none;
@@ -423,47 +417,45 @@
 </div>
 
 <script>
-    // URL de tu API FastAPI
+    
     const API_URL = 'http://127.0.0.1:5000/v1/incidencias';
 
-    // Variable global para almacenar las incidencias y facilitar el filtro
+    
     let listaIncidencias = [];
     let idIncidenciaEditando = null;
 
-    // Cargar datos apenas inicia la vista
+    
     document.addEventListener('DOMContentLoaded', cargarIncidencias);
 
-    // Escuchar el evento de enviar del formulario de REGISTRO
+    
     document.getElementById('formIncidencia').addEventListener('submit', function(e) {
         e.preventDefault();
         guardarIncidencia();
     });
 
-    // Escuchar el evento de enviar del formulario de EDICIÓN
+    
     document.getElementById('formEditIncidencia').addEventListener('submit', function(e) {
         e.preventDefault();
         actualizarIncidencia();
     });
 
-    // Escuchar cambios en el FILTRO
+    
     document.getElementById('filtro-estado').addEventListener('change', aplicarFiltro);
 
-    // -------------------------------------------------------------------
-    // FUNCIONES PRINCIPALES
-    // -------------------------------------------------------------------
+    
 
-    // 1. Obtener datos de FastAPI
+    
     async function cargarIncidencias() {
         try {
             const response = await fetch(API_URL);
             listaIncidencias = await response.json();
-            aplicarFiltro(); // Aplica el filtro actual y renderiza la tabla
+            aplicarFiltro(); 
         } catch (error) {
             console.error("Error al cargar incidencias:", error);
         }
     }
 
-    // 2. Lógica del Filtro
+    
     function aplicarFiltro() {
         const estadoSeleccionado = document.getElementById('filtro-estado').value;
         let datosFiltrados = listaIncidencias;
@@ -473,10 +465,10 @@
         }
 
         renderTable(datosFiltrados);
-        actualizarTarjetas(listaIncidencias); // Mantenemos las tarjetas con los totales de TODAS las incidencias
+        actualizarTarjetas(listaIncidencias); 
     }
 
-    // 3. Dibujar la tabla HTML
+    
     function renderTable(incidencias) {
         const tbody = document.getElementById('tabla-incidencias');
         document.getElementById('titulo-lista').innerText = `Lista de Incidencias (${incidencias.length})`;
@@ -487,7 +479,11 @@
             const badgeClass = esPendiente ? 'status-pending' : 'status-resolved';
             const textoBadge = esPendiente ? 'Pendiente' : 'Resuelto';
             
-            // Botones de Acción Modificados (Editar y Eliminar)
+            
+            const btnResolver = esPendiente 
+                ? `<button onclick="marcarComoResuelta('${inc.id}')" title="Marcar como Resuelta" class="text-success border-0 bg-transparent mx-1" style="color: #16a34a; transition: 0.2s;"><i class="fa-solid fa-circle-check"></i></button>` 
+                : '';
+            
             const btnEditar = `<button onclick="abrirModalEditar('${inc.id}')" title="Editar" class="text-primary border-0 bg-transparent mx-1"><i class="fa-solid fa-pen"></i></button>`;
             const btnEliminar = `<button onclick="eliminarIncidencia('${inc.id}')" title="Eliminar" class="text-danger border-0 bg-transparent mx-1"><i class="fa-solid fa-trash"></i></button>`;
 
@@ -503,6 +499,7 @@
                     <td>${inc.responsable || 'N/A'}</td>
                     <td>${inc.fecha}</td>
                     <td class="action-icons">
+                        ${btnResolver}
                         ${btnEditar}
                         ${btnEliminar}
                     </td>
@@ -511,7 +508,7 @@
         });
     }
 
-    // 4. Actualizar contadores superiores
+    
     function actualizarTarjetas(incidencias) {
         const pendientes = incidencias.filter(i => i.estado === 'PENDIENTE').length;
         const resueltas = incidencias.filter(i => i.estado === 'RESUELTO').length;
@@ -521,7 +518,7 @@
         document.getElementById('card-resueltas').innerText = resueltas;
     }
 
-    // 5. POST: Guardar nueva incidencia
+    
     async function guardarIncidencia() {
         const nueva = {
             envio_id: document.getElementById('envio_id').value,
@@ -537,13 +534,13 @@
             });
 
             if(response.ok) {
-                // Limpiar formulario y cerrar modal
+                
                 document.getElementById('formIncidencia').reset();
                 var myModalEl = document.getElementById('modalRegistrarIncidencia');
                 var modal = bootstrap.Modal.getInstance(myModalEl);
                 modal.hide();
                 
-                // Recargar tabla para ver el nuevo registro
+                
                 cargarIncidencias();
             } else {
                 alert('Error al guardar la incidencia.');
@@ -553,25 +550,25 @@
         }
     }
 
-    // 6. Preparar y abrir Modal de Edición
+    
     function abrirModalEditar(id) {
-        // Buscamos los datos actuales en nuestra lista global
+        
         const incidencia = listaIncidencias.find(i => i.id === id);
         if (!incidencia) return;
 
         idIncidenciaEditando = id;
         
-        // Rellenamos el formulario con los datos actuales
+        
         document.getElementById('edit_envio_id').value = incidencia.envio_id;
         document.getElementById('edit_tipo').value = incidencia.tipo;
         document.getElementById('edit_descripcion').value = incidencia.descripcion;
 
-        // Abrimos el modal
+        
         var myModal = new bootstrap.Modal(document.getElementById('modalEditarIncidencia'));
         myModal.show();
     }
 
-    // 7. PUT: Actualizar incidencia existente
+    
     async function actualizarIncidencia() {
         const editada = {
             envio_id: document.getElementById('edit_envio_id').value,
@@ -580,7 +577,6 @@
         };
 
         try {
-            // Asegúrate de que FastAPI soporte el método PUT para esta ruta
             const response = await fetch(`${API_URL}/${idIncidenciaEditando}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -588,13 +584,13 @@
             });
 
             if(response.ok) {
-                // Limpiar y cerrar modal
+                
                 document.getElementById('formEditIncidencia').reset();
                 var myModalEl = document.getElementById('modalEditarIncidencia');
                 var modal = bootstrap.Modal.getInstance(myModalEl);
                 modal.hide();
                 
-                // Recargar para ver los cambios
+                
                 cargarIncidencias();
             } else {
                 alert('Error al actualizar la incidencia en el servidor.');
@@ -604,23 +600,45 @@
         }
     }
 
-    // 8. DELETE: Eliminar incidencia
+    
     async function eliminarIncidencia(id) {
         if(!confirm(`¿Estás seguro de que deseas eliminar la incidencia ${id}?`)) return;
         
         try {
-            // Asegúrate de que FastAPI soporte el método DELETE para esta ruta
             const response = await fetch(`${API_URL}/${id}`, {
                 method: 'DELETE'
             });
             
             if(response.ok) {
-                cargarIncidencias(); // Recargar la tabla si se eliminó con éxito
+                cargarIncidencias(); 
             } else {
                 alert('Error al eliminar la incidencia.');
             }
         } catch (error) {
             console.error("Error al eliminar:", error);
+        }
+    }
+
+    
+    async function marcarComoResuelta(id) {
+        if(!confirm(`¿Estás seguro de que deseas marcar la incidencia ${id} como RESUELTA?`)) return;
+        
+        try {
+            
+            const response = await fetch(`${API_URL}/${id}/resolver`, {
+                method: 'PATCH' 
+               
+            });
+            
+            if(response.ok) {
+                cargarIncidencias(); 
+            } else {
+                const errorData = await response.json();
+                alert(`Error al cambiar el estado: ${errorData.detail || 'Error desconocido'}`);
+            }
+        } catch (error) {
+            console.error("Error al resolver la incidencia:", error);
+            alert("Hubo un problema de conexión con el servidor.");
         }
     }
 </script>

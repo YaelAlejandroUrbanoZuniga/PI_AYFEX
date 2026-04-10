@@ -17,4 +17,4 @@ class Incidencia(IncidenciaBase):
     fecha: date
 
     class Config:
-        from_attributes = True # Permite convertir el modelo de DB a JSON
+        from_attributes = True 
