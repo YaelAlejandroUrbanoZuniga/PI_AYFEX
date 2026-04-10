@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.data.webDATA.crear_operadoresDATAW import Crear_Operadores
 from app.data.dbDATA import engine, Base
 from app.data.movilDATA.crear_pedidosDATA import Crear_Pedidos
+from app.data.movilDATA.crear_reporteDATA import Crear_Reporte
 from app.data.webDATA.crear_incidenciasDATAW import Crear_Incidencias
 from app.data.webDATA.crear_perfilDATAW import UsuarioDB
 from app.data.movilDATA.crear_usuarioDATA import UsuarioMDB 
@@ -15,6 +16,7 @@ from app.data.webDATA.rutasDATAW import RutaDB
 Base.metadata.create_all(bind=engine)
 
 from app.routers.movilROUTERS import pedidosROUTERS
+from app.routers.movilROUTERS import reporteROUTERS
 from app.routers.movilROUTERS import authROUTERS
 from app.routers.webROUTERS import operadoresROUTERSW
 from app.routers.webROUTERS import incidenciasROUTERSW
@@ -50,6 +52,8 @@ def read_root():
 
 app.include_router(pedidosROUTERS.router)
 app.include_router(authROUTERS.router)
+app.include_router(reporteROUTERS.router)
+
 
 
 

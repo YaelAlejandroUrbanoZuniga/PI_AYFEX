@@ -1,9 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import {
-  View, Text, StyleSheet, TouchableOpacity,
-  ScrollView, Modal, Platform
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Modal, Platform, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import HeaderNaranja from '../Components/HeaderNaranja';
@@ -18,8 +15,20 @@ export default function PrincipalM({ navigation }) {
   const [escaneando, setEscaneando] = useState(true);
   const [pedidoEscaneado, setPedidoEscaneado] = useState(null);
   const [permission, requestPermission] = useCameraPermissions();
-
+  const [notifVisible, setNotifVisible] = useState(false);
+  const [reportes, setReportes] = useState([]);
+  const [modalReportesVisible, setModalReportesVisible] = useState(false);
+  const [busquedaReportes, setBusquedaReportes] = useState('');
+  const [filtroReportes, setFiltroReportes] = useState('Recientes');
+  const [mostrarFiltrosReportes, setMostrarFiltrosReportes] = useState(false);
   const primerNombre = global.usuarioActual?.nombre_completo?.split(' ')[0] || 'Usuario';
+
+  const PRIORIDAD_COLORES = {
+    BAJA: '#34C759',
+    NORMAL: '#FF6B00',
+    ALTA: '#FF9500',
+    URGENTE: '#FF3B30',
+  };
 
   const cargarPedidos = async () => {
     try {
@@ -33,7 +42,22 @@ export default function PrincipalM({ navigation }) {
     }
   };
 
-  useFocusEffect(useCallback(() => { cargarPedidos(); }, []));
+  const cargarReportes = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/v1/reportes/`, {
+        headers: { "Authorization": `Bearer ${global.authToken}` }
+      });
+      const data = await response.json();
+      setReportes(Array.isArray(data) ? data : []);
+    } catch (error) {
+      setReportes([]);
+    }
+  };
+
+  useFocusEffect(useCallback(() => {
+    cargarPedidos();
+    cargarReportes();
+  }, []));
 
   const abrirScanner = async () => {
     if (!permission?.granted) {
@@ -78,6 +102,28 @@ export default function PrincipalM({ navigation }) {
       params: { pedidoData: pedido }
     });
   };
+  const reportesFiltrados = useMemo(() => {
+    let resultado = [...reportes];
+    if (busquedaReportes.trim()) {
+      const texto = busquedaReportes.toLowerCase();
+      resultado = resultado.filter(r =>
+        r.tipo?.toLowerCase().includes(texto) ||
+        r.descripcion?.toLowerCase().includes(texto) ||
+        r.prioridad?.toLowerCase().includes(texto) ||
+        r.estado?.toLowerCase().includes(texto)
+      );
+    }
+    switch (filtroReportes) {
+      case 'Recientes': resultado.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)); break;
+      case 'Antiguos': resultado.sort((a, b) => new Date(a.fecha) - new Date(b.fecha)); break;
+      case 'Urgentes primero': resultado.sort((a, b) => {
+        const orden = { URGENTE: 0, ALTA: 1, NORMAL: 2, BAJA: 3 };
+        return (orden[a.prioridad] ?? 4) - (orden[b.prioridad] ?? 4);
+      }); break;
+      case 'Pendientes': resultado = resultado.filter(r => r.estado === 'PENDIENTE'); break;
+    }
+    return resultado;
+  }, [reportes, busquedaReportes, filtroReportes]);
 
   const pedidosActivos = pedidos.length;
   const totalPedidos = pedidos.length;
@@ -86,9 +132,13 @@ export default function PrincipalM({ navigation }) {
     <View style={styles.container}>
       <HeaderNaranja />
 
-      {/* BOTÓN QR EN EL HEADER */}
+      {/* BOTONES DEL HEADER */}
       <TouchableOpacity style={styles.qrButton} onPress={abrirScanner}>
         <Ionicons name="qr-code-outline" size={24} color="#FFFFFF" />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.notifButton} onPress={() => setNotifVisible(true)}>
+        <Ionicons name="notifications-outline" size={24} color="#FFFFFF" />
       </TouchableOpacity>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -189,9 +239,171 @@ export default function PrincipalM({ navigation }) {
             </View>
           </TouchableOpacity>
         ))}
+        {/* SECCIÓN REPORTES */}
+        <View style={styles.separator} />
+
+        <View style={styles.shipmentsHeader}>
+          <Text style={styles.shipmentsTitle}>Mis Reportes</Text>
+          <TouchableOpacity onPress={() => setModalReportesVisible(true)}>
+            <Text style={styles.viewAllText}>Ver todos</Text>
+          </TouchableOpacity>
+        </View>
+
+        {reportes.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Ionicons name="document-text-outline" size={36} color="#DDDDDD" />
+            <Text style={styles.emptyText}>Aquí aparecerán tus reportes enviados</Text>
+          </View>
+        ) : (
+          reportes.slice(0, 2).map((reporte) => (
+            <View key={reporte.id} style={styles.reporteCard}>
+              <View style={styles.reporteHeader}>
+                <View style={[styles.reporteIconContainer, { backgroundColor: (PRIORIDAD_COLORES[reporte.prioridad] || '#FF6B00') + '20' }]}>
+                  <Ionicons name="document-text-outline" size={18} color={PRIORIDAD_COLORES[reporte.prioridad] || '#FF6B00'} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.reporteTipo} numberOfLines={1}>{reporte.tipo}</Text>
+                  <Text style={styles.reporteFecha}>{reporte.fecha ? reporte.fecha.split('T')[0] : 'Sin fecha'}</Text>
+                </View>
+                <View style={[styles.prioridadBadge, { backgroundColor: (PRIORIDAD_COLORES[reporte.prioridad] || '#FF6B00') + '20' }]}>
+                  <Text style={[styles.prioridadBadgeText, { color: PRIORIDAD_COLORES[reporte.prioridad] || '#FF6B00' }]}>
+                    {reporte.prioridad}
+                  </Text>
+                </View>
+              </View>
+              <Text style={styles.reporteDescripcion} numberOfLines={2}>{reporte.descripcion}</Text>
+              <View style={styles.reporteFooter}>
+                <View style={[styles.estadoReporteBadge, reporte.estado === 'PENDIENTE' && styles.estadoPendiente]}>
+                  <Text style={[styles.estadoReporteText, reporte.estado === 'PENDIENTE' && styles.estadoPendienteText]}>
+                    {reporte.estado}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          ))
+        )}
 
         <View style={{ height: 100 }} />
       </ScrollView>
+      {/* MODAL NOTIFICACIONES */}
+      <Modal visible={notifVisible} animationType="slide" transparent>
+        <View style={styles.notifOverlay}>
+          <View style={styles.notifContainer}>
+            <View style={styles.notifHeader}>
+              <Text style={styles.notifTitle}>Notificaciones</Text>
+              <TouchableOpacity onPress={() => setNotifVisible(false)} style={styles.notifCloseBtn}>
+                <Ionicons name="close" size={22} color="#333333" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.notifEmptyContainer}>
+              <View style={styles.notifEmptyIcon}>
+                <Ionicons name="notifications-off-outline" size={36} color="#CCCCCC" />
+              </View>
+              <Text style={styles.notifEmptyTitle}>Sin notificaciones</Text>
+              <Text style={styles.notifEmptyText}>
+                Aquí aparecerán las actualizaciones sobre tus pedidos y envíos
+              </Text>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      {/* MODAL TODOS LOS REPORTES */}
+      <Modal visible={modalReportesVisible} animationType="slide">
+        <View style={styles.modalReportesContainer}>
+
+          <View style={styles.modalReportesHeader}>
+            <Text style={styles.modalReportesTitulo}>Mis Reportes</Text>
+            <TouchableOpacity
+              style={styles.modalReportesCerrar}
+              onPress={() => setModalReportesVisible(false)}
+            >
+              <Ionicons name="close" size={22} color="#333" />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.modalReportesContent}>
+            <View style={styles.searchContainer}>
+              <Ionicons name="search-outline" size={18} color="#999" />
+              <TextInput
+                style={styles.searchInput}
+                placeholder="Buscar por tipo, descripción..."
+                placeholderTextColor="#BBBBBB"
+                value={busquedaReportes}
+                onChangeText={setBusquedaReportes}
+              />
+              {busquedaReportes.length > 0 && (
+                <TouchableOpacity onPress={() => setBusquedaReportes('')}>
+                  <Ionicons name="close-circle" size={18} color="#CCCCCC" />
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <View style={styles.filtrosHeader}>
+              <Text style={styles.filtrosLabel}>Ordenar por:</Text>
+              <TouchableOpacity
+                style={styles.filtrosToggle}
+                onPress={() => setMostrarFiltrosReportes(!mostrarFiltrosReportes)}
+              >
+                <Text style={styles.filtrosToggleText}>{filtroReportes}</Text>
+                <Ionicons name={mostrarFiltrosReportes ? "chevron-up" : "chevron-down"} size={14} color="#FF6B00" />
+              </TouchableOpacity>
+            </View>
+
+            {mostrarFiltrosReportes && (
+              <View style={styles.filtrosContainer}>
+                {['Recientes', 'Antiguos', 'Urgentes primero', 'Pendientes'].map(f => (
+                  <TouchableOpacity
+                    key={f}
+                    style={[styles.filtroChip, filtroReportes === f && styles.filtroChipActivo]}
+                    onPress={() => { setFiltroReportes(f); setMostrarFiltrosReportes(false); }}
+                  >
+                    <Text style={[styles.filtroChipText, filtroReportes === f && styles.filtroChipTextActivo]}>{f}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {reportesFiltrados.length === 0 ? (
+                <View style={styles.emptyContainer}>
+                  <Ionicons name="document-text-outline" size={40} color="#DDDDDD" />
+                  <Text style={styles.emptyText}>
+                    {busquedaReportes ? `Sin resultados para "${busquedaReportes}"` : 'No tienes reportes aún'}
+                  </Text>
+                </View>
+              ) : (
+                reportesFiltrados.map((reporte) => (
+                  <View key={reporte.id} style={styles.reporteCard}>
+                    <View style={styles.reporteHeader}>
+                      <View style={[styles.reporteIconContainer, { backgroundColor: (PRIORIDAD_COLORES[reporte.prioridad] || '#FF6B00') + '20' }]}>
+                        <Ionicons name="document-text-outline" size={18} color={PRIORIDAD_COLORES[reporte.prioridad] || '#FF6B00'} />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.reporteTipo} numberOfLines={1}>{reporte.tipo}</Text>
+                        <Text style={styles.reporteFecha}>{reporte.fecha ? reporte.fecha.split('T')[0] : 'Sin fecha'}</Text>
+                      </View>
+                      <View style={[styles.prioridadBadge, { backgroundColor: (PRIORIDAD_COLORES[reporte.prioridad] || '#FF6B00') + '20' }]}>
+                        <Text style={[styles.prioridadBadgeText, { color: PRIORIDAD_COLORES[reporte.prioridad] || '#FF6B00' }]}>
+                          {reporte.prioridad}
+                        </Text>
+                      </View>
+                    </View>
+                    <Text style={styles.reporteDescripcion}>{reporte.descripcion}</Text>
+                    <View style={styles.reporteFooter}>
+                      <View style={[styles.estadoReporteBadge, reporte.estado === 'PENDIENTE' && styles.estadoPendiente]}>
+                        <Text style={[styles.estadoReporteText, reporte.estado === 'PENDIENTE' && styles.estadoPendienteText]}>
+                          {reporte.estado}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                ))
+              )}
+              <View style={{ height: 40 }} />
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
 
       {/* MODAL ESCÁNER */}
       <Modal visible={scannerVisible} animationType="slide">
@@ -319,12 +531,60 @@ const styles = StyleSheet.create({
   qrButton: {
     position: 'absolute',
     top: Platform.OS === 'ios' ? 54 : 30,
+    left: 20,
+    zIndex: 10,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  notifButton: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 54 : 30,
     right: 20,
     zIndex: 10,
     width: 40,
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  notifOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
+  },
+  notifContainer: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 24,
+    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
+    minHeight: 280,
+  },
+  notifHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  notifTitle: { fontSize: 20, fontWeight: '700', color: '#000000' },
+  notifCloseBtn: {
+    width: 36, height: 36, borderRadius: 18,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center', alignItems: 'center',
+  },
+  notifEmptyContainer: { alignItems: 'center', paddingVertical: 20 },
+  notifEmptyIcon: {
+    width: 72, height: 72, borderRadius: 36,
+    backgroundColor: '#F8F9FA',
+    justifyContent: 'center', alignItems: 'center', marginBottom: 16,
+  },
+  notifEmptyTitle: { fontSize: 16, fontWeight: '600', color: '#333333', marginBottom: 8 },
+  notifEmptyText: {
+    fontSize: 13, color: '#AAAAAA',
+    textAlign: 'center', lineHeight: 20, paddingHorizontal: 20,
   },
 
   greetingContainer: { paddingTop: 20, paddingBottom: 16 },
@@ -460,4 +720,51 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2, shadowRadius: 4, elevation: 4,
   },
   resultCloseButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' },
+  reporteCard: {
+    backgroundColor: '#FFFFFF', borderRadius: 14, padding: 14, marginBottom: 12,
+    borderWidth: 1, borderColor: '#F0F0F0',
+    shadowColor: '#000', shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05, shadowRadius: 6, elevation: 2,
+  },
+  reporteHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 8, gap: 10 },
+  reporteIconContainer: { width: 36, height: 36, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  reporteTipo: { fontSize: 14, fontWeight: '700', color: '#111111' },
+  reporteFecha: { fontSize: 11, color: '#999999', marginTop: 2 },
+  prioridadBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20 },
+  prioridadBadgeText: { fontSize: 11, fontWeight: '700' },
+  reporteDescripcion: { fontSize: 13, color: '#555555', lineHeight: 18, marginBottom: 10 },
+  reporteFooter: { flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#F5F5F5', paddingTop: 8 },
+  estadoReporteBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, backgroundColor: '#F5F5F5' },
+  estadoReporteText: { fontSize: 11, fontWeight: '600', color: '#888888' },
+  estadoPendiente: { backgroundColor: '#FFF3E6' },
+  estadoPendienteText: { color: '#FF6B00' },
+
+  modalReportesContainer: { flex: 1, backgroundColor: '#FFFFFF' },
+  modalReportesHeader: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingTop: Platform.OS === 'ios' ? 60 : 40,
+    paddingHorizontal: 20, paddingBottom: 16,
+    borderBottomWidth: 1, borderBottomColor: '#EEEEEE',
+  },
+  modalReportesTitulo: { fontSize: 20, fontWeight: '700', color: '#000000' },
+  modalReportesCerrar: { width: 36, height: 36, borderRadius: 18, backgroundColor: '#F5F5F5', justifyContent: 'center', alignItems: 'center' },
+  modalReportesContent: { flex: 1, paddingHorizontal: 20, paddingTop: 16 },
+
+  searchContainer: {
+    flexDirection: 'row', alignItems: 'center',
+    backgroundColor: '#F8F9FA', borderRadius: 14,
+    paddingHorizontal: 14, paddingVertical: Platform.OS === 'ios' ? 12 : 8,
+    borderWidth: 1, borderColor: '#EEEEEE', marginBottom: 14,
+  },
+  searchInput: { flex: 1, marginLeft: 8, fontSize: 14, color: '#333333' },
+  filtrosHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 },
+  filtrosLabel: { fontSize: 13, color: '#999999' },
+  filtrosToggle: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#FFF3E6', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: '#FF6B00' },
+  filtrosToggleText: { fontSize: 13, color: '#FF6B00', fontWeight: '600' },
+  filtrosContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 },
+  filtroChip: { paddingHorizontal: 14, paddingVertical: 7, borderRadius: 20, backgroundColor: '#F8F9FA', borderWidth: 1, borderColor: '#EEEEEE' },
+  filtroChipActivo: { backgroundColor: '#FF6B00', borderColor: '#FF6B00' },
+  filtroChipText: { fontSize: 13, color: '#666666' },
+  filtroChipTextActivo: { color: '#FFFFFF', fontWeight: '600' },
+  
 });
