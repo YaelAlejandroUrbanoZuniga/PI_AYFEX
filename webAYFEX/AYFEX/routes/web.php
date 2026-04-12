@@ -69,3 +69,6 @@ Route::get('/registro', function () {
     // Como tu archivo está suelto en la raíz de "views", solo ponemos su nombre
     return view('registro'); 
 })->name('registro');
+Route::get('/notificaciones', function () {
+    return view('notificaciones'); // Asegúrate de que este sea el nombre exacto de tu archivo .blade.php
+})->name('notificaciones');

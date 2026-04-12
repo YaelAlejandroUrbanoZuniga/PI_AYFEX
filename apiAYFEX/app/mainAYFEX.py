@@ -13,6 +13,7 @@ from app.data.webDATA.crear_incidenciasDATAW import Crear_Incidencias
 from app.data.webDATA.crear_perfilDATAW import UsuarioDB
 from app.data.movilDATA.crear_usuarioDATA import UsuarioMDB 
 from app.data.webDATA.rutasDATAW import RutaDB
+
 Base.metadata.create_all(bind=engine)
 
 from app.routers.movilROUTERS import pedidosROUTERS
@@ -24,6 +25,7 @@ from app.routers.webROUTERS import perfilROUTERSW
 from app.routers.webROUTERS import loginROUTERSW
 from app.routers.webROUTERS import registroROUTERSW
 from app.routers.webROUTERS import rutasROUTERSW
+from app.routers.webROUTERS import pedidosROUTERSW
 
 app = FastAPI(
     title="API AYFEX PEDIDOS",
@@ -63,3 +65,4 @@ app.include_router(perfilROUTERSW.router)
 app.include_router(loginROUTERSW.router)
 app.include_router(registroROUTERSW.router)
 app.include_router(rutasROUTERSW.router)
+app.include_router(pedidosROUTERSW.router)

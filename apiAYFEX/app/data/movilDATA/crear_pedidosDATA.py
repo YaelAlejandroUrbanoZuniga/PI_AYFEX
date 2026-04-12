@@ -17,7 +17,9 @@ class Crear_Pedidos(Base):
     fecha = Column(Date, default=date.today, nullable=False)
 
     # Nuevos campos de estado y logística
+    
     estado = Column(String(30), default="EN PREPARACIÓN", nullable=False)
+    ruta_id = Column(Integer, nullable=True)
     ruta_nombre = Column(String(100), nullable=True)
     ruta_codigo = Column(String(50), nullable=True)
     ruta_zonas = Column(String(500), nullable=True)
