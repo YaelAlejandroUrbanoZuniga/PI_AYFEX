@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, StringConstraints
-from typing import Annotated
+from typing import Annotated, Optional
 from datetime import date
 
 class PedidoBase(BaseModel):
@@ -18,6 +18,15 @@ class Pedido(PedidoBase):
     id: str
     usuario_id: int
     fecha: date
+    estado: str = "EN PREPARACIÓN"
+    ruta_nombre: Optional[str] = None
+    ruta_codigo: Optional[str] = None
+    ruta_zonas: Optional[str] = None
+    operador_nombre: Optional[str] = None
+    operador_telefono: Optional[str] = None
+    dias_estimados: Optional[int] = None
+    fecha_asignacion: Optional[date] = None
+    motivo_rechazo: Optional[str] = None
 
     class Config:
         from_attributes = True
