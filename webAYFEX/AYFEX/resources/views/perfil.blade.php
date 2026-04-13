@@ -9,10 +9,6 @@
     .brand-text { display:flex;flex-direction:column; }
     .brand-name { font-weight:900;font-size:1.2rem;color:#ffffff;line-height:1.1;letter-spacing:1px; }
     .brand-slogan { font-size:0.75rem;color:rgba(255,255,255,0.85); }
-    .header-search { flex:1;max-width:600px;margin:0 2rem;position:relative; }
-    .header-search i { position:absolute;left:18px;top:50%;transform:translateY(-50%);color:#ff5722;z-index:2; }
-    .header-search input { width:100%;padding:10px 15px 10px 45px;border:none;border-radius:25px;background-color:#ffffff;font-size:0.95rem;color:#333;outline:none;box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-    .header-search input::placeholder { color:#aaa; }
     .header-actions { display:flex;align-items:center;gap:20px; }
     .user-profile { display:flex;align-items:center;gap:12px;text-decoration:none;padding:5px;border-radius:8px;transition:background-color 0.3s; }
     .user-profile:hover { background-color:rgba(255,255,255,0.1); }
@@ -109,10 +105,6 @@
             </div>
         </a>
 
-        <div class="header-search d-none d-md-block">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Buscar envíos, clientes, operadores...">
-        </div>
 
         <div class="header-actions">
             <a href="{{ route('perfil') }}" class="user-profile" style="background-color:rgba(255,255,255,0.15)">
@@ -275,6 +267,15 @@
 </div>
 
 <script>
+// Fallback: mostrar nombre desde localStorage mientras carga la API
+(function() {
+    const nombre = localStorage.getItem('nombreUsuario') || '';
+    const elN = document.getElementById('headerNombre');
+    const elA = document.getElementById('headerAvatar');
+    if (elN && nombre) elN.textContent = nombre;
+    if (elA && nombre) elA.textContent = nombre.charAt(0).toUpperCase();
+})();
+
 
 function cerrarSesion() {
     localStorage.removeItem("authToken");

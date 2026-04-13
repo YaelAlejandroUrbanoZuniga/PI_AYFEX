@@ -16,14 +16,6 @@
     .brand-text { display: flex; flex-direction: column; }
     .brand-name { font-weight: 900; font-size: 1.2rem; color: #ffffff; line-height: 1.1; letter-spacing: 1px; }
     .brand-slogan { font-size: 0.75rem; color: rgba(255,255,255,0.85); }
-    .header-search { flex: 1; max-width: 600px; margin: 0 2rem; position: relative; }
-    .header-search i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #ff5722; z-index: 2; }
-    .header-search input {
-        width: 100%; padding: 10px 15px 10px 45px; border: none; border-radius: 25px;
-        background-color: #ffffff; font-size: 0.95rem; color: #333; outline: none;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .header-search input::placeholder { color: #aaa; }
     .header-actions { display: flex; align-items: center; gap: 20px; }
     .user-profile { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .user-info { text-align: right; }
@@ -117,11 +109,6 @@
                 <span class="brand-slogan">Gestión de Transporte Logistico de Paquetería</span>
             </div>
         </a>
-
-        <div class="header-search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" id="buscadorClientes" placeholder="Buscar por nombre, correo o teléfono...">
-        </div>
 
         <div class="header-actions">
             <a href="{{ route('perfil') }}" class="user-profile">
@@ -310,16 +297,11 @@ async function cargarClientes() {
 // BUSCADOR (filtra en tiempo real)
 // ══════════════════════════════════════
 function conectarBuscador(inputId) {
-    document.getElementById(inputId).addEventListener('input', function () {
+    const el = document.getElementById(inputId);
+    if (!el) return;
+    el.addEventListener('input', function () {
         const q = this.value.toLowerCase().trim();
-        // Sincronizar ambos inputs
-        ['buscadorClientes','buscadorTabla'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el && el !== this) el.value = this.value;
-        });
-
         if (!q) { renderTabla(todosLosClientes); return; }
-
         const filtrados = todosLosClientes.filter(c =>
             c.nombre_completo.toLowerCase().includes(q) ||
             c.correo_electronico.toLowerCase().includes(q) ||
@@ -345,7 +327,6 @@ function actualizarPerfil() {
 // ══════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
     cargarClientes();
-    conectarBuscador('buscadorClientes');
     conectarBuscador('buscadorTabla');
     actualizarPerfil();
 });

@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Limpiamos tokens anteriores al entrar al login por seguridad
     localStorage.removeItem("authToken");
-    localStorage.removeItem("authUserName");
+    localStorage.removeItem("nombreUsuario");
 
     formLogin.addEventListener("submit", function(event) {
         event.preventDefault();
@@ -265,7 +265,7 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             
             if(data.nombre) {
-                localStorage.setItem("authUserName", data.nombre);
+                localStorage.setItem("nombreUsuario", data.nombre);
             }
             
             window.location.href = "/dashboard"; 
