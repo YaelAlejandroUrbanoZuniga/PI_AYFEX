@@ -26,6 +26,8 @@ from app.routers.webROUTERS import loginROUTERSW
 from app.routers.webROUTERS import registroROUTERSW
 from app.routers.webROUTERS import rutasROUTERSW
 from app.routers.webROUTERS import pedidosROUTERSW
+from app.routers.webROUTERS import clientesROUTERSW
+
 
 app = FastAPI(
     title="API AYFEX PEDIDOS",
@@ -66,3 +68,4 @@ app.include_router(loginROUTERSW.router)
 app.include_router(registroROUTERSW.router)
 app.include_router(rutasROUTERSW.router)
 app.include_router(pedidosROUTERSW.router)
+app.include_router(clientesROUTERSW.router)
