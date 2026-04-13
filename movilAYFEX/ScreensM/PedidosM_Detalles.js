@@ -15,12 +15,12 @@ import { API_BASE_URL } from '../config';
 const API_URL = `${API_BASE_URL}/v1/pedidos`;
 
 const ESTADO_CONFIG = {
-  'EN PREPARACIÓN':     { color: '#FF9500', icono: 'construct-outline',       label: 'En Preparación' },
-  'EN ESPERA':          { color: '#3A86FF', icono: 'time-outline',             label: 'En Espera' },
-  'EN CAMINO':          { color: '#FF6B00', icono: 'bicycle-outline',          label: 'En Camino' },
-  'EN CAMINO AL DESTINO': { color: '#9B59B6', icono: 'navigate-outline',       label: 'En Camino al Destino' },
-  'ENTREGADO':          { color: '#34C759', icono: 'checkmark-circle-outline', label: 'Entregado' },
-  'RECHAZADO':          { color: '#FF3B30', icono: 'close-circle-outline',     label: 'Rechazado' },
+  'EN PREPARACIÓN': { color: '#FF9500', icono: 'construct-outline', label: 'En Preparación' },
+  'EN ESPERA': { color: '#3A86FF', icono: 'time-outline', label: 'En Espera' },
+  'EN CAMINO': { color: '#FF6B00', icono: 'bicycle-outline', label: 'En Camino' },
+  'EN CAMINO AL DESTINO': { color: '#9B59B6', icono: 'navigate-outline', label: 'En Camino al Destino' },
+  'ENTREGADO': { color: '#34C759', icono: 'checkmark-circle-outline', label: 'Entregado' },
+  'RECHAZADO': { color: '#FF3B30', icono: 'close-circle-outline', label: 'Rechazado' },
 };
 
 function ModalConfirmacion({ visible, titulo, mensaje, onConfirmar, onCancelar, confirmText = "Confirmar", peligro = false }) {
@@ -238,7 +238,7 @@ export default function PedidosM_Detalles({ navigation, route }) {
         </div>
         <div>
           <div class="pedido-num">Pedido #${pedido.id}</div>
-          <div class="fecha-gen">Generado: ${new Date().toLocaleDateString('es-MX', { day:'2-digit', month:'long', year:'numeric' })}</div>
+          <div class="fecha-gen">Generado: ${new Date().toLocaleDateString('es-MX', { day: '2-digit', month: 'long', year: 'numeric' })}</div>
         </div>
       </div>
       <div class="estado-bar">
@@ -540,6 +540,16 @@ export default function PedidosM_Detalles({ navigation, route }) {
                 <Text style={styles.deleteText}>Eliminar</Text>
               </TouchableOpacity>
             </View>
+          )}
+
+          {pedido.estado === 'RECHAZADO' && (
+            <TouchableOpacity
+              style={styles.deleteButton}
+              onPress={() => setModalEliminarVisible(true)}
+            >
+              <Ionicons name="trash-outline" size={16} color="#FFFFFF" />
+              <Text style={styles.deleteText}>Eliminar pedido rechazado</Text>
+            </TouchableOpacity>
           )}
         </View>
 

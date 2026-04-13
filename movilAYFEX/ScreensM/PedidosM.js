@@ -76,14 +76,14 @@ export default function PedidosM({ navigation }) {
     return resultado;
   }, [pedidos, busqueda, filtroActivo]);
 
-  const getEstadoColor = (estado) => {
-    switch (estado) {
-      case 'EN CAMINO': return '#3A86FF';
-      case 'ENTREGADO': return '#34C759';
-      case 'CANCELADO': return '#FF3B30';
-      default: return '#FF6B00';
-    }
-  };
+  const ESTADO_CONFIG = {
+  'EN PREPARACIÓN':       { color: '#FF9500', icono: 'construct-outline' },
+  'EN ESPERA':            { color: '#3A86FF', icono: 'time-outline' },
+  'EN CAMINO':            { color: '#FF6B00', icono: 'bicycle-outline' },
+  'EN CAMINO AL DESTINO': { color: '#9B59B6', icono: 'navigate-outline' },
+  'ENTREGADO':            { color: '#34C759', icono: 'checkmark-circle-outline' },
+  'RECHAZADO':            { color: '#FF3B30', icono: 'close-circle-outline' },
+};
 
   return (
     <View style={styles.container}>
@@ -181,17 +181,18 @@ export default function PedidosM({ navigation }) {
             activeOpacity={0.8}
           >
             <View style={styles.cardHeader}>
-              <View style={styles.packageIcon}>
+              <View style={[styles.packageIcon, { backgroundColor: (ESTADO_CONFIG[pedido.estado]?.color || '#FF6B00') }]}>
                 <Ionicons name="cube" size={18} color="#fff" />
               </View>
               <View style={styles.cardHeaderInfo}>
-                <Text style={styles.orderId}>Pedido #{pedido.id}</Text>
+                <Text style={styles.orderId}>Pedido {pedido.id}</Text>
                 <Text style={styles.orderDate}>
                   {pedido.fecha ? pedido.fecha.split("T")[0] : "Sin fecha"}
                 </Text>
               </View>
-              <View style={[styles.estadoBadge, { backgroundColor: getEstadoColor(pedido.estado) + '20' }]}>
-                <Text style={[styles.estadoText, { color: getEstadoColor(pedido.estado) }]}>
+              <View style={[styles.estadoBadge, { backgroundColor: (ESTADO_CONFIG[pedido.estado]?.color || '#FF6B00') + '20', flexDirection: 'row', gap: 4 }]}>
+                <Ionicons name={ESTADO_CONFIG[pedido.estado]?.icono || 'cube-outline'} size={11} color={ESTADO_CONFIG[pedido.estado]?.color || '#FF6B00'} />
+                <Text style={[styles.estadoText, { color: ESTADO_CONFIG[pedido.estado]?.color || '#FF6B00' }]}>
                   {pedido.estado || 'EN PREPARACIÓN'}
                 </Text>
               </View>
