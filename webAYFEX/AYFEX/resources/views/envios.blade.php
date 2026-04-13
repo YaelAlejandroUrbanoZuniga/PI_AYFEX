@@ -366,8 +366,8 @@
     // =====================================================
     // CONFIGURACIÓN — cambia este puerto si FastAPI usa otro
     // =====================================================
-    const API_BASE = 'http://127.0.0.1:8001/v1/pedidos-web';
-    const RUTAS_API = 'http://127.0.0.1:8001/v1/rutas';
+    const API_BASE = 'http://127.0.0.1:5000/v1/pedidos-web';
+    const RUTAS_API = 'http://127.0.0.1:5000/v1/rutas';
 
     let todosPedidos = []; // cache local para filtros
 
