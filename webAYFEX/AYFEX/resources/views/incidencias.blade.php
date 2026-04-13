@@ -2,236 +2,174 @@
 
 @section('content')
 <style>
-    
     .main-header {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
+        position: sticky; top: 0; z-index: 1000;
         background: linear-gradient(90deg, #ff5722 0%, #e64a19 100%);
         font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
     .header-top {
         display: flex; justify-content: space-between; align-items: center;
-        padding: 12px 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 12px 24px; border-bottom: 1px solid rgba(255,255,255,0.2);
     }
     .header-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-    .brand-icon {
-        width: 40px; height: 40px; background: #ffffff; border-radius: 10px;
-        display: flex; justify-content: center; align-items: center; color: #ff5722; font-size: 1.2rem;
-    }
     .brand-text { display: flex; flex-direction: column; }
-    .brand-name { font-weight: 900; font-size: 1.2rem; color: #ffffff; line-height: 1.1; letter-spacing: 1px;}
-    .brand-slogan { font-size: 0.75rem; color: rgba(255, 255, 255, 0.85); }
-
+    .brand-name { font-weight: 900; font-size: 1.2rem; color: #ffffff; line-height: 1.1; letter-spacing: 1px; }
+    .brand-slogan { font-size: 0.75rem; color: rgba(255,255,255,0.85); }
     .header-search { flex: 1; max-width: 600px; margin: 0 2rem; position: relative; }
     .header-search i { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #ff5722; z-index: 2; }
     .header-search input {
         width: 100%; padding: 10px 15px 10px 45px; border: none; border-radius: 25px;
-        background-color: #ffffff; font-size: 0.95rem; color: #333; outline: none; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        background-color: #ffffff; font-size: 0.95rem; color: #333; outline: none;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     .header-search input::placeholder { color: #aaa; }
-
     .header-actions { display: flex; align-items: center; gap: 20px; }
-    
     .user-profile { display: flex; align-items: center; gap: 12px; text-decoration: none; }
     .user-info { text-align: right; }
     .user-name { font-weight: 600; font-size: 0.9rem; color: #ffffff; line-height: 1.2; }
-    .user-role { font-size: 0.75rem; color: rgba(255, 255, 255, 0.85); }
+    .user-role { font-size: 0.75rem; color: rgba(255,255,255,0.85); }
     .user-avatar {
-        width: 38px; height: 38px; background-color: #ffffff; color: #ff5722; border-radius: 50%;
-        display: flex; justify-content: center; align-items: center; font-size: 1.1rem; font-weight: bold;
+        width: 38px; height: 38px; background-color: #ffffff; color: #ff5722;
+        border-radius: 50%; display: flex; justify-content: center; align-items: center;
+        font-size: 1.1rem; font-weight: bold;
     }
-
     .header-nav { display: flex; padding: 0 24px; gap: 8px; }
     .nav-item {
         padding: 12px 16px; font-size: 0.95rem; color: #ffffff; font-weight: 600; text-decoration: none;
-        display: flex; align-items: center; gap: 8px; border-radius: 12px 12px 0 0; margin-top: 6px; cursor: pointer; transition: all 0.3s;
+        display: flex; align-items: center; gap: 8px; border-radius: 12px 12px 0 0;
+        margin-top: 6px; cursor: pointer; transition: all 0.3s;
     }
-    .nav-item:hover { background-color: rgba(255, 255, 255, 0.2); color: #ffffff; }
+    .nav-item:hover { background-color: rgba(255,255,255,0.2); color: #ffffff; }
     .nav-item.active { background-color: #f4f6f9; color: #ff5722; }
     .nav-item.active i { color: #ff5722; }
-    .nav-item i.chevron { font-size: 0.75rem; margin-left: 4px; transition: color 0.3s;}
-    
-    .dropdown-menu { border: none; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); border-radius: 0 8px 8px 8px; padding: 8px 0; margin-top: 0 !important;}
-    .dropdown-item { padding: 10px 20px; font-size: 0.9rem; color: #444; font-weight: 500;}
+    .nav-item i.chevron { font-size: 0.75rem; margin-left: 4px; }
+    .dropdown-menu { border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 0 8px 8px 8px; padding: 8px 0; margin-top: 0 !important; }
+    .dropdown-item { padding: 10px 20px; font-size: 0.9rem; color: #444; font-weight: 500; }
     .dropdown-item:hover { background-color: #fffaf5; color: #ff5722; }
 
-    
-    body { background-color: #f4f6f9; color: #333; overflow-x: hidden; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
-    .navbar { display: none !important; } 
+    body { background-color: #f4f6f9; color: #333; overflow-x: hidden; margin: 0; font-family: 'Segoe UI', Roboto, sans-serif; }
+    .navbar { display: none !important; }
     .container.mt-4 { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+    .main-wrapper { padding: 30px; max-width: 1400px; margin: 0 auto; }
 
-    .main-wrapper { 
-        padding: 30px; 
-        max-width: 1400px; 
-        margin: 0 auto; 
+    /* ── KPI Cards ── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .kpi-card {
+        background: #fff; border-radius: 16px; padding: 22px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex;
+        align-items: center; gap: 16px; position: relative; transition: transform 0.2s;
     }
+    .kpi-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+    .kpi-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
+    .kpi-card h6 { color: #777; font-size: 0.82rem; font-weight: 600; margin: 0 0 4px; }
+    .kpi-card h3 { font-weight: 900; margin: 0; color: #222; font-size: 2rem; line-height: 1; }
+    .ic-orange { background: #fff7ed; color: #f97316; }
+    .ic-red    { background: #fef2f2; color: #ef4444; }
+    .ic-green  { background: #f0fdf4; color: #22c55e; }
+    .ic-blue   { background: #eff6ff; color: #3b82f6; }
 
-    .header-actions-page { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;}
+    /* ── Tabla ── */
+    .table-container {
+        background: #fff; border-radius: 16px; padding: 25px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .table-toolbar {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+    }
+    .tabla-titulo { font-weight: 800; font-size: 1.05rem; color: #222; margin: 0; }
+    .toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .filter-search-wrap { position: relative; }
+    .filter-search-wrap i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 0.85rem; }
+    .filter-input {
+        padding: 8px 12px 8px 34px; border-radius: 8px; border: 1px solid #e0e0e0;
+        font-size: 0.88rem; outline: none; background: #f9fafb; min-width: 200px;
+    }
+    .filter-select {
+        padding: 8px 14px; border-radius: 8px; border: 1px solid #e0e0e0;
+        font-size: 0.88rem; outline: none; background: #f9fafb; color: #444; cursor: pointer;
+    }
+    .btn-refresh {
+        background: #f9fafb; border: 1px solid #e0e0e0; border-radius: 8px;
+        padding: 8px 14px; font-size: 0.88rem; color: #555; cursor: pointer;
+        display: flex; align-items: center; gap: 6px; transition: 0.2s; font-weight: 600;
+    }
+    .btn-refresh:hover { background: #ff5722; color: #fff; border-color: #ff5722; }
+
+    .table th { border-top: none; color: #888; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; padding-bottom: 14px; letter-spacing: 0.5px; }
+    .table td { vertical-align: middle; font-size: 0.88rem; color: #444; border-bottom: 1px solid #f4f4f4; padding: 13px 8px; }
+
+    /* badges */
+    .badge-estado { padding: 5px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+    .b-pendiente  { background: #fef9c3; color: #ca8a04; }
+    .b-resuelto   { background: #dcfce7; color: #16a34a; }
+
+    .badge-prioridad { padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+    .p-alta   { background: #fee2e2; color: #dc2626; }
+    .p-normal { background: #e0f2fe; color: #0369a1; }
+    .p-baja   { background: #f1f5f9; color: #64748b; }
+
+    /* action buttons */
+    .btn-accion {
+        border: none; background: none; padding: 5px 8px; border-radius: 6px;
+        font-size: 0.85rem; cursor: pointer; transition: 0.2s;
+    }
+    .btn-resolver { background: #dcfce7; color: #16a34a; }
+    .btn-resolver:hover { background: #16a34a; color: #fff; }
+    .btn-reabrir  { background: #fef9c3; color: #ca8a04; }
+    .btn-reabrir:hover  { background: #ca8a04; color: #fff; }
+    .btn-ver      { background: #f1f5f9; color: #475569; }
+    .btn-ver:hover      { background: #475569; color: #fff; }
+
+    /* modal detalle */
+    .detalle-field { background: #f9fafb; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+    .detalle-label { font-size: 0.72rem; color: #9ca3af; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+    .detalle-value { font-weight: 700; color: #111; font-size: 0.95rem; }
+
     .page-title h2 { font-weight: 900; margin: 0; color: #222; }
-    .page-title p { color: #666; font-size: 0.95rem; margin-top: 5px; margin-bottom: 0;}
+    .page-title p  { color: #666; font-size: 0.95rem; margin-bottom: 0; }
+    .text-orange   { color: #ff5722; }
 
-    .btn-register { 
-        background-color: #ff5722; color: white; border: none; padding: 10px 20px; 
-        border-radius: 10px; font-weight: bold; transition: 0.3s; display: inline-flex; align-items: center;
-    }
-    .btn-register:hover { background-color: #e64a19; color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(230, 74, 25, 0.2); }
-
-    .stat-card { 
-        background: #fff; border-radius: 16px; padding: 22px; 
-        border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
-        position: relative; height: 100%; transition: transform 0.2s;
-    }
-    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
-    .stat-card h6 { color: #777; font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }
-    .stat-card h3 { font-weight: 900; margin: 0; color: #222; font-size: 2rem; }
-    .stat-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
-    
-    .icon-orange-light { background: #fff7ed; color: #f97316; }
-    .icon-red-light { background: #fef2f2; color: #ef4444; }
-    .icon-green-light { background: #f0fdf4; color: #22c55e; }
-
-    .table-container { background: #fff; border-radius: 16px; padding: 25px; margin-top: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-    .filter-select { border-radius: 10px; border: 1px solid #ddd; padding: 8px 15px; font-size: 0.9rem; outline: none; transition: border-color 0.2s;}
-    .filter-select:focus { border-color: #ff5722; }
-
-    .badge-status { padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-    .status-pending { background: #fee2e2; color: #dc2626; }
-    .status-resolved { background: #dcfce7; color: #16a34a; }
-
-    .action-icons button { background: none; border: none; padding: 0; cursor: pointer; margin: 0 5px; font-size: 1.1rem; transition: 0.2s; }
-    .action-icons button:hover { transform: scale(1.1); }
-    .text-primary { color: #0d6efd; }
-    .text-primary:hover { color: #0a58ca; }
-    .text-danger { color: #dc3545; }
-    .text-danger:hover { color: #b02a37; }
-
-    
-    .custom-modal-content {
-        border-radius: 16px;
-        border: none;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-        overflow: hidden;
-    }
-    .custom-modal-header {
-        border-bottom: 1px solid #f0f0f0;
-        padding: 24px;
-        background-color: #fff;
-    }
-    .custom-modal-title {
-        font-weight: 800;
-        color: #222;
-        font-size: 1.25rem;
-        margin: 0;
-    }
-    .custom-modal-body {
-        padding: 24px;
-        background-color: #fafbfc;
-    }
-    .custom-form-label {
-        font-weight: 600;
-        font-size: 0.85rem;
-        color: #555;
-        margin-bottom: 8px;
-        display: block;
-    }
-    .custom-form-control, .custom-form-select {
-        width: 100%;
-        border-radius: 10px;
-        border: 1px solid #ddd;
-        padding: 12px 16px;
-        font-size: 0.95rem;
-        color: #333;
-        transition: all 0.3s ease;
-        background-color: #fff;
-    }
-    .custom-form-control:focus, .custom-form-select:focus {
-        border-color: #ff5722;
-        box-shadow: 0 0 0 4px rgba(255, 87, 34, 0.1);
-        outline: none;
-    }
-    .custom-form-control::placeholder {
-        color: #aaa;
-    }
-    .custom-modal-footer {
-        border-top: 1px solid #f0f0f0;
-        padding: 16px 24px;
-        background-color: #fff;
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-    }
-    .btn-cancel {
-        background-color: #f1f5f9;
-        color: #475569;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        padding: 10px 20px;
-        transition: 0.3s;
-    }
-    .btn-cancel:hover {
-        background-color: #e2e8f0;
-        color: #1e293b;
-    }
-    .btn-orange-modal {
-        background-color: #ff5722;
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: 0.3s;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .btn-orange-modal:hover {
-        background-color: #e64a19;
-        color: white;
-    }
+    .empty-state { text-align: center; padding: 50px 20px; color: #aaa; }
+    .empty-state i { font-size: 2.5rem; margin-bottom: 12px; display: block; }
 </style>
 
+<!-- ══════════ HEADER ══════════ -->
 <header class="main-header">
     <div class="header-top">
         <a href="{{ route('dashboard') }}" class="header-brand">
-            <div style="width: 45px; height: 45px; background-color: #ffffff; border-radius: 50%; display: flex; justify-content: center; align-items: center; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                <img src="{{ asset('AYFEXLOGO-Photoroom.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; padding: 6px;">
+            <div style="width:45px;height:45px;background:#fff;border-radius:50%;display:flex;justify-content:center;align-items:center;overflow:hidden;box-shadow:0 2px 5px rgba(0,0,0,.1);">
+                <img src="{{ asset('AYFEXLOGO-Photoroom.png') }}" alt="Logo" style="width:100%;height:100%;object-fit:contain;padding:6px;">
             </div>
-            
             <div class="brand-text">
                 <span class="brand-name">AYFEX</span>
                 <span class="brand-slogan">Gestión de Transporte Logistico de Paquetería</span>
             </div>
         </a>
-
-        <div class="header-search d-none d-md-block">
+        <div class="header-search">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Buscar por ID, envío o tipo...">
+            <input type="text" placeholder="Buscar número de guía, cliente o ciudad...">
         </div>
-
         <div class="header-actions">
             <a href="{{ route('perfil') }}" class="user-profile">
-                <div class="user-info d-none d-sm-block">
+                <div class="user-info d-none d-md-block">
                     <div class="user-name">Admin AYFEX</div>
                     <div class="user-role">Administrador</div>
                 </div>
                 <div class="user-avatar">A</div>
             </a>
-            <a href="{{ route('login') }}" class="user-profile" style="margin-left: 10px;" title="Cerrar Sesión">
-                <i class="fa-solid fa-right-from-bracket" style="color: white; font-size: 1.2rem;"></i>
+            <a href="{{ route('login') }}" class="user-profile" style="margin-left:10px;" title="Cerrar Sesión">
+                <i class="fa-solid fa-right-from-bracket" style="color:white;font-size:1.2rem;"></i>
             </a>
         </div>
     </div>
-
-    <div class="header-nav flex-wrap">
+    <div class="header-nav">
         <a href="{{ route('dashboard') }}" class="nav-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <i class="fa-solid fa-border-all"></i> Dashboard
         </a>
-
         <div class="dropdown">
-            <div class="nav-item {{ request()->routeIs('envios') || request()->routeIs('rutas') ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="nav-item {{ request()->routeIs('envios') || request()->routeIs('rutas') ? 'active' : '' }}" data-bs-toggle="dropdown">
                 Operaciones <i class="fa-solid fa-chevron-down chevron"></i>
             </div>
             <ul class="dropdown-menu">
@@ -239,9 +177,8 @@
                 <li><a class="dropdown-item" href="{{ route('rutas') }}"><i class="fa-solid fa-route me-2"></i> Rutas</a></li>
             </ul>
         </div>
-
         <div class="dropdown">
-            <div class="nav-item {{ request()->routeIs('clientes') || request()->routeIs('operadores') ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="nav-item {{ request()->routeIs('clientes') || request()->routeIs('operadores') ? 'active' : '' }}" data-bs-toggle="dropdown">
                 Gestión <i class="fa-solid fa-chevron-down chevron"></i>
             </div>
             <ul class="dropdown-menu">
@@ -249,397 +186,345 @@
                 <li><a class="dropdown-item" href="{{ route('operadores') }}"><i class="fa-solid fa-truck me-2"></i> Operadores</a></li>
             </ul>
         </div>
-
         <div class="dropdown">
-            <div class="nav-item {{ request()->routeIs('reportes') || request()->routeIs('incidencias') ? 'active' : '' }}" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="nav-item {{ request()->routeIs('reportes') || request()->routeIs('incidencias') ? 'active' : '' }}" data-bs-toggle="dropdown">
                 Administración <i class="fa-solid fa-chevron-down chevron"></i>
             </div>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{{ route('reportes') }}"><i class="fa-solid fa-file-lines me-2"></i> Reportes</a></li>
-                <li><a class="dropdown-item" href="{{ route('incidencias') }}" style="{{ request()->routeIs('incidencias') ? 'color: #ff5722; font-weight: bold; background-color: #fffaf5;' : '' }}"><i class="fa-solid fa-circle-exclamation me-2"></i> Incidencias</a></li>
+                <li><a class="dropdown-item" href="{{ route('incidencias') }}" style="{{ request()->routeIs('incidencias') ? 'color:#ff5722;font-weight:bold;background-color:#fffaf5;' : '' }}"><i class="fa-solid fa-circle-exclamation me-2"></i> Incidencias</a></li>
             </ul>
         </div>
     </div>
 </header>
 
+<!-- ══════════ CONTENIDO ══════════ -->
 <div class="main-wrapper">
-    <div class="header-actions-page">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="page-title">
-            <h2>Gestión de Incidencias</h2>
-            <p>Monitorea y resuelve problemas en los envíos</p>
+            <h2>Reportes de la App Móvil</h2>
+            <p>Incidencias reportadas por los clientes — Monitorea y da solución</p>
         </div>
-        <button class="btn-register" data-bs-toggle="modal" data-bs-target="#modalRegistrarIncidencia">
-            <i class="fa-solid fa-plus me-2"></i> Registrar Incidencia
+        <button class="btn-refresh" onclick="cargarReportes()" style="padding:10px 20px;font-size:0.9rem;">
+            <i class="fa-solid fa-sync"></i> Actualizar
         </button>
     </div>
 
-    <div class="row g-4 mb-2">
-        <div class="col-md-4">
-            <div class="stat-card">
-                <h6>Total Incidencias</h6>
-                <h3 id="card-total">0</h3>
-                <div class="stat-icon icon-orange-light"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            </div>
+    <!-- KPIs -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon ic-orange"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div><h6>Total Reportes</h6><h3 id="kpi-total">—</h3></div>
         </div>
-        <div class="col-md-4">
-            <div class="stat-card">
-                <h6>Pendientes</h6>
-                <h3 id="card-pendientes">0</h3>
-                <div class="stat-icon icon-red-light"><i class="fa-solid fa-circle-exclamation"></i></div>
-            </div>
+        <div class="kpi-card">
+            <div class="kpi-icon ic-red"><i class="fa-solid fa-circle-exclamation"></i></div>
+            <div><h6>Pendientes</h6><h3 id="kpi-pendientes">—</h3></div>
         </div>
-        <div class="col-md-4">
-            <div class="stat-card">
-                <h6>Resueltas</h6>
-                <h3 id="card-resueltas">0</h3>
-                <div class="stat-icon icon-green-light"><i class="fa-solid fa-circle-check"></i></div>
-            </div>
+        <div class="kpi-card">
+            <div class="kpi-icon ic-green"><i class="fa-solid fa-circle-check"></i></div>
+            <div><h6>Resueltos</h6><h3 id="kpi-resueltos">—</h3></div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon ic-blue"><i class="fa-solid fa-arrow-up"></i></div>
+            <div><h6>Alta Prioridad</h6><h3 id="kpi-alta">—</h3></div>
         </div>
     </div>
 
+    <!-- Tabla -->
     <div class="table-container">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-            <h5 id="titulo-lista" style="font-weight: 800; margin: 0;">Lista de Incidencias (0)</h5>
-            <select id="filtro-estado" class="filter-select">
-                <option value="TODOS">Todos los estados</option>
-                <option value="PENDIENTE">Pendiente</option>
-                <option value="RESUELTO">Resuelto</option>
-            </select>
+        <div class="table-toolbar">
+            <h5 class="tabla-titulo" id="tabla-titulo">Reportes de la App (0)</h5>
+            <div class="toolbar-right">
+                <div class="filter-search-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="filter-input" id="filtro-texto" placeholder="Buscar por tipo o descripción..." oninput="filtrar()">
+                </div>
+                <select class="filter-select" id="filtro-estado" onchange="filtrar()">
+                    <option value="">Todos los estados</option>
+                    <option value="PENDIENTE">Pendiente</option>
+                    <option value="RESUELTO">Resuelto</option>
+                </select>
+                <select class="filter-select" id="filtro-prioridad" onchange="filtrar()">
+                    <option value="">Todas las prioridades</option>
+                    <option value="ALTA">Alta</option>
+                    <option value="NORMAL">Normal</option>
+                    <option value="BAJA">Baja</option>
+                </select>
+            </div>
         </div>
 
         <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th class="text-secondary small fw-bold">ID</th>
-                        <th class="text-secondary small fw-bold">ENVÍO</th>
-                        <th class="text-secondary small fw-bold">TIPO</th>
-                        <th class="text-secondary small fw-bold">DESCRIPCIÓN</th>
-                        <th class="text-secondary small fw-bold">ESTADO</th>
-                        <th class="text-secondary small fw-bold">RESPONSABLE</th>
-                        <th class="text-secondary small fw-bold">FECHA</th>
-                        <th class="text-secondary small fw-bold">ACCIONES</th>
+            <table class="table table-borderless align-middle">
+                <thead>
+                    <tr style="border-bottom:2px solid #f0f0f0;">
+                        <th>#</th>
+                        <th>Usuario</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                        <th>Prioridad</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="tabla-incidencias">
+                <tbody id="tbody-reportes">
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <div class="spinner-border" style="color:#ff5722;" role="status"></div>
+                            <p class="mt-2 text-muted">Cargando reportes...</p>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="modalRegistrarIncidencia" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content custom-modal-content">
-            <div class="modal-header custom-modal-header">
-                <h5 class="modal-title custom-modal-title">Registrar Nueva Incidencia</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- ══════════ MODAL DETALLE ══════════ -->
+<div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:16px;border:none;box-shadow:0 10px 40px rgba(0,0,0,0.12);">
+            <div class="modal-header" style="border-bottom:1px solid #f0f0f0;padding:22px 24px;">
+                <h5 class="modal-title" style="font-weight:800;color:#222;">
+                    <i class="fa-solid fa-circle-exclamation me-2 text-orange"></i>
+                    Reporte <span id="det-id" style="color:#ff5722;"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body custom-modal-body">
-                <form id="formIncidencia">
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <label class="custom-form-label">ID Envío</label>
-                            <input type="text" id="envio_id" class="custom-form-control" placeholder="Ej. ENV-005" required>
-                        </div>
-                        <div class="col-md-6 mb-4">
-                            <label class="custom-form-label">Tipo de Incidencia</label>
-                            <select id="tipo" class="custom-form-select" required>
-                                <option value="">Selecciona un tipo...</option>
-                                <option value="Retraso en tránsito">Retraso en tránsito</option>
-                                <option value="Dirección incorrecta">Dirección incorrecta</option>
-                                <option value="Paquete dañado">Paquete dañado</option>
-                                <option value="Posible extravío">Posible extravío</option>
-                                <option value="Otro">Otro</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 mb-2">
-                            <label class="custom-form-label">Descripción</label>
-                            <textarea id="descripcion" class="custom-form-control" rows="4" placeholder="Detalla la situación..." required></textarea>
-                        </div>
-                    </div>
-                </form>
+            <div class="modal-body" style="padding:24px;" id="modal-detalle-body">
             </div>
-            <div class="modal-footer custom-modal-footer">
-                <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" form="formIncidencia" class="btn-orange-modal">
-                    <i class="fa-solid fa-save me-2"></i> Guardar Incidencia
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="modalEditarIncidencia" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content custom-modal-content">
-            <div class="modal-header custom-modal-header">
-                <h5 class="modal-title custom-modal-title">Editar Incidencia</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body custom-modal-body">
-                <form id="formEditIncidencia">
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <label class="custom-form-label">ID Envío</label>
-                            <input type="text" id="edit_envio_id" class="custom-form-control" required>
-                        </div>
-                        <div class="col-md-6 mb-4">
-                            <label class="custom-form-label">Tipo de Incidencia</label>
-                            <select id="edit_tipo" class="custom-form-select" required>
-                                <option value="">Selecciona un tipo...</option>
-                                <option value="Retraso en tránsito">Retraso en tránsito</option>
-                                <option value="Dirección incorrecta">Dirección incorrecta</option>
-                                <option value="Paquete dañado">Paquete dañado</option>
-                                <option value="Posible extravío">Posible extravío</option>
-                                <option value="Otro">Otro</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 mb-2">
-                            <label class="custom-form-label">Descripción</label>
-                            <textarea id="edit_descripcion" class="custom-form-control" rows="4" required></textarea>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer custom-modal-footer">
-                <button type="button" class="btn-cancel" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" form="formEditIncidencia" class="btn-orange-modal">
-                    <i class="fa-solid fa-save me-2"></i> Actualizar Incidencia
-                </button>
+            <div class="modal-footer" style="border-top:1px solid #f0f0f0;padding:16px 24px;gap:10px;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius:8px;font-weight:600;">Cerrar</button>
+                <button type="button" id="btn-modal-accion" class="btn" style="border-radius:8px;font-weight:600;"></button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    
-    const API_URL = 'http://127.0.0.1:5000/v1/incidencias';
+// ══════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════
+const API_REPORTES = 'http://127.0.0.1:5000/v1/reportes-movil';
 
-    
-    let listaIncidencias = [];
-    let idIncidenciaEditando = null;
+const token = localStorage.getItem('authToken');
+const getHeaders = () => ({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+});
 
-    
-    document.addEventListener('DOMContentLoaded', cargarIncidencias);
+let todosReportes = [];
 
-    
-    document.getElementById('formIncidencia').addEventListener('submit', function(e) {
-        e.preventDefault();
-        guardarIncidencia();
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', cargarReportes);
+
+// ══════════════════════════════════════
+// CARGAR REPORTES
+// ══════════════════════════════════════
+async function cargarReportes() {
+    const tbody = document.getElementById('tbody-reportes');
+    tbody.innerHTML = `
+        <tr><td colspan="8" class="text-center py-5">
+            <div class="spinner-border" style="color:#ff5722;" role="status"></div>
+            <p class="mt-2 text-muted">Cargando reportes...</p>
+        </td></tr>`;
+
+    try {
+        const res = await fetch(`${API_REPORTES}/`, { headers: getHeaders() });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        todosReportes = await res.json();
+        actualizarKPIs(todosReportes);
+        filtrar();
+    } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `
+            <tr><td colspan="8" class="text-center text-danger py-5">
+                <i class="fa-solid fa-plug-circle-xmark fa-2x mb-2 d-block"></i>
+                Sin conexión con el servidor. ¿Está corriendo FastAPI?
+            </td></tr>`;
+    }
+}
+
+// ══════════════════════════════════════
+// KPIs
+// ══════════════════════════════════════
+function actualizarKPIs(data) {
+    document.getElementById('kpi-total').innerText      = data.length;
+    document.getElementById('kpi-pendientes').innerText = data.filter(r => r.estado === 'PENDIENTE').length;
+    document.getElementById('kpi-resueltos').innerText  = data.filter(r => r.estado === 'RESUELTO').length;
+    document.getElementById('kpi-alta').innerText       = data.filter(r => r.prioridad === 'ALTA').length;
+}
+
+// ══════════════════════════════════════
+// FILTROS
+// ══════════════════════════════════════
+function filtrar() {
+    const texto     = document.getElementById('filtro-texto').value.toLowerCase();
+    const estado    = document.getElementById('filtro-estado').value;
+    const prioridad = document.getElementById('filtro-prioridad').value;
+
+    const filtrados = todosReportes.filter(r => {
+        const matchTexto     = !texto    || r.tipo.toLowerCase().includes(texto) || r.descripcion.toLowerCase().includes(texto);
+        const matchEstado    = !estado   || r.estado === estado;
+        const matchPrioridad = !prioridad|| r.prioridad === prioridad;
+        return matchTexto && matchEstado && matchPrioridad;
     });
 
-    
-    document.getElementById('formEditIncidencia').addEventListener('submit', function(e) {
-        e.preventDefault();
-        actualizarIncidencia();
-    });
+    renderTabla(filtrados);
+}
 
-    
-    document.getElementById('filtro-estado').addEventListener('change', aplicarFiltro);
+// ══════════════════════════════════════
+// RENDER TABLA
+// ══════════════════════════════════════
+function renderTabla(data) {
+    const tbody = document.getElementById('tbody-reportes');
+    document.getElementById('tabla-titulo').innerText = `Reportes de la App (${data.length})`;
 
-    
-
-    
-    async function cargarIncidencias() {
-        try {
-            const response = await fetch(API_URL);
-            listaIncidencias = await response.json();
-            aplicarFiltro(); 
-        } catch (error) {
-            console.error("Error al cargar incidencias:", error);
-        }
+    if (!data.length) {
+        tbody.innerHTML = `
+            <tr><td colspan="8">
+                <div class="empty-state">
+                    <i class="fa-solid fa-inbox"></i>
+                    <p style="font-weight:600;">Sin reportes para mostrar</p>
+                </div>
+            </td></tr>`;
+        return;
     }
 
-    
-    function aplicarFiltro() {
-        const estadoSeleccionado = document.getElementById('filtro-estado').value;
-        let datosFiltrados = listaIncidencias;
+    tbody.innerHTML = data.map(r => `
+        <tr>
+            <td><strong>#${r.id}</strong></td>
+            <td>
+                <div style="font-weight:600;font-size:0.85rem;">${r.nombre_usuario}</div>
+            </td>
+            <td><span style="font-weight:600;">${r.tipo}</span></td>
+            <td>
+                <span class="text-muted" style="font-size:0.82rem;max-width:200px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${r.descripcion}">
+                    ${r.descripcion}
+                </span>
+            </td>
+            <td>${badgePrioridad(r.prioridad)}</td>
+            <td style="font-size:0.83rem;">${r.fecha}</td>
+            <td>${badgeEstado(r.estado)}</td>
+            <td>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <button class="btn-accion btn-ver" onclick="abrirDetalle(${r.id})" title="Ver detalle">
+                        <i class="fa-regular fa-eye"></i>
+                    </button>
+                    ${r.estado === 'PENDIENTE'
+                        ? `<button class="btn-accion btn-resolver" onclick="cambiarEstado(${r.id}, 'resolver')" title="Marcar resuelto">
+                               <i class="fa-solid fa-check"></i> Resolver
+                           </button>`
+                        : `<button class="btn-accion btn-reabrir" onclick="cambiarEstado(${r.id}, 'pendiente')" title="Reabrir">
+                               <i class="fa-solid fa-rotate-left"></i> Reabrir
+                           </button>`
+                    }
+                </div>
+            </td>
+        </tr>
+    `).join('');
+}
 
-        if (estadoSeleccionado !== 'TODOS') {
-            datosFiltrados = listaIncidencias.filter(inc => inc.estado === estadoSeleccionado);
-        }
+// ══════════════════════════════════════
+// CAMBIAR ESTADO (resolver / pendiente)
+// ══════════════════════════════════════
+async function cambiarEstado(id, accion) {
+    const labels = { resolver: 'resuelto', pendiente: 'pendiente' };
+    if (!confirm(`¿Marcar el reporte #${id} como ${labels[accion]}?`)) return;
 
-        renderTable(datosFiltrados);
-        actualizarTarjetas(listaIncidencias); 
-    }
-
-    
-    function renderTable(incidencias) {
-        const tbody = document.getElementById('tabla-incidencias');
-        document.getElementById('titulo-lista').innerText = `Lista de Incidencias (${incidencias.length})`;
-        tbody.innerHTML = '';
-
-        incidencias.forEach(inc => {
-            const esPendiente = inc.estado === 'PENDIENTE';
-            const badgeClass = esPendiente ? 'status-pending' : 'status-resolved';
-            const textoBadge = esPendiente ? 'Pendiente' : 'Resuelto';
-            
-            
-            const btnResolver = esPendiente 
-                ? `<button onclick="marcarComoResuelta('${inc.id}')" title="Marcar como Resuelta" class="text-success border-0 bg-transparent mx-1" style="color: #16a34a; transition: 0.2s;"><i class="fa-solid fa-circle-check"></i></button>` 
-                : '';
-            
-            const btnEditar = `<button onclick="abrirModalEditar('${inc.id}')" title="Editar" class="text-primary border-0 bg-transparent mx-1"><i class="fa-solid fa-pen"></i></button>`;
-            const btnEliminar = `<button onclick="eliminarIncidencia('${inc.id}')" title="Eliminar" class="text-danger border-0 bg-transparent mx-1"><i class="fa-solid fa-trash"></i></button>`;
-
-            tbody.innerHTML += `
-                <tr>
-                    <td class="fw-bold">${inc.id}</td>
-                    <td>${inc.envio_id}</td>
-                    <td>${inc.tipo}</td>
-                    <td class="text-muted small text-truncate" style="max-width: 200px;" title="${inc.descripcion}">
-                        ${inc.descripcion}
-                    </td>
-                    <td><span class="badge-status ${badgeClass}">${textoBadge}</span></td>
-                    <td>${inc.responsable || 'N/A'}</td>
-                    <td>${inc.fecha}</td>
-                    <td class="action-icons">
-                        ${btnResolver}
-                        ${btnEditar}
-                        ${btnEliminar}
-                    </td>
-                </tr>
-            `;
+    try {
+        const res = await fetch(`${API_REPORTES}/${id}/${accion}`, {
+            method: 'PATCH',
+            headers: getHeaders()
         });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        await cargarReportes();
+    } catch (err) {
+        alert(`Error: ${err.message}`);
     }
+}
 
-    
-    function actualizarTarjetas(incidencias) {
-        const pendientes = incidencias.filter(i => i.estado === 'PENDIENTE').length;
-        const resueltas = incidencias.filter(i => i.estado === 'RESUELTO').length;
-        
-        document.getElementById('card-total').innerText = incidencias.length;
-        document.getElementById('card-pendientes').innerText = pendientes;
-        document.getElementById('card-resueltas').innerText = resueltas;
-    }
+// ══════════════════════════════════════
+// MODAL DETALLE
+// ══════════════════════════════════════
+function abrirDetalle(id) {
+    const r = todosReportes.find(x => x.id === id);
+    if (!r) return;
 
-    
-    async function guardarIncidencia() {
-        const nueva = {
-            envio_id: document.getElementById('envio_id').value,
-            tipo: document.getElementById('tipo').value,
-            descripcion: document.getElementById('descripcion').value
+    document.getElementById('det-id').innerText = `#${r.id}`;
+
+    document.getElementById('modal-detalle-body').innerHTML = `
+        <div class="detalle-field">
+            <div class="detalle-label">Usuario que reportó</div>
+            <div class="detalle-value">${r.nombre_usuario}</div>
+        </div>
+        <div class="row g-3">
+            <div class="col-6">
+                <div class="detalle-field">
+                    <div class="detalle-label">Tipo</div>
+                    <div class="detalle-value">${r.tipo}</div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="detalle-field">
+                    <div class="detalle-label">Prioridad</div>
+                    <div class="detalle-value">${badgePrioridad(r.prioridad)}</div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="detalle-field">
+                    <div class="detalle-label">Estado</div>
+                    <div class="detalle-value">${badgeEstado(r.estado)}</div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="detalle-field">
+                    <div class="detalle-label">Fecha</div>
+                    <div class="detalle-value">${r.fecha}</div>
+                </div>
+            </div>
+        </div>
+        <div class="detalle-field mt-1">
+            <div class="detalle-label">Descripción</div>
+            <div class="detalle-value" style="font-weight:500;line-height:1.6;">${r.descripcion}</div>
+        </div>
+    `;
+
+    // Botón de acción en el modal
+    const btnAccion = document.getElementById('btn-modal-accion');
+    if (r.estado === 'PENDIENTE') {
+        btnAccion.className = 'btn btn-success';
+        btnAccion.innerHTML = '<i class="fa-solid fa-check me-2"></i> Resolver';
+        btnAccion.onclick = () => {
+            bootstrap.Modal.getInstance(document.getElementById('modalDetalle')).hide();
+            cambiarEstado(r.id, 'resolver');
         };
-
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(nueva)
-            });
-
-            if(response.ok) {
-                
-                document.getElementById('formIncidencia').reset();
-                var myModalEl = document.getElementById('modalRegistrarIncidencia');
-                var modal = bootstrap.Modal.getInstance(myModalEl);
-                modal.hide();
-                
-                
-                cargarIncidencias();
-            } else {
-                alert('Error al guardar la incidencia.');
-            }
-        } catch (error) {
-            console.error("Error al guardar:", error);
-        }
-    }
-
-    
-    function abrirModalEditar(id) {
-        
-        const incidencia = listaIncidencias.find(i => i.id === id);
-        if (!incidencia) return;
-
-        idIncidenciaEditando = id;
-        
-        
-        document.getElementById('edit_envio_id').value = incidencia.envio_id;
-        document.getElementById('edit_tipo').value = incidencia.tipo;
-        document.getElementById('edit_descripcion').value = incidencia.descripcion;
-
-        
-        var myModal = new bootstrap.Modal(document.getElementById('modalEditarIncidencia'));
-        myModal.show();
-    }
-
-    
-    async function actualizarIncidencia() {
-        const editada = {
-            envio_id: document.getElementById('edit_envio_id').value,
-            tipo: document.getElementById('edit_tipo').value,
-            descripcion: document.getElementById('edit_descripcion').value
+    } else {
+        btnAccion.className = 'btn btn-warning';
+        btnAccion.innerHTML = '<i class="fa-solid fa-rotate-left me-2"></i> Reabrir';
+        btnAccion.onclick = () => {
+            bootstrap.Modal.getInstance(document.getElementById('modalDetalle')).hide();
+            cambiarEstado(r.id, 'pendiente');
         };
-
-        try {
-            const response = await fetch(`${API_URL}/${idIncidenciaEditando}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(editada)
-            });
-
-            if(response.ok) {
-                
-                document.getElementById('formEditIncidencia').reset();
-                var myModalEl = document.getElementById('modalEditarIncidencia');
-                var modal = bootstrap.Modal.getInstance(myModalEl);
-                modal.hide();
-                
-                
-                cargarIncidencias();
-            } else {
-                alert('Error al actualizar la incidencia en el servidor.');
-            }
-        } catch (error) {
-            console.error("Error al actualizar:", error);
-        }
     }
 
-    
-    async function eliminarIncidencia(id) {
-        if(!confirm(`¿Estás seguro de que deseas eliminar la incidencia ${id}?`)) return;
-        
-        try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE'
-            });
-            
-            if(response.ok) {
-                cargarIncidencias(); 
-            } else {
-                alert('Error al eliminar la incidencia.');
-            }
-        } catch (error) {
-            console.error("Error al eliminar:", error);
-        }
-    }
+    new bootstrap.Modal(document.getElementById('modalDetalle')).show();
+}
 
-    
-    async function marcarComoResuelta(id) {
-        if(!confirm(`¿Estás seguro de que deseas marcar la incidencia ${id} como RESUELTA?`)) return;
-        
-        try {
-            
-            const response = await fetch(`${API_URL}/${id}/resolver`, {
-                method: 'PATCH' 
-               
-            });
-            
-            if(response.ok) {
-                cargarIncidencias(); 
-            } else {
-                const errorData = await response.json();
-                alert(`Error al cambiar el estado: ${errorData.detail || 'Error desconocido'}`);
-            }
-        } catch (error) {
-            console.error("Error al resolver la incidencia:", error);
-            alert("Hubo un problema de conexión con el servidor.");
-        }
-    }
+// ══════════════════════════════════════
+// HELPERS BADGES
+// ══════════════════════════════════════
+function badgeEstado(estado) {
+    const cls = estado === 'RESUELTO' ? 'b-resuelto' : 'b-pendiente';
+    return `<span class="badge-estado ${cls}">${estado}</span>`;
+}
+
+function badgePrioridad(prioridad) {
+    const map = { 'ALTA': 'p-alta', 'NORMAL': 'p-normal', 'BAJA': 'p-baja' };
+    return `<span class="badge-prioridad ${map[prioridad] ?? 'p-normal'}">${prioridad ?? 'NORMAL'}</span>`;
+}
 </script>
 @endsection

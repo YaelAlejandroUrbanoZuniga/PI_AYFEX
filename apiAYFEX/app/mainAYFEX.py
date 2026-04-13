@@ -13,6 +13,7 @@ from app.data.webDATA.crear_incidenciasDATAW import Crear_Incidencias
 from app.data.webDATA.crear_perfilDATAW import UsuarioDB
 from app.data.movilDATA.crear_usuarioDATA import UsuarioMDB 
 from app.data.webDATA.rutasDATAW import RutaDB
+from app.routers.webROUTERS import reportesROUTERSW
 
 Base.metadata.create_all(bind=engine)
 
@@ -66,3 +67,4 @@ app.include_router(loginROUTERSW.router)
 app.include_router(registroROUTERSW.router)
 app.include_router(rutasROUTERSW.router)
 app.include_router(pedidosROUTERSW.router)
+app.include_router(reportesROUTERSW.router)

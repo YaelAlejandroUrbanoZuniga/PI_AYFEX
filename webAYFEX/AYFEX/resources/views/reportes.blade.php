@@ -316,7 +316,7 @@
 // ══════════════════════════════════════
 const API_PEDIDOS     = 'http://127.0.0.1:5000/v1/pedidos-web/';
 const API_OPERADORES  = 'http://127.0.0.1:5000/v1/operadores/';
-const API_INCIDENCIAS = 'http://127.0.0.1:5000/v1/incidencias/';
+const API_INCIDENCIAS = 'http://127.0.0.1:5000/v1/reportes-movil/';
 
 const token = localStorage.getItem('authToken');
 const getHeaders = () => ({
@@ -516,8 +516,8 @@ async function reporteIncidencias(desde, hasta) {
 
     const pendientes = data.filter(i => i.estado === 'PENDIENTE').length;
     const resueltas  = data.filter(i => i.estado === 'RESUELTO').length;
+    const altaPrior  = data.filter(i => i.prioridad === 'ALTA').length;
 
-    // Conteo por tipo
     const porTipo = {};
     data.forEach(i => { porTipo[i.tipo] = (porTipo[i.tipo] ?? 0) + 1; });
     const tipos   = Object.keys(porTipo);
@@ -525,44 +525,54 @@ async function reporteIncidencias(desde, hasta) {
     const colores = ['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6'];
 
     document.getElementById('kpi-grid').innerHTML = `
-        ${kpiCard('fa-circle-exclamation', data.length,  'Total Incidencias', 'c-red')}
-        ${kpiCard('fa-clock',              pendientes,   'Pendientes',        'c-yellow')}
-        ${kpiCard('fa-check-circle',       resueltas,    'Resueltas',         'c-green')}
+        ${kpiCard('fa-circle-exclamation', data.length, 'Total Reportes',  'c-red')}
+        ${kpiCard('fa-clock',              pendientes,  'Pendientes',       'c-yellow')}
+        ${kpiCard('fa-check-circle',       resueltas,   'Resueltos',        'c-green')}
+        ${kpiCard('fa-arrow-up',           altaPrior,   'Alta Prioridad',   'c-orange')}
     `;
 
-    document.getElementById('chart-bar-title').innerText = 'Incidencias por Tipo';
+    document.getElementById('chart-bar-title').innerText = 'Reportes por Tipo';
     renderBar(tipos.length ? tipos : ['Sin datos'], tipos.length ? valores : [0], colores);
     renderDonut(
-        ['Pendientes', 'Resueltas'],
+        ['Pendientes', 'Resueltos'],
         [pendientes, resueltas],
         ['#f97316', '#22c55e']
     );
 
-    document.getElementById('tabla-title').innerText = `Lista de Incidencias (${data.length})`;
+    document.getElementById('tabla-title').innerText = `Reportes Móvil (${data.length})`;
     document.getElementById('tabla-contenido').innerHTML = tablaIncidencias(data);
 
-    reporteActual = { tipo: 'incidencias', data, desde, hasta };
+    reporteActual = { tipo: 'incidencias', data, desde, hasta, kpis: { total: data.length, pendientes, resueltas, altaPrior } };
 }
 
 function tablaIncidencias(data) {
-    if (!data.length) return '<p class="text-muted p-3">Sin incidencias en el rango seleccionado.</p>';
+    if (!data.length) return '<p class="text-muted p-3">Sin reportes en el rango seleccionado.</p>';
     return `
     <table class="op-table">
         <thead><tr>
-            <th>ID</th><th>Envío</th><th>Tipo</th><th>Descripción</th><th>Responsable</th><th>Fecha</th><th>Estado</th>
+            <th>#</th><th>Cliente</th><th>Tipo</th><th>Descripción</th><th>Prioridad</th><th>Fecha</th><th>Estado</th>
         </tr></thead>
         <tbody>
         ${data.map(i => `<tr>
-            <td><strong>${i.id}</strong></td>
-            <td>${i.envio_id ?? '—'}</td>
+            <td><strong>#${i.id}</strong></td>
+            <td>${i.nombre_usuario ?? 'Sin nombre'}</td>
             <td>${i.tipo}</td>
-            <td style="max-width:200px;">${i.descripcion}</td>
-            <td>${i.responsable ?? '—'}</td>
+            <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${i.descripcion}">${i.descripcion}</td>
+            <td>${badgePrioridadReporte(i.prioridad)}</td>
             <td>${i.fecha}</td>
             <td><span class="op-badge ${i.estado === 'RESUELTO' ? 'op-disponible' : 'op-en-ruta'}">${i.estado}</span></td>
         </tr>`).join('')}
         </tbody>
     </table>`;
+}
+
+function badgePrioridadReporte(p) {
+    const map = {
+        'ALTA':   'background:#fee2e2;color:#dc2626',
+        'NORMAL': 'background:#e0f2fe;color:#0369a1',
+        'BAJA':   'background:#f1f5f9;color:#64748b',
+    };
+    return `<span style="${map[p] ?? map['NORMAL']};padding:4px 10px;border-radius:6px;font-size:0.7rem;font-weight:800;">${p ?? 'NORMAL'}</span>`;
 }
 
 // ══════════════════════════════════════
@@ -732,33 +742,32 @@ function buildPDFHTML(reporte, tipoLabel, desde, hasta, fechaGen) {
     }
 
     if (reporte.tipo === 'incidencias') {
-        const { data } = reporte;
-        const pendientes = data.filter(i => i.estado === 'PENDIENTE').length;
-        const resueltas  = data.filter(i => i.estado === 'RESUELTO').length;
+        const { data, kpis } = reporte;
         seccionDatos = `
         <div class="pdf-section">
-            <p class="pdf-section-title">Resumen de Incidencias</p>
+            <p class="pdf-section-title">Resumen de Reportes Móvil</p>
             <div class="pdf-grid-3">
-                ${pdfField('Total', data.length)}
-                ${pdfField('Pendientes', pendientes)}
-                ${pdfField('Resueltas', resueltas)}
+                ${pdfField('Total', kpis.total)}
+                ${pdfField('Pendientes', kpis.pendientes)}
+                ${pdfField('Resueltos', kpis.resueltas)}
+                ${pdfField('Alta Prioridad', kpis.altaPrior)}
             </div>
         </div>
         <div class="pdf-section" style="overflow:hidden;">
-            <p class="pdf-section-title">Detalle de Incidencias</p>
+            <p class="pdf-section-title">Detalle de Reportes</p>
             <table class="pdf-table" style="table-layout:fixed;width:100%;word-break:break-word;">
                 <thead><tr>
-                    <th style="width:13%">ID</th>
-                    <th style="width:18%">Envío</th>
-                    <th style="width:14%">Tipo</th>
-                    <th style="width:30%">Descripción</th>
+                    <th style="width:8%">#</th>
+                    <th style="width:22%">Cliente</th>
+                    <th style="width:18%">Tipo</th>
+                    <th style="width:27%">Descripción</th>
                     <th style="width:12%">Fecha</th>
                     <th style="width:13%">Estado</th>
                 </tr></thead>
                 <tbody>
                 ${data.slice(0, 30).map(i => `<tr>
-                    <td><strong>${i.id}</strong></td>
-                    <td>${i.envio_id ?? '—'}</td>
+                    <td><strong>#${i.id}</strong></td>
+                    <td>${i.nombre_usuario ?? '—'}</td>
                     <td>${i.tipo}</td>
                     <td>${i.descripcion}</td>
                     <td>${i.fecha}</td>
@@ -768,6 +777,7 @@ function buildPDFHTML(reporte, tipoLabel, desde, hasta, fechaGen) {
                 </tr>`).join('')}
                 </tbody>
             </table>
+            ${data.length > 30 ? `<p style="color:#888;font-size:0.78rem;margin-top:10px;">Se muestran los primeros 30 registros de ${data.length} totales.</p>` : ''}
         </div>`;
     }
 
@@ -849,11 +859,15 @@ function exportarExcel() {
     }
     if (tipo === 'incidencias') {
         filas = data.map(i => ({
-            ID: i.id, Envío: i.envio_id ?? '—', Tipo: i.tipo,
-            Descripción: i.descripcion, Responsable: i.responsable ?? '—',
-            Fecha: i.fecha, Estado: i.estado
+            '#': i.id,
+            Cliente: i.nombre_usuario ?? '—',
+            Tipo: i.tipo,
+            Descripción: i.descripcion,
+            Prioridad: i.prioridad ?? 'NORMAL',
+            Fecha: i.fecha,
+            Estado: i.estado
         }));
-        nombreHoja = 'Incidencias';
+        nombreHoja = 'Reportes Móvil';
     }
 
     const ws = XLSX.utils.json_to_sheet(filas);
