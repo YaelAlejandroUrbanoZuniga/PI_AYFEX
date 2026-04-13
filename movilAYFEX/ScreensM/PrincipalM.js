@@ -101,7 +101,8 @@ export default function PrincipalM({ navigation }) {
   const verDetalles = (pedido) => {
     navigation.navigate("Pedidos", {
       screen: "PedidosDetalles",
-      params: { pedidoData: pedido }
+      params: { pedidoData: pedido },
+      initial: false,
     });
   };
 
@@ -115,9 +116,11 @@ export default function PrincipalM({ navigation }) {
   const totalActivos = pedidosActivos.length;
   const totalPedidos = pedidos.length;
 
-  // Notificaciones: pedidos rechazados
-  const notificaciones = pedidos.filter(p => p.estado === 'RECHAZADO');
+  const notificaciones = pedidos.filter(p =>
+    p.estado === 'RECHAZADO' || p.estado === 'POR_CONFIRMAR_ENTREGA'
+  );
   const tieneNotifs = notificaciones.length > 0;
+
 
   // Reportes: solo pendientes, últimos 2
   const reportesPendientes = [...reportes]
@@ -254,31 +257,23 @@ export default function PrincipalM({ navigation }) {
 
         <View style={styles.statsContainer}>
           <View style={styles.statCard}>
-            <View style={styles.statCardLeft}>
-              <View style={styles.statIconContainer}>
-                <Ionicons name="time-outline" size={22} color="#FF6B00" />
-              </View>
-              <View>
-                <Text style={styles.statNumber}>{totalActivos}</Text>
-                <Text style={styles.statLabel}>Pedidos Activos     </Text>
-              </View>
+            <View style={[styles.statAccent, { backgroundColor: '#FF6B00' }]} />
+            <View style={styles.statIconContainer}>
+              <Ionicons name="time-outline" size={22} color="#FF6B00" />
             </View>
-            <View style={styles.statBarContainer}>
-              <View style={[styles.statBar, { height: totalPedidos > 0 ? `${(totalActivos / totalPedidos) * 100}%` : '0%', backgroundColor: '#FF6B00' }]} />
+            <View style={styles.statTexts}>
+              <Text style={styles.statNumber}>{totalActivos}</Text>
+              <Text style={styles.statLabel}>Pedidos Activos</Text>
             </View>
           </View>
           <View style={styles.statCard}>
-            <View style={styles.statCardLeft}>
-              <View style={[styles.statIconContainer, { backgroundColor: '#eeffee' }]}>
-                <Ionicons name="cube-outline" size={22} color="#006c11" />
-              </View>
-              <View>
-                <Text style={styles.statNumber}>{totalPedidos}</Text>
-                <Text style={styles.statLabel}>Pedidos Totales     </Text>
-              </View>
+            <View style={[styles.statAccent, { backgroundColor: '#04901b' }]} />
+            <View style={[styles.statIconContainer, { backgroundColor: '#eeffee' }]}>
+              <Ionicons name="cube-outline" size={22} color="#006c11" />
             </View>
-            <View style={styles.statBarContainer}>
-              <View style={[styles.statBar, { height: '100%', backgroundColor: '#04901b' }]} />
+            <View style={styles.statTexts}>
+              <Text style={styles.statNumber}>{totalPedidos}</Text>
+              <Text style={styles.statLabel}>Pedidos Totales</Text>
             </View>
           </View>
         </View>
@@ -356,40 +351,55 @@ export default function PrincipalM({ navigation }) {
               </View>
             ) : (
               <ScrollView showsVerticalScrollIndicator={false}>
-                {notificaciones.map(pedido => (
-                  <TouchableOpacity
-                    key={pedido.id}
-                    style={styles.notifItem}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      setNotifVisible(false);
-                      navigation.navigate("Pedidos", {
-                        screen: "PedidosDetalles",
-                        params: { pedidoData: pedido }
-                      });
-                    }}
-                  >
-                    <View style={styles.notifItemIconBox}>
-                      <Ionicons name="close-circle" size={28} color="#FF3B30" />
-                    </View>
-                    <View style={styles.notifItemContent}>
-                      <View style={styles.notifItemTitleRow}>
-                        <Text style={styles.notifItemTitle}>Pedido rechazado</Text>
-                        <Text style={styles.notifItemFecha}>
-                          {pedido.fecha ? pedido.fecha.split('T')[0] : ''}
-                        </Text>
+                {notificaciones.map(pedido => {
+                  const esRechazo = pedido.estado === 'RECHAZADO';
+                  return (
+                    <TouchableOpacity
+                      key={pedido.id}
+                      style={[styles.notifItem, !esRechazo && styles.notifItemEntrega]}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        setNotifVisible(false);
+                        navigation.navigate("Pedidos", {
+                          screen: "PedidosDetalles",
+                          params: { pedidoData: pedido },
+                          initial: false,
+                        });
+                      }}
+                    >
+                      <View style={[styles.notifItemIconBox, !esRechazo && styles.notifItemIconBoxEntrega]}>
+                        <Ionicons
+                          name={esRechazo ? "close-circle" : "checkmark-done-circle"}
+                          size={28}
+                          color={esRechazo ? "#FF3B30" : "#FF9500"}
+                        />
                       </View>
-                      <Text style={styles.notifItemId}>{pedido.id}</Text>
-                      {pedido.motivo_rechazo && (
-                        <Text style={styles.notifItemMotivo}>{pedido.motivo_rechazo}</Text>
-                      )}
-                      <View style={styles.notifItemVerRow}>
-                        <Text style={styles.notifItemVer}>Ver detalles</Text>
-                        <Ionicons name="chevron-forward" size={14} color="#FF3B30" />
+                      <View style={styles.notifItemContent}>
+                        <View style={styles.notifItemTitleRow}>
+                          <Text style={[styles.notifItemTitle, !esRechazo && { color: '#FF9500' }]}>
+                            {esRechazo ? 'Pedido rechazado' : 'Paquete por confirmar'}
+                          </Text>
+                          <Text style={styles.notifItemFecha}>
+                            {pedido.fecha ? pedido.fecha.split('T')[0] : ''}
+                          </Text>
+                        </View>
+                        <Text style={styles.notifItemId}>{pedido.id}</Text>
+                        {esRechazo && pedido.motivo_rechazo && (
+                          <Text style={styles.notifItemMotivo}>{pedido.motivo_rechazo}</Text>
+                        )}
+                        {!esRechazo && (
+                          <Text style={[styles.notifItemMotivo, { borderColor: '#FFD4A8', backgroundColor: '#FFF8EE' }]}>
+                            El operador indica que el paquete llegó a su destino. Confirma si lo recibiste correctamente.
+                          </Text>
+                        )}
+                        <View style={styles.notifItemVerRow}>
+                          <Text style={[styles.notifItemVer, !esRechazo && { color: '#FF9500' }]}>Ver detalles</Text>
+                          <Ionicons name="chevron-forward" size={14} color={esRechazo ? "#FF3B30" : "#FF9500"} />
+                        </View>
                       </View>
-                    </View>
-                  </TouchableOpacity>
-                ))}
+                    </TouchableOpacity>
+                  );
+                })}
                 <View style={{ height: 40 }} />
               </ScrollView>
             )}
@@ -608,15 +618,17 @@ const styles = StyleSheet.create({
     flex: 1, backgroundColor: "#F8F9FA",
     borderRadius: 16, padding: 16,
     borderWidth: 1, borderColor: "#EEEEEE",
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    flexDirection: 'row', alignItems: 'center', gap: 12,
     overflow: 'hidden',
   },
-  statCardLeft: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  statAccent: {
+    position: 'absolute', left: 0, top: 0, bottom: 0,
+    width: 4, borderTopLeftRadius: 16, borderBottomLeftRadius: 16,
+  },
   statIconContainer: { backgroundColor: "#FFF3E6", borderRadius: 12, padding: 10 },
+  statTexts: { flex: 1 },
   statNumber: { fontSize: 24, fontWeight: "800", color: "#000000" },
   statLabel: { fontSize: 10, color: "#888", marginTop: 2, fontWeight: '500' },
-  statBarContainer: { width: 4, height: 50, backgroundColor: '#EEEEEE', borderRadius: 4, overflow: 'hidden' },
-  statBar: { width: '100%', borderRadius: 4, position: 'absolute', bottom: 0 },
 
   separator: { height: 1, backgroundColor: "#EEEEEE", marginBottom: 16, marginTop: 4 },
   sectionHeader: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
@@ -744,4 +756,6 @@ const styles = StyleSheet.create({
   resultGridItem: { backgroundColor: '#FFFFFF', borderRadius: 10, padding: 12, borderWidth: 1, borderColor: '#EEEEEE', minWidth: '45%', flex: 1 },
   resultCloseButton: { backgroundColor: '#FF6B00', borderRadius: 14, paddingVertical: 16, alignItems: 'center', marginTop: 8, shadowColor: '#FF6B00', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.2, shadowRadius: 4, elevation: 4 },
   resultCloseButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' },
+  notifItemEntrega: { backgroundColor: '#FFF8EE', borderColor: '#FFD4A8' },
+  notifItemIconBoxEntrega: { borderColor: '#FFD4A8' },
 });

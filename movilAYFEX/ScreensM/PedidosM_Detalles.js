@@ -15,12 +15,13 @@ import { API_BASE_URL } from '../config';
 const API_URL = `${API_BASE_URL}/v1/pedidos`;
 
 const ESTADO_CONFIG = {
-  'EN PREPARACIÓN': { color: '#FF9500', icono: 'construct-outline', label: 'En Preparación' },
-  'EN ESPERA': { color: '#3A86FF', icono: 'time-outline', label: 'En Espera' },
-  'EN CAMINO': { color: '#FF6B00', icono: 'bicycle-outline', label: 'En Camino' },
-  'EN CAMINO AL DESTINO': { color: '#9B59B6', icono: 'navigate-outline', label: 'En Camino al Destino' },
-  'ENTREGADO': { color: '#34C759', icono: 'checkmark-circle-outline', label: 'Entregado' },
-  'RECHAZADO': { color: '#FF3B30', icono: 'close-circle-outline', label: 'Rechazado' },
+  'EN PREPARACIÓN':        { color: '#FF9500', icono: 'construct-outline',        label: 'En Preparación' },
+  'EN ESPERA':             { color: '#3A86FF', icono: 'time-outline',              label: 'En Espera' },
+  'EN CAMINO':             { color: '#FF6B00', icono: 'bicycle-outline',           label: 'En Camino' },
+  'EN CAMINO AL DESTINO':  { color: '#9B59B6', icono: 'navigate-outline',          label: 'En Camino al Destino' },
+  'POR_CONFIRMAR_ENTREGA': { color: '#FF9500', icono: 'checkmark-done-outline',    label: 'Por Confirmar Entrega' },
+  'ENTREGADO':             { color: '#34C759', icono: 'checkmark-circle-outline',  label: 'Entregado' },
+  'RECHAZADO':             { color: '#FF3B30', icono: 'close-circle-outline',      label: 'Rechazado' },
 };
 
 function ModalConfirmacion({ visible, titulo, mensaje, onConfirmar, onCancelar, confirmText = "Confirmar", peligro = false }) {
@@ -72,6 +73,23 @@ export default function PedidosM_Detalles({ navigation, route }) {
   const [anchura, setAnchura] = useState(String(pedido.anchura));
   const [descripcion, setDescripcion] = useState(pedido.descripcion || '');
 
+   useEffect(() => {
+  const recargar = async () => {
+    try {
+      const response = await fetch(`${API_URL}/${pedidoInicial.id}`, {
+        headers: { "Authorization": `Bearer ${global.authToken}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setPedido(data);
+      }
+    } catch (error) {
+      console.log("Error recargando:", error);
+    }
+  };
+  recargar();
+}, []);
+
   // Calcular días restantes en tiempo real
   const calcularDiasRestantes = () => {
     if (!pedido.dias_estimados || !pedido.fecha_asignacion) return null;
@@ -120,7 +138,7 @@ export default function PedidosM_Detalles({ navigation, route }) {
       });
       if (!response.ok) throw new Error("Error al actualizar");
       setModalEditarVisible(false);
-      navigation.goBack();
+      navigation.navigate('PedidosLista');
     } catch (error) {
       console.log(error);
     }
@@ -133,7 +151,7 @@ export default function PedidosM_Detalles({ navigation, route }) {
         headers: { "Authorization": `Bearer ${global.authToken}` }
       });
       setModalEliminarVisible(false);
-      navigation.goBack();
+      navigation.navigate('PedidosLista');
     } catch (error) {
       console.log(error);
     }
@@ -296,41 +314,59 @@ export default function PedidosM_Detalles({ navigation, route }) {
 
   // Botón de acción según el estado actual
   const renderBotonAccion = () => {
-    switch (pedido.estado) {
-      case 'EN PREPARACIÓN':
-        return (
+  switch (pedido.estado) {
+    case 'EN PREPARACIÓN':
+      return (
+        <TouchableOpacity
+          style={styles.accionButton}
+          onPress={() => setModalListoVisible(true)}
+        >
+          <Ionicons name="checkmark-circle-outline" size={20} color="#FFFFFF" />
+          <Text style={styles.accionButtonText}>Mi pedido está listo</Text>
+        </TouchableOpacity>
+      );
+    case 'EN CAMINO':
+      return (
+        <TouchableOpacity
+          style={[styles.accionButton, { backgroundColor: '#9B59B6' }]}
+          onPress={() => setModalEntregarOperadorVisible(true)}
+        >
+          <Ionicons name="cube-outline" size={20} color="#FFFFFF" />
+          <Text style={styles.accionButtonText}>Entregué al operador</Text>
+        </TouchableOpacity>
+      );
+    case 'POR_CONFIRMAR_ENTREGA':
+      return (
+        <View style={styles.notifEntregaCard}>
+          <View style={styles.notifEntregaIcono}>
+            <Ionicons name="notifications" size={22} color="#FF9500" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.notifEntregaTitulo}>El paquete está por llegar</Text>
+            <Text style={styles.notifEntregaSubtitulo}>Confirma cuando lo hayas recibido</Text>
+          </View>
           <TouchableOpacity
-            style={styles.accionButton}
-            onPress={() => setModalListoVisible(true)}
-          >
-            <Ionicons name="checkmark-circle-outline" size={20} color="#FFFFFF" />
-            <Text style={styles.accionButtonText}>Mi pedido está listo</Text>
-          </TouchableOpacity>
-        );
-      case 'EN CAMINO':
-        return (
-          <TouchableOpacity
-            style={[styles.accionButton, { backgroundColor: '#9B59B6' }]}
-            onPress={() => setModalEntregarOperadorVisible(true)}
-          >
-            <Ionicons name="cube-outline" size={20} color="#FFFFFF" />
-            <Text style={styles.accionButtonText}>Entregué al operador</Text>
-          </TouchableOpacity>
-        );
-      case 'EN CAMINO AL DESTINO':
-        return (
-          <TouchableOpacity
-            style={[styles.accionButton, { backgroundColor: '#34C759' }]}
+            style={styles.notifEntregaBoton}
             onPress={() => setModalEntregaFinalVisible(true)}
           >
-            <Ionicons name="home-outline" size={20} color="#FFFFFF" />
-            <Text style={styles.accionButtonText}>El paquete fue entregado</Text>
+            <Text style={styles.notifEntregaBotonTexto}>Confirmar</Text>
           </TouchableOpacity>
-        );
-      default:
-        return null;
-    }
-  };
+        </View>
+      );
+    case 'EN CAMINO AL DESTINO':
+      return (
+        <TouchableOpacity
+          style={[styles.accionButton, { backgroundColor: '#34C759' }]}
+          onPress={() => setModalEntregaFinalVisible(true)}
+        >
+          <Ionicons name="home-outline" size={20} color="#FFFFFF" />
+          <Text style={styles.accionButtonText}>El paquete fue entregado</Text>
+        </TouchableOpacity>
+      );
+    default:
+      return null;
+  }
+};
 
   return (
     <View style={styles.container}>
@@ -749,4 +785,20 @@ const styles = StyleSheet.create({
   alertBotonTexto: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
   alertCancelar: { paddingVertical: 12 },
   alertCancelarTexto: { fontSize: 14, color: '#999999' },
+  notifEntregaCard: {
+  flexDirection: 'row', alignItems: 'center', gap: 12,
+  backgroundColor: '#FFF8EE', borderRadius: 14, padding: 14,
+  marginBottom: 14, borderWidth: 1, borderColor: '#FFD4A8',
+},
+notifEntregaIcono: {
+  width: 44, height: 44, borderRadius: 22,
+  backgroundColor: '#FFF3E6', justifyContent: 'center', alignItems: 'center',
+},
+notifEntregaTitulo: { fontSize: 14, fontWeight: '700', color: '#FF9500' },
+notifEntregaSubtitulo: { fontSize: 12, color: '#888', marginTop: 2 },
+notifEntregaBoton: {
+  backgroundColor: '#FF9500', borderRadius: 10,
+  paddingVertical: 8, paddingHorizontal: 14,
+},
+notifEntregaBotonTexto: { color: '#FFFFFF', fontSize: 13, fontWeight: '700' },
 });

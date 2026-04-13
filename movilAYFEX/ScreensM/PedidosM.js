@@ -77,12 +77,13 @@ export default function PedidosM({ navigation }) {
   }, [pedidos, busqueda, filtroActivo]);
 
   const ESTADO_CONFIG = {
-  'EN PREPARACIÓN':       { color: '#FF9500', icono: 'construct-outline' },
-  'EN ESPERA':            { color: '#3A86FF', icono: 'time-outline' },
-  'EN CAMINO':            { color: '#FF6B00', icono: 'bicycle-outline' },
-  'EN CAMINO AL DESTINO': { color: '#9B59B6', icono: 'navigate-outline' },
-  'ENTREGADO':            { color: '#34C759', icono: 'checkmark-circle-outline' },
-  'RECHAZADO':            { color: '#FF3B30', icono: 'close-circle-outline' },
+  'EN PREPARACIÓN':        { color: '#FF9500', icono: 'construct-outline' },
+  'EN ESPERA':             { color: '#3A86FF', icono: 'time-outline' },
+  'EN CAMINO':             { color: '#FF6B00', icono: 'bicycle-outline' },
+  'EN CAMINO AL DESTINO':  { color: '#9B59B6', icono: 'navigate-outline' },
+  'POR_CONFIRMAR_ENTREGA': { color: '#FF9500', icono: 'checkmark-done-outline' },
+  'ENTREGADO':             { color: '#34C759', icono: 'checkmark-circle-outline' },
+  'RECHAZADO':             { color: '#FF3B30', icono: 'close-circle-outline' },
 };
 
   return (

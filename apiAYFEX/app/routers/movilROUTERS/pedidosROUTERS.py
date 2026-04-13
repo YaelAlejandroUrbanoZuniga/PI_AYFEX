@@ -29,6 +29,20 @@ async def leer_pedidos(
         Crear_Pedidos.usuario_id == int(usuario_id)
     ).all()
 
+@router.get("/{id}", response_model=Pedido)
+async def leer_pedido(
+    id: str,
+    db: Session = Depends(get_db),
+    usuario_id: str = Depends(verificar_Peticion_Movil)
+):
+    pedido_db = db.query(Crear_Pedidos).filter(
+        Crear_Pedidos.id == id,
+        Crear_Pedidos.usuario_id == int(usuario_id)
+    ).first()
+    if not pedido_db:
+        raise HTTPException(status_code=404, detail="Pedido no encontrado")
+    return pedido_db
+
 @router.post("/", response_model=Pedido, status_code=status.HTTP_201_CREATED)
 async def crear_pedido(
     pedidoP: PedidoBase,
@@ -67,7 +81,6 @@ async def actualizar_pedido(
     ).first()
     if not pedido_db:
         raise HTTPException(status_code=404, detail="Pedido no encontrado")
-
     pedido_db.origen = pedidoP.origen
     pedido_db.destino = pedidoP.destino
     pedido_db.peso = pedidoP.peso
@@ -95,7 +108,6 @@ async def eliminar_pedido(
     db.commit()
     return {"mensaje": "Pedido eliminado correctamente"}
 
-# --- ENDPOINT: Usuario confirma que su pedido está listo ---
 @router.patch("/{id}/listo", response_model=Pedido)
 async def confirmar_pedido_listo(
     id: str,
@@ -110,13 +122,13 @@ async def confirmar_pedido_listo(
         raise HTTPException(status_code=404, detail="Pedido no encontrado")
     if pedido_db.estado != "EN PREPARACIÓN":
         raise HTTPException(status_code=400, detail="Solo se pueden confirmar pedidos EN PREPARACIÓN")
-    
     pedido_db.estado = "EN ESPERA"
     db.commit()
     db.refresh(pedido_db)
     return pedido_db
 
-# --- ENDPOINT: Usuario confirma que entregó el paquete al operador ---
+# El usuario confirma que entregó el paquete al operador
+# Acepta EN CAMINO porque la web confirma desde su lado y el estado puede variar
 @router.patch("/{id}/entregar-operador", response_model=Pedido)
 async def confirmar_entrega_operador(
     id: str,
@@ -129,15 +141,14 @@ async def confirmar_entrega_operador(
     ).first()
     if not pedido_db:
         raise HTTPException(status_code=404, detail="Pedido no encontrado")
-    if pedido_db.estado != "EN CAMINO":
-        raise HTTPException(status_code=400, detail="Solo se puede confirmar entrega cuando el pedido está EN CAMINO")
-    
+    if pedido_db.estado not in ["EN CAMINO", "EN CAMINO AL DESTINO"]:
+        raise HTTPException(status_code=400, detail="Estado inválido para esta acción")
     pedido_db.estado = "EN CAMINO AL DESTINO"
     db.commit()
     db.refresh(pedido_db)
     return pedido_db
 
-# --- ENDPOINT: Usuario confirma que recibió su pedido ---
+# El usuario confirma que recibió el pedido (web puso POR_CONFIRMAR_ENTREGA)
 @router.patch("/{id}/confirmar-entrega", response_model=Pedido)
 async def confirmar_entrega_final(
     id: str,
@@ -150,9 +161,8 @@ async def confirmar_entrega_final(
     ).first()
     if not pedido_db:
         raise HTTPException(status_code=404, detail="Pedido no encontrado")
-    if pedido_db.estado != "EN CAMINO AL DESTINO":
-        raise HTTPException(status_code=400, detail="Solo se puede confirmar entrega final cuando está EN CAMINO AL DESTINO")
-    
+    if pedido_db.estado not in ["EN CAMINO AL DESTINO", "POR_CONFIRMAR_ENTREGA"]:
+        raise HTTPException(status_code=400, detail="Estado inválido para esta acción")
     pedido_db.estado = "ENTREGADO"
     db.commit()
     db.refresh(pedido_db)
