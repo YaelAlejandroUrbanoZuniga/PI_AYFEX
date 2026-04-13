@@ -16,7 +16,11 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/login/") 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/v1/login/")
+oauth2_scheme_movil = OAuth2PasswordBearer(
+    tokenUrl="/v1/auth/login-swagger",
+    scheme_name="OAuth2PasswordBearer_Movil"
+)
 
 def verificar_password(password_plano, password_hash):
     
@@ -49,7 +53,7 @@ def verificar_Peticion(token: str = Depends(oauth2_scheme), db: Session = Depend
         
     return usuario_db
 
-def verificar_Peticion_Movil(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def verificar_Peticion_Movil(token: str = Depends(oauth2_scheme_movil), db: Session = Depends(get_db)):
     credenciales_excepcion = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="No se pudieron validar las credenciales",
@@ -68,3 +72,4 @@ def verificar_Peticion_Movil(token: str = Depends(oauth2_scheme), db: Session = 
         raise credenciales_excepcion
 
     return str(usuario_db.id)
+

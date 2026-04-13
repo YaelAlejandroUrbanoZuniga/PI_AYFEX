@@ -4,6 +4,8 @@ from app.data.dbDATA import get_db
 from app.data.movilDATA.crear_usuarioDATA import UsuarioMDB
 from app.models.movilMODELS.usuarioMODELS import UsuarioRegistro, UsuarioLogin, UsuarioResponse
 from app.security.authSECURITY import crear_token, pwd_context
+from fastapi.security import OAuth2PasswordRequestForm
+
 
 router = APIRouter(
     prefix="/v1/auth",
@@ -62,3 +64,21 @@ def iniciar_sesion(datos: UsuarioLogin, db: Session = Depends(get_db)):
             "telefono": usuario.telefono
         }
     }
+
+@router.post("/login-swagger", include_in_schema=True)
+def login_swagger_movil(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    db: Session = Depends(get_db)
+):
+    usuario = db.query(UsuarioMDB).filter(
+        UsuarioMDB.correo_electronico == form_data.username
+    ).first()
+
+    if not usuario or not pwd_context.verify(form_data.password, usuario.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Correo o contraseña incorrectos"
+        )
+
+    token = crear_token({"sub": str(usuario.id)})
+    return {"access_token": token, "token_type": "bearer"}
