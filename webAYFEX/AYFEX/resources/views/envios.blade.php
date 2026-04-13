@@ -216,7 +216,7 @@
     <div class="alert-api" id="alert-api">
         <i class="fa-solid fa-triangle-exclamation me-2"></i>
         <strong>Sin conexión con el servidor FastAPI.</strong> Verifica que esté corriendo en
-        <code>http://127.0.0.1:8001</code> y que el CORS esté configurado correctamente.
+        <code>http://127.0.0.1:5000</code> y que el CORS esté configurado correctamente.
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -364,10 +364,17 @@
 
 <script>
     // =====================================================
-    // CONFIGURACIÓN — cambia este puerto si FastAPI usa otro
+    // CONFIGURACIÓN
     // =====================================================
-    const API_BASE = 'http://127.0.0.1:5000/v1/pedidos-web';
+    const API_BASE  = 'http://127.0.0.1:5000/v1/pedidos-web';
     const RUTAS_API = 'http://127.0.0.1:5000/v1/rutas';
+
+    // ✅ TOKEN — igual que en rutas.blade.php
+    const token = localStorage.getItem('authToken');
+    const getHeaders = () => ({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    });
 
     let todosPedidos = []; // cache local para filtros
 
@@ -431,10 +438,10 @@
     }
 
     // =====================================================
-    // CARGAR PEDIDOS
+    // CARGAR PEDIDOS  ✅ con token
     // =====================================================
     async function cargarPedidos() {
-        const tbody = document.getElementById('tabla-pedidos-body');
+        const tbody    = document.getElementById('tabla-pedidos-body');
         const contador = document.getElementById('contador-pedidos');
 
         tbody.innerHTML = `
@@ -446,7 +453,9 @@
             </tr>`;
 
         try {
-            const res = await fetch(`${API_BASE}/`);
+            const res = await fetch(`${API_BASE}/`, {
+                headers: getHeaders() // ✅ token incluido
+            });
 
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
@@ -474,7 +483,7 @@
     }
 
     function renderTabla(pedidos) {
-        const tbody = document.getElementById('tabla-pedidos-body');
+        const tbody    = document.getElementById('tabla-pedidos-body');
         const contador = document.getElementById('contador-pedidos');
         contador.innerText = `Lista de envíos (${pedidos.length})`;
 
@@ -523,11 +532,13 @@
     }
 
     // =====================================================
-    // CARGAR RUTAS para el select del modal
+    // CARGAR RUTAS para el select del modal  ✅ con token
     // =====================================================
     async function cargarRutas() {
         try {
-            const res = await fetch(`${RUTAS_API}/`);
+            const res = await fetch(`${RUTAS_API}/`, {
+                headers: getHeaders() // ✅ token incluido
+            });
             if (!res.ok) return;
             const rutas = await res.json();
             const select = document.getElementById('conf-ruta-id');
@@ -564,7 +575,7 @@
         try {
             const res = await fetch(`${API_BASE}/${id}/confirmar`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getHeaders(), // ✅ token incluido
                 body: JSON.stringify({ ruta_id: parseInt(rutaId), dias_estimados: parseInt(dias) })
             });
 
@@ -603,7 +614,7 @@
         try {
             const res = await fetch(`${API_BASE}/${id}/rechazar`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getHeaders(), // ✅ token incluido
                 body: JSON.stringify({ motivo_rechazo: motivo })
             });
 
@@ -621,13 +632,16 @@
     }
 
     // =====================================================
-    // MARCAR ENTREGADO
+    // MARCAR ENTREGADO  ✅ con token
     // =====================================================
     async function marcarEntregado(id) {
         if (!confirm(`¿Marcar el pedido ${id} como entregado? El cliente recibirá una notificación.`)) return;
 
         try {
-            const res = await fetch(`${API_BASE}/${id}/marcar-entregado`, { method: 'PATCH' });
+            const res = await fetch(`${API_BASE}/${id}/marcar-entregado`, {
+                method: 'PATCH',
+                headers: getHeaders() // ✅ token incluido
+            });
             if (!res.ok) {
                 const err = await res.json();
                 throw new Error(err.detail ?? 'Error');

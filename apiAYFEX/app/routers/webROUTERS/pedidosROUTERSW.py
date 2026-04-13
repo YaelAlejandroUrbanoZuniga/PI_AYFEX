@@ -38,8 +38,8 @@ def confirmar_pedido(pedido_id: str, datos: PedidoConfirmar, db: Session = Depen
         raise HTTPException(status_code=404, detail="Ruta no encontrada")
 
     # Obtenemos el operador vinculado a la ruta
-    nombre_operador   = getattr(ruta.operador, 'nombre',    'Sin operador') if hasattr(ruta, 'operador') else 'Sin operador'
-    telefono_operador = getattr(ruta.operador, 'telefono',  None)           if hasattr(ruta, 'operador') else None
+    nombre_operador   = ruta.operador.nombre_completo if ruta.operador else 'Sin operador'
+    telefono_operador = ruta.operador.telefono        if ruta.operador else None
 
     pedido.estado             = "EN CAMINO"
     pedido.ruta_id            = ruta.id
